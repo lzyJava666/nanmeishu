@@ -1,16 +1,17 @@
-package com.nanmeishu.util;
+package com.nanmeishu.user.util;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.nanmeishu.user.constant.AllConstant;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 public class JwtUtil {
-    private  static final int EXPIRE_DATE=1000*60*60*2;
-    private static final String TOKEN_SECRET="`_nanmeishu_~";
+
 
     /**
      * 生成jwt签名
@@ -21,8 +22,8 @@ public class JwtUtil {
     public static String sign(String username,String userId){
         try {
             //过期时间为2小时
-            Date date=new Date(System.currentTimeMillis()+EXPIRE_DATE);
-            Algorithm algorithm=Algorithm.HMAC256(TOKEN_SECRET);
+            Date date=new Date(System.currentTimeMillis()+AllConstant.getExpireDate());
+            Algorithm algorithm=Algorithm.HMAC256(AllConstant.getTokenSecret());
             Map<String,Object> header=new HashMap<>(2);
             header.put("typ","JWT");
             header.put("alg","HS256");
@@ -46,7 +47,7 @@ public class JwtUtil {
      */
     public static boolean verify(String token){
         try {
-            Algorithm algorithm=Algorithm.HMAC256(TOKEN_SECRET);
+            Algorithm algorithm=Algorithm.HMAC256(AllConstant.getTokenSecret());
             JWTVerifier verifier = JWT.require(algorithm).build();
             DecodedJWT jwt = verifier.verify(token);
             return true;
@@ -69,4 +70,5 @@ public class JwtUtil {
             return null;
         }
     }
+
 }

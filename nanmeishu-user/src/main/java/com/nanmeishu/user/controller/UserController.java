@@ -1,7 +1,7 @@
 package com.nanmeishu.user.controller;
 
 import com.nanmeishu.entity.ResponseResult;
-import com.nanmeishu.util.JwtUtil;
+import com.nanmeishu.user.util.JwtUtil;
 import com.nanmeishu.util.ResultUtil;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,7 +9,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
-public class TestController {
+public class UserController {
 
     @PostMapping("/login")
     public ResponseResult login(@RequestBody Map<String,Object> user){
@@ -35,6 +35,5 @@ public class TestController {
             return ResultUtil.error();
         }
     }
-
 
 }
