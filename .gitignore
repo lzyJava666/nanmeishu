@@ -18,6 +18,17 @@
 *.zip
 *.tar.gz
 *.rar
+*.iml
+# 直接在这里添加即可，注意加上备注，好知道是忽略什么文件 #
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
+##############################
+## Folders                  ##
+##############################
+target
+out
+log
+.idea
+.project
+**/.mvn
+**/mvnw
+**/mvnw.cmd
