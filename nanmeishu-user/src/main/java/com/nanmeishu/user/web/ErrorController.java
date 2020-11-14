@@ -1,4 +1,4 @@
-package com.nanmeishu.error;
+package com.nanmeishu.user.web;
 
 import com.alibaba.fastjson.JSONException;
 import com.nanmeishu.entity.ResponseResult;

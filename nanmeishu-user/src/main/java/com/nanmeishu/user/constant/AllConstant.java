@@ -14,6 +14,16 @@ public class AllConstant {
     private static int EXPIRE_DATE;
     //token密钥
     private static String TOKEN_SECRET;
+    //密码加密
+    private static String PAS_MD5;
+
+    public static String getPasMd5() {
+        return PAS_MD5;
+    }
+    @Value("${PAS.MD5}")
+    public  void setPasMd5(String pasMd5) {
+        PAS_MD5 = pasMd5;
+    }
 
     public static int getExpireDate() {
         return EXPIRE_DATE;

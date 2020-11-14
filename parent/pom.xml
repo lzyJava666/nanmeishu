@@ -17,9 +17,10 @@
         <lombok.version>1.16.14</lombok.version>
         <spring-cloud-alibaba.version>0.2.1.RELEASE</spring-cloud-alibaba.version>
         <mysql.version>8.0.15</mysql.version>
-        <mybatis-plus.version>2.3</mybatis-plus.version>
+        <mybatis-plus.version>3.1.0</mybatis-plus.version>
         <commons-lang3.version>3.7</commons-lang3.version>
         <jwt.version>3.3.0</jwt.version>
+        <redis.version>3.1.0-m1</redis.version>
     </properties>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -31,6 +32,16 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>redis.clients</groupId>
+                <artifactId>jedis</artifactId>
+                <version>${redis.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>com.auth0</groupId>
                 <artifactId>java-jwt</artifactId>
                 <version>${jwt.version}</version>
@@ -39,11 +50,6 @@
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
                 <version>${mysql.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus</artifactId>
-                <version>${mybatis-plus.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
