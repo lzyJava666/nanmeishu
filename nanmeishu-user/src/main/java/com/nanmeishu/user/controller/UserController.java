@@ -7,6 +7,7 @@ import com.nanmeishu.user.entity.User;
 import com.nanmeishu.user.service.UserService;
 import com.nanmeishu.user.util.JwtUtil;
 import com.nanmeishu.user.util.RedisUtil;
+import com.nanmeishu.user.web.TokenVerifyAnnotation;
 import com.nanmeishu.util.DataUtil;
 import com.nanmeishu.util.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import redis.clients.jedis.Jedis;
 
-import java.sql.SQLOutput;
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.Map;
 
@@ -53,6 +54,17 @@ public class UserController {
         }else{
             throw new RuntimeException("系统出错");
         }
+    }
+
+    @GetMapping("/test")
+    @TokenVerifyAnnotation()
+    public ResponseResult test(HttpServletRequest request){
+        return ResultUtil.success(JwtUtil.get(request.getHeader("accessToken"),"username"));
+    }
+    @TokenVerifyAnnotation
+    @PostMapping("/posTest")
+    public ResponseResult posTest(){
+        return ResultUtil.success("成功");
     }
 
     @GetMapping("/verify")
