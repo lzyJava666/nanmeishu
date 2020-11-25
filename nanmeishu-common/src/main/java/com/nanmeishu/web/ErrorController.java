@@ -1,4 +1,4 @@
-package com.nanmeishu.user.web;
+package com.nanmeishu.web;
 
 import com.alibaba.fastjson.JSONException;
 import com.nanmeishu.entity.ResponseResult;
@@ -6,6 +6,7 @@ import com.nanmeishu.util.ResultUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -29,6 +30,11 @@ public class ErrorController {
     @ExceptionHandler(value = {MissingServletRequestParameterException.class})
     public ResponseResult missingServletRequestParameterException(MissingServletRequestParameterException e){
         return ResultUtil.error("请求缺少参数："+e.getParameterName());
+    }
+
+    @ExceptionHandler(value = {HttpMediaTypeNotSupportedException.class})
+    public ResponseResult httpMediaTypeNotSupportedException(HttpMediaTypeNotSupportedException e){
+        return ResultUtil.error("出现参数格式错误！请检查请求头是否正确");
     }
 
     //@ExceptionHandler(value = {NoTokenException.class})

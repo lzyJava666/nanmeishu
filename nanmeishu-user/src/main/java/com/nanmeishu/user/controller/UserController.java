@@ -10,15 +10,15 @@ import com.nanmeishu.user.util.RedisUtil;
 import com.nanmeishu.user.web.TokenVerifyAnnotation;
 import com.nanmeishu.util.DataUtil;
 import com.nanmeishu.util.ResultUtil;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import redis.clients.jedis.Jedis;
-
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.Map;
-
+@Api(tags  = "用户接口" )
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -33,10 +33,18 @@ public class UserController {
     String TOKEN_DATE;
 
     @PostMapping("/login")
+    @ApiOperation("用戶登录接口")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "username",value = "用户名",paramType = "body",required = true),
+            @ApiImplicitParam(name = "password",value = "密码（MD5加密）",paramType = "body",required = true)
+    })
+    @ApiResponses({
+            @ApiResponse(code = 200,message = "令牌token",response = String.class)
+    })
     public ResponseResult login(@RequestBody Map<String,Object> map){
+        loginVerify(map);
         String username=String.valueOf(map.get("username"));
         String password= DataUtil.md5Encrypt(String.valueOf(map.get("password")), AllConstant.getPasMd5());
-        System.out.println(password);
         //验证登录是否成功
         User user = userService.getOne(new QueryWrapper<User>().eq("username", username).eq("password", password));
         if(user==null){
@@ -55,25 +63,105 @@ public class UserController {
             throw new RuntimeException("系统出错");
         }
     }
-
-    @GetMapping("/test")
-    @TokenVerifyAnnotation()
-    public ResponseResult test(HttpServletRequest request){
-        return ResultUtil.success(JwtUtil.get(request.getHeader("accessToken"),"username"));
+    //登录接口数据有效性验证
+    private void loginVerify(Map<String, Object> map) {
+        DataUtil.verifyData(map.get("username").toString(),"用户名/username");
+        DataUtil.verifyData(map.get("password").toString()," 密码/password");
     }
+
+    @ApiOperation("注册接口")
+    @PostMapping("/register")
+    public ResponseResult register(@RequestBody User user){
+        registerVerify(user);
+        userService.register(user);
+        return ResultUtil.success();
+    }
+
+    //注册接口--数据有效性验证
+    private void registerVerify(User user) {
+        DataUtil.verifyData(user.getPassword(),"密码/password");
+        DataUtil.verifyData(user.getPhone(),"手机号/phone");
+        DataUtil.verifyData(user.getUsername(),"用户名/username");
+        if(user.getCreateTime()==null){
+            user.setCreateTime(LocalDateTime.now());
+        }
+        user.setPassword(DataUtil.md5Encrypt(user.getPassword(),AllConstant.getPasMd5()));
+    }
+
+    @ApiOperation("修改用户信息")
+    @PostMapping("/update")
     @TokenVerifyAnnotation
-    @PostMapping("/posTest")
-    public ResponseResult posTest(){
-        return ResultUtil.success("成功");
+    public ResponseResult update(@RequestBody User user,HttpServletRequest request){
+        updateVerify(user,request);
+        userService.updateUser(user);
+        return ResultUtil.success();
     }
 
-    @GetMapping("/verify")
+    //修改用户信息数据有效性验证
+    private void updateVerify(User user,HttpServletRequest request) {
+        String token=request.getHeader("accessToken");
+        String userId= JwtUtil.get(token,"userId");
+        DataUtil.verifyData(userId,"用户ID/userId");
+        user.setUserId(Long.parseLong(userId));
+        user.setCreateTime(null);
+        user.setPassword(null);
+    }
+
     public ResponseResult verify(@RequestParam("token") String token){
         if(JwtUtil.verify(token)){
             return ResultUtil.success(JwtUtil.get(token,"userId"));
         }else{
             return ResultUtil.error();
         }
+    }
+
+    @ApiOperation("修改密码")
+    @PostMapping("/updatePas")
+    @TokenVerifyAnnotation
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "formerPas",value = "旧密码",required = true,paramType = "body"),
+            @ApiImplicitParam(name = "newPas",value = "新密码",required = true,paramType = "body"),
+            @ApiImplicitParam(name = "phone",value = "手机号",required = true,paramType = "body"),
+    })
+    public ResponseResult updatePas(@RequestBody Map<String,Object> reqMap,HttpServletRequest request){
+        updatePasVerify(reqMap);
+        String token = request.getHeader("accessToken");
+        String userId = JwtUtil.get(token,"userId");
+        userService.updatePas(userId,reqMap);
+        return ResultUtil.success();
+    }
+
+    //找回密码数据有效性验证
+    private void updatePasVerify(Map<String, Object> reqMap) {
+        DataUtil.verifyData(reqMap.get("formerPas"),"旧密码/formerPas");
+        DataUtil.verifyData(reqMap.get("newPas"),"新密码/newPas");
+        DataUtil.verifyData(reqMap.get("phone"),"手机号/phone");
+    }
+
+    @ApiOperation("找回密码")
+    @PostMapping("/getBackPas")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "phone",value = "手机号",required = true,paramType = "body"),
+            @ApiImplicitParam(name = "password",value = "新密码",required = true,paramType = "body")
+    })
+    public ResponseResult getBackPas(@RequestBody Map<String,Object> reqMap){
+        getBackPasVerify(reqMap);
+        User user = userService.getOne(new QueryWrapper<User>().eq("phone", reqMap.get("phone").toString()));
+        if(user == null){
+            throw new RuntimeException("当前手机号未注册");
+        }
+        user.setPassword(DataUtil.md5Encrypt(reqMap.get("password").toString(),AllConstant.getPasMd5()));
+        boolean u = userService.updateById(user);
+        if(!u){
+            throw new RuntimeException("出错，请重试！");
+        }
+        return ResultUtil.success();
+    }
+
+    //找回密码数据有效性验证
+    private void getBackPasVerify(Map<String, Object> reqMap) {
+        DataUtil.verifyData(reqMap.get("phone"),"手机号/phone");
+        DataUtil.verifyData(reqMap.get("password"),"新密码/password");
     }
 
 }

@@ -2,7 +2,7 @@ package com.nanmeishu.user.web;
 
 import com.nanmeishu.user.util.JwtUtil;
 import com.nanmeishu.user.util.RedisUtil;
-import com.nanmeishu.user.util.SpringUtil;
+import com.nanmeishu.util.SpringUtil;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;

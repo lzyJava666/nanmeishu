@@ -1,4 +1,4 @@
-package com.nanmeishu.user.util;
+package com.nanmeishu.util;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;

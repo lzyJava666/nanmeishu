@@ -1,11 +1,18 @@
 package com.nanmeishu.entity;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * 接口响应类
  */
+@ApiModel("接口响应类")
 public class ResponseResult {
+    @ApiModelProperty("响应代码")
     private int errcode ;
+    @ApiModelProperty("响应数据")
     private Object data = "";
+    @ApiModelProperty("响应消息")
     private String errmsg = "";
 
     public int getErrcode() {
@@ -33,6 +40,7 @@ public class ResponseResult {
     }
 
     public ResponseResult() {
+
     }
 
     public ResponseResult(int errcode, Object data, String errmsg) {
