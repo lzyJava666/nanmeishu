@@ -1,16 +1,20 @@
-package com.nanmeishu.user.web;
+package com.nanmeishu.web;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.*;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+
 import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
+
 /**
  * controller方法的切面
  */
@@ -22,7 +26,7 @@ public class ControllerAspect {
     //为了记录执行时间 方便调试 如果不需要可以去掉
     ThreadLocal<Long> startTime = new ThreadLocal<>();
 
-    @Pointcut("execution(public * com.nanmeishu.user.controller.*.*(..))")
+    @Pointcut("execution(public * com.nanmeishu.*.controller.*.*(..))")
     public void pointCut() {}
 
     @Before("pointCut()")

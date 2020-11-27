@@ -42,5 +42,7 @@ public class User implements Serializable {
     private String ipNumber;
     @ApiModelProperty("角色ID")
     private Long roleId;
+    @ApiModelProperty("头像url")
+    private String headPortrait;
 
 }

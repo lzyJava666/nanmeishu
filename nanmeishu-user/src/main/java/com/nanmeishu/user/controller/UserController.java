@@ -164,4 +164,15 @@ public class UserController {
         DataUtil.verifyData(reqMap.get("password"),"新密码/password");
     }
 
+    @ApiOperation("通过id拿到用户对象")
+    @GetMapping("/get")
+    @ApiImplicitParam(name = "userId",value = "用户id",required = true)
+    @ApiResponses({
+            @ApiResponse(code = 200,message = "用户对象",response = User.class)
+    })
+    public ResponseResult get(@RequestParam("userId") String userId){
+        return ResultUtil.success(userService.getById(userId));
+    }
+
+
 }

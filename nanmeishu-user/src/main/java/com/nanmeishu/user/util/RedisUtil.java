@@ -4,7 +4,7 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
-public class RedisUtil {
+public class  RedisUtil {
     private JedisPool jedisPool;
 
     public void initPool(String host, int port, int database,String password) {

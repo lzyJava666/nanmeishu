@@ -8,7 +8,7 @@ public enum ErrorCodeEnum {
     error(0);
     private int code;
 
-    private ErrorCodeEnum(int code) {
+    ErrorCodeEnum(int code) {
         this.code = code;
     }
 

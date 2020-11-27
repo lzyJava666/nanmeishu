@@ -1,4 +1,4 @@
-package com.nanmeishu.user.web;
+package com.nanmeishu.web;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,7 +23,7 @@ public class MapperAspect {
 
     private Logger logger= LogManager.getLogger(MapperAspect.class);
 
-    @Pointcut("execution( * com.nanmeishu.user.mapper.*.*(..))")
+    @Pointcut("execution( * com.nanmeishu.*.mapper.*.*(..))")
     public void pointCut() {}
 
     @Before("pointCut()")
