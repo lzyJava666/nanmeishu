@@ -1,5 +1,6 @@
 package com.nanmeishu.user.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.nanmeishu.entity.ResponseResult;
 import com.nanmeishu.user.entity.Area;
 import com.nanmeishu.user.entity.AreaDetails;
@@ -11,10 +12,10 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 
 @Api(tags = "地区接口")
@@ -48,6 +49,12 @@ public class AreaController {
         return ResultUtil.success(areaService.listDetailsByAreaId(areaId));
     }
 
+    @PostMapping("/listSave")
+    public ResponseResult listSave(@RequestBody String json){
+        List<Map> lists = JSON.parseArray(json, Map.class);
+        areaService.listSave(lists);
 
+        return ResultUtil.success("success");
+    }
 
 }

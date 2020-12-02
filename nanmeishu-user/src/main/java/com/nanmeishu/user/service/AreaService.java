@@ -5,6 +5,7 @@ import com.nanmeishu.user.entity.Area;
 import com.nanmeishu.user.entity.AreaDetails;
 
 import java.util.List;
+import java.util.Map;
 
 public interface AreaService{
     /**
@@ -19,4 +20,10 @@ public interface AreaService{
      * @return 详情列表
      */
     List<AreaDetails> listDetailsByAreaId(String areaId);
+
+    /**
+     * 外部导入地区
+     * @param lists
+     */
+    void listSave(List<Map> lists);
 }

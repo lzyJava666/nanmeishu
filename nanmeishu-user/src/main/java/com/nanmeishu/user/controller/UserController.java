@@ -174,5 +174,17 @@ public class UserController {
         return ResultUtil.success(userService.getById(userId));
     }
 
+    @GetMapping("/verifyToken")
+    public ResponseResult verifyToken(@RequestParam("token") String token){
+        Jedis jedis = redisUtil.getJedis();
+        if(jedis.get(token)!=null){
+            //token存在
+            jedis.close();
+            if(JwtUtil.verify(token)) {
+                return ResultUtil.success(true);
+            }
+        }
+        return ResultUtil.success(false);
+    }
 
 }
