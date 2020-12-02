@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 public class TokenVerifyAspect {
 
     //有@GetNoTokenAnnotation注释的方法处理，需判断token是否可用
-    @Before(value = "@annotation(com.nanmeishu.user.web.TokenVerifyAnnotation)")
+    @Before(value = "@annotation(com.nanmeishu.web.TokenVerifyAnnotation)")
     public void tokenVerifyBefore(JoinPoint joinPoint){
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest req = attributes.getRequest();

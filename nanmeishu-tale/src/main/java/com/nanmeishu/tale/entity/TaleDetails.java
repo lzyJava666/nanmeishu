@@ -3,6 +3,7 @@ package com.nanmeishu.tale.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -24,4 +25,6 @@ public class TaleDetails implements Serializable {
     private String titleHead;
     @ApiModelProperty("故事id")
     private Long taleId;
+    @ApiModelProperty("第三方SDK标识")
+    private String sdkLabel;
 }

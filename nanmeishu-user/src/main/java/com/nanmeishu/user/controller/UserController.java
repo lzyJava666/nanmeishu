@@ -7,7 +7,7 @@ import com.nanmeishu.user.entity.User;
 import com.nanmeishu.user.service.UserService;
 import com.nanmeishu.user.util.JwtUtil;
 import com.nanmeishu.user.util.RedisUtil;
-import com.nanmeishu.user.web.TokenVerifyAnnotation;
+import com.nanmeishu.web.TokenVerifyAnnotation;
 import com.nanmeishu.util.DataUtil;
 import com.nanmeishu.util.ResultUtil;
 import io.swagger.annotations.*;

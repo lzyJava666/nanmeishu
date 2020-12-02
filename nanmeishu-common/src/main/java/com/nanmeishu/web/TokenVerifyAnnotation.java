@@ -1,4 +1,4 @@
-package com.nanmeishu.user.web;
+package com.nanmeishu.web;
 
 import jdk.internal.org.objectweb.asm.tree.analysis.Value;
 import sun.awt.SunHints;

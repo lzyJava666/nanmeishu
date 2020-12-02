@@ -6,6 +6,7 @@ import com.nanmeishu.tale.feign.UserFeign;
 import com.nanmeishu.tale.service.TaleService;
 import com.nanmeishu.util.DataUtil;
 import com.nanmeishu.util.ResultUtil;
+import com.nanmeishu.web.TokenVerifyAnnotation;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -66,6 +67,10 @@ public class TaleController {
         return ResultUtil.success(taleService.listByUserId(userId));
     }
 
-
+    @TokenVerifyAnnotation
+    @GetMapping("/test")
+    public ResponseResult getTest(){
+        return ResultUtil.success("success");
+    }
 
 }
