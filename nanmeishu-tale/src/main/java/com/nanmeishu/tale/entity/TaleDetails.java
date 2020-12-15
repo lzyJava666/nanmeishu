@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 
 import java.io.Serializable;
 
@@ -19,7 +20,9 @@ public class TaleDetails implements Serializable {
     @ApiModelProperty("内容")
     private String content;
     @ApiModelProperty("标题---不超过15个字")
+    @Length(min = 1,max = 15)
     private String taleTitle;
+    @Length(min = 1,max = 50)
     @ApiModelProperty("简单描述---不超过50个字")
     private String titleHead;
     @ApiModelProperty("故事id")

@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import redis.clients.jedis.Jedis;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.Map;
 @Api(tags  = "用户接口" )
@@ -71,7 +72,7 @@ public class UserController {
 
     @ApiOperation("注册接口")
     @PostMapping("/register")
-    public ResponseResult register(@RequestBody User user){
+    public ResponseResult register(@RequestBody @Valid User user){
         registerVerify(user);
         userService.register(user);
         return ResultUtil.success();

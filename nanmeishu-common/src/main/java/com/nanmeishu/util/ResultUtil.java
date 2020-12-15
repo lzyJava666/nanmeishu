@@ -29,5 +29,8 @@ public class ResultUtil {
         responseResult=new ResponseResult(ErrorCodeEnum.error.getCode(),"",msg);
         return responseResult;
     }
-
+    public static ResponseResult error(StringBuffer msg){
+        responseResult=new ResponseResult(ErrorCodeEnum.error.getCode(),"",msg);
+        return responseResult;
+    }
 }

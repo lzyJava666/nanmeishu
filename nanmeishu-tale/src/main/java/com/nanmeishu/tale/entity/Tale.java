@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.hibernate.validator.constraints.Range;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -27,8 +28,10 @@ public class Tale {
     private LocalDate frontDate;
     @ApiModelProperty("故事结束日期 (新增时不能为空)")
     private LocalDate endDate;
+    @Range(min = 0,max = 1)
     @ApiModelProperty("是否删除 0:否 1：是")
     private Integer isDelete;
+    @Range(max = 4,min = 0)
     @ApiModelProperty("类型 0：日记 1：经历 2：亿人 3 ：亿事 4 ：其他 (新增时不能为空)")
     private Integer type;
     @ApiModelProperty("对象（与类型对应）")

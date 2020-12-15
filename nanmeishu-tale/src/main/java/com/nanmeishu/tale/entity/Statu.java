@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.hibernate.validator.constraints.Range;
 
 @TableName("t_statu")
 @Data
@@ -20,6 +21,7 @@ public class Statu {
     private String describe;
     @ApiModelProperty("url")
     private String statuUrl;
+    @Range(max = 1,min = 0)
     @ApiModelProperty("是否启用 0 是 1 否")
     private Integer isDelete;
 }

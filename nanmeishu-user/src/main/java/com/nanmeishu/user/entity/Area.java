@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.hibernate.validator.constraints.Range;
 
 import java.io.Serializable;
 import java.util.List;
@@ -21,6 +22,7 @@ public class Area implements Serializable {
     @ApiModelProperty("地区名")
     private String name;
     @ApiModelProperty("是否删除 0 否 1是")
+    @Range(max = 1,min = 0)
     private Integer isDelete;
     @ApiModelProperty("备注")
     private String br;

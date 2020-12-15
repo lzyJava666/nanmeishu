@@ -49,6 +49,12 @@ public class ResponseResult {
         this.errmsg = errmsg;
     }
 
+    public ResponseResult(int errcode, Object data, StringBuffer errmsg) {
+        this.errcode = errcode;
+        this.data = data;
+        this.errmsg = errmsg.toString();
+    }
+
     @Override
     public String toString() {
         return "ResponseResult{" +
