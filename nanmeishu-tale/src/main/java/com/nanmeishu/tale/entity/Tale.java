@@ -13,7 +13,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@TableName("t_tale")
+@TableName("tt_tale")
 @ApiModel("故事对象")
 @Data
 public class Tale {
@@ -34,7 +34,7 @@ public class Tale {
     @Range(max = 4,min = 0)
     @ApiModelProperty("类型 0：日记 1：经历 2：亿人 3 ：亿事 4 ：其他 (新增时不能为空)")
     private Integer type;
-    @ApiModelProperty("对象（与类型对应）")
+    @ApiModelProperty("对象（与类型对应，类型->对象对应关系如下{0:心情id，1-4：自定义}）")
     private String objectt;
     @ApiModelProperty("所属用户id (新增时不能为空)")
     private Long userId;

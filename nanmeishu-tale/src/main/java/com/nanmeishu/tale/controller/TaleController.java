@@ -71,11 +71,7 @@ public class TaleController {
     }
 
 
-    @TokenVerifyAnnotation
-    @GetMapping("/aaa")
-    public ResponseResult getTest(){
-        return ResultUtil.success("success");
-    }
+
 
 
 }

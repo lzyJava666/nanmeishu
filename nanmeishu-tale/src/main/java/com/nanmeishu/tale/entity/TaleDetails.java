@@ -11,7 +11,7 @@ import org.hibernate.validator.constraints.Length;
 import java.io.Serializable;
 
 @ApiModel("故事明细对象")
-@TableName("t_tale_details")
+@TableName("tt_tale_details")
 @Data
 public class TaleDetails implements Serializable {
     @TableId(type = IdType.ASSIGN_ID)

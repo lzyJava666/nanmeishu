@@ -8,29 +8,44 @@ import com.nanmeishu.enums.ErrorCodeEnum;
  */
 public class ResultUtil {
 
-    private static ResponseResult responseResult;
 
-    public static ResponseResult success(){
-        responseResult=new ResponseResult(ErrorCodeEnum.seccess.getCode(),"",ErrorCodeEnum.seccess.name());
+    public static ResponseResult success() {
+        ResponseResult responseResult = ResponseResult.getInstance();
+        responseResult.setErrcode(ErrorCodeEnum.seccess.getCode());
+        responseResult.setData("");
+        responseResult.setErrmsg(ErrorCodeEnum.seccess.name());
         return responseResult;
     }
 
-    public static ResponseResult success(Object o){
-        responseResult=new ResponseResult(ErrorCodeEnum.seccess.getCode(),o,ErrorCodeEnum.seccess.name());
+    public static ResponseResult success(Object o) {
+        ResponseResult responseResult = ResponseResult.getInstance();
+        responseResult.setErrcode(ErrorCodeEnum.seccess.getCode());
+        responseResult.setData(o);
+        responseResult.setErrmsg(ErrorCodeEnum.seccess.name());
         return responseResult;
     }
 
-    public static ResponseResult error(){
-        responseResult=new ResponseResult(ErrorCodeEnum.error.getCode(),"",ErrorCodeEnum.error.name());
+    public static ResponseResult error() {
+        ResponseResult responseResult = ResponseResult.getInstance();
+        responseResult.setErrcode(ErrorCodeEnum.error.getCode());
+        responseResult.setData("");
+        responseResult.setErrmsg(ErrorCodeEnum.error.name());
         return responseResult;
     }
 
-    public static ResponseResult error(String msg){
-        responseResult=new ResponseResult(ErrorCodeEnum.error.getCode(),"",msg);
+    public static ResponseResult error(String msg) {
+        ResponseResult responseResult = ResponseResult.getInstance();
+        responseResult.setErrcode(ErrorCodeEnum.error.getCode());
+        responseResult.setData("");
+        responseResult.setErrmsg(msg);
         return responseResult;
     }
-    public static ResponseResult error(StringBuffer msg){
-        responseResult=new ResponseResult(ErrorCodeEnum.error.getCode(),"",msg);
+
+    public static ResponseResult error(StringBuffer msg) {
+        ResponseResult responseResult = ResponseResult.getInstance();
+        responseResult.setErrcode(ErrorCodeEnum.error.getCode());
+        responseResult.setData("");
+        responseResult.setErrmsg(msg.toString());
         return responseResult;
     }
 }

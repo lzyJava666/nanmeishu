@@ -10,6 +10,7 @@
     <modules>
         <module>nanmeishu-common</module>
         <module>nanmeishu-user</module>
+        <module>nanmeishu-tale</module>
     </modules>
 
     <build>

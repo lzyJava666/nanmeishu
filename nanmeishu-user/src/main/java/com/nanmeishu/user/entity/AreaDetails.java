@@ -11,7 +11,7 @@ import org.hibernate.validator.constraints.Range;
 import java.io.Serializable;
 @ApiModel("地区详情对象")
 @Data
-@TableName("u_area_details")
+@TableName("uu_area_details")
 public class AreaDetails implements Serializable {
     @ApiModelProperty("地区详情id")
     @TableId(type = IdType.ASSIGN_ID)

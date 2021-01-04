@@ -8,7 +8,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.hibernate.validator.constraints.Range;
 
-@TableName("t_statu")
+@TableName("tt_statu")
 @Data
 @ApiModel("心情对象")
 public class Statu {

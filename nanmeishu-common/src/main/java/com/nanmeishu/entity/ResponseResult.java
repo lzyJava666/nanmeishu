@@ -8,12 +8,28 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel("接口响应类")
 public class ResponseResult {
+    private static volatile ResponseResult responseResult;
+
     @ApiModelProperty("响应代码")
     private int errcode ;
     @ApiModelProperty("响应数据")
     private Object data = "";
     @ApiModelProperty("响应消息")
     private String errmsg = "";
+
+    private ResponseResult(){}
+
+    public static ResponseResult getInstance(){
+        if(responseResult==null){
+            synchronized (ResponseResult.class){
+                if(responseResult==null){
+                    responseResult=new ResponseResult();
+                }
+            }
+        }
+        return responseResult;
+    }
+
 
     public int getErrcode() {
         return errcode;
@@ -37,22 +53,6 @@ public class ResponseResult {
 
     public void setErrmsg(String errmsg) {
         this.errmsg = errmsg;
-    }
-
-    public ResponseResult() {
-
-    }
-
-    public ResponseResult(int errcode, Object data, String errmsg) {
-        this.errcode = errcode;
-        this.data = data;
-        this.errmsg = errmsg;
-    }
-
-    public ResponseResult(int errcode, Object data, StringBuffer errmsg) {
-        this.errcode = errcode;
-        this.data = data;
-        this.errmsg = errmsg.toString();
     }
 
     @Override

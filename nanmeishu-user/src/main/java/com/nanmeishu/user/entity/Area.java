@@ -12,7 +12,7 @@ import org.hibernate.validator.constraints.Range;
 import java.io.Serializable;
 import java.util.List;
 
-@TableName("u_area")
+@TableName("uu_area")
 @Data
 @ApiModel("地区对象")
 public class Area implements Serializable {

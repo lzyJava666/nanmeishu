@@ -14,14 +14,15 @@ import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
 @Data
-@TableName("u_user")
+@TableName("uu_user")
 @ApiModel("用户对象")
 public class User implements Serializable {
     @ApiModelProperty("用户id（修改时必需）")
-    @TableId(type = IdType.ASSIGN_ID,value = "user_id")
+    @TableId(type = IdType.ASSIGN_ID, value = "user_id")
     private Long userId;
-    @Length(min = 11,max = 11)
+    @Length(min = 11, max = 11)
     @ApiModelProperty("手机号（注册时必需）")
     private String phone;
     @ApiModelProperty("用户名（注册时必需）")
@@ -37,7 +38,7 @@ public class User implements Serializable {
     @ApiModelProperty("年龄")
     private Integer age;
     @ApiModelProperty("性别： 0:未知 1：男 2：女")
-    @Range(max = 2,min = 0)
+    @Range(max = 2, min = 0)
     private Integer sex;
     @ApiModelProperty("详细地址")
     private String address;
@@ -46,7 +47,7 @@ public class User implements Serializable {
     @ApiModelProperty("出生日期")
     private LocalDate dateOfBirth;
     @ApiModelProperty("是否已删除 0 ：否 1： 是")
-    @Range(max = 1,min = 0)
+    @Range(max = 1, min = 0)
     private Integer isDelete;
     @ApiModelProperty("最后登陆ip")
     private String ipNumber;
