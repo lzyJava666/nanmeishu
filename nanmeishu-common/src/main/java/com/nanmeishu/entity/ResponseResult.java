@@ -2,10 +2,12 @@ package com.nanmeishu.entity;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 /**
  * 接口响应类
  */
+@Data
 @ApiModel("接口响应类")
 public class ResponseResult {
     private static volatile ResponseResult responseResult;
@@ -28,39 +30,5 @@ public class ResponseResult {
             }
         }
         return responseResult;
-    }
-
-
-    public int getErrcode() {
-        return errcode;
-    }
-
-    public void setErrcode(int errcode) {
-        this.errcode = errcode;
-    }
-
-    public Object getData() {
-        return data;
-    }
-
-    public void setData(Object data) {
-        this.data = data;
-    }
-
-    public String getErrmsg() {
-        return errmsg;
-    }
-
-    public void setErrmsg(String errmsg) {
-        this.errmsg = errmsg;
-    }
-
-    @Override
-    public String toString() {
-        return "ResponseResult{" +
-                "errcode='" + errcode + '\'' +
-                ", data=" + data +
-                ", errmsg='" + errmsg + '\'' +
-                '}';
     }
 }
