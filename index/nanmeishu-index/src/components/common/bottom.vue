@@ -1,10 +1,10 @@
 <template>
   <div id="bottom">
-    <van-tabbar v-model="tabIndex">
+    <van-tabbar v-model="val">
       <van-tabbar-item icon="home-o">记录</van-tabbar-item>
       <van-tabbar-item icon="search">事务</van-tabbar-item>
       <van-tabbar-item icon="friends-o">人生进度条</van-tabbar-item>
-      <van-tabbar-item icon="setting-o">我的</van-tabbar-item>
+      <van-tabbar-item icon="user-o">我的</van-tabbar-item>
     </van-tabbar>
   </div>
 </template>
@@ -14,27 +14,50 @@
     name: "bottom",
     data() {
       return {
-        tabIndex:0
+        val: -1
       }
     },
-    watch:{
-      tabIndex:(newVal,oldVal)=>{
+    props: ["tabIndex"]
+    ,
+    methods: {},
+    watch: {
+      val: function (newVal, oldVal) {
+        if (oldVal == -1) {
+          return;
+        }
+        if (newVal === oldVal) {
+          return;
+        }
         switch (newVal) {
-          case 0:{
+          case 0: {
             this.$router.push({
-              path:`/index`
+              path: `/index`
             })
           }
-          break;
-          case 1:{
-            console.log(this);
+            break;
+          case 1: {
             this.$router.push({
-              path:`/login`
+              path: `/transaction`
             })
           }
-          break;
+            break;
+          case 2: {
+            this.$router.push({
+              path: `/friend`
+            })
+          }
+            break;
+          case 3: {
+            this.$router.push({
+              path: `/user`,
+            })
+          }
+            break;
         }
       }
+    },
+    created() {
+      this.val = this.val == -1 ? this.tabIndex : this.val;
     }
   }
 </script>

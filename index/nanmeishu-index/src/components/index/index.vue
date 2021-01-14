@@ -8,7 +8,7 @@
         <tale></tale>
       </van-tab>
     </van-tabs>
-    <bottom></bottom>
+    <bottom v-bind:tabIndex="0"></bottom>
   </div>
 
 </template>
