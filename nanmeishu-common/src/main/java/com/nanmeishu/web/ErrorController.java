@@ -69,7 +69,6 @@ public class ErrorController {
     @ExceptionHandler(value = {RuntimeException.class})
     public ResponseResult runtimeException(RuntimeException e) {
         errMsg=new StringBuffer()
-                .append("自定义抛出的运行时异常：")
                 .append(e.toString().substring(e.toString().indexOf("Exception") + 10));
         logger.error(errMsg);
         return ResultUtil.error(errMsg);

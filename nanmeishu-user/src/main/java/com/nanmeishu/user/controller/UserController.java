@@ -45,7 +45,8 @@ public class UserController {
     public ResponseResult login(@RequestBody Map<String,Object> map){
         loginVerify(map);
         String username=String.valueOf(map.get("username"));
-        String password= DataUtil.md5Encrypt(String.valueOf(map.get("password")), AllConstant.getPasMd5());
+        String password=String.valueOf(map.get("password"));
+        //String password= DataUtil.md5Encrypt(String.valueOf(map.get("password")), AllConstant.getPasMd5());
         //验证登录是否成功
         User user = userService.getOne(new QueryWrapper<User>().eq("username", username).eq("password", password));
         if(user==null){

@@ -37,7 +37,7 @@
       <van-divider/>
     </div>
     <div id="exit-bottom">
-      <van-button block style="background: #eeeeee;border-radius:5px;margin-bottom: 10px">退出登录</van-button>
+      <van-button block style="background: #eeeeee;border-radius:5px;margin-bottom: 10px" @click="exit()">退出登录</van-button>
       <van-button block style="background: #ffffff;color: #bbbbbb;border-radius:5px;">注销账号</van-button>
     </div>
 
@@ -50,6 +50,11 @@
     methods: {
       onClickLeft() {
         this.$router.push("/user")
+      },
+      // 注销
+      exit(){
+        this.removeCookie("token");
+        this.$router.push("/login")
       }
     }
   }

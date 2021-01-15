@@ -6,7 +6,7 @@
     <div style="margin-top: 40%;display: block">
       <span id="title">验证码登录</span>
       <van-field style="margin-top: 30px;font-size: 17px;"
-                 v-model="value"
+                 v-model="phone"
                  placeholder="请输入手机号"
 
       />
@@ -24,19 +24,40 @@
       </van-field>
     </div>
     <div style="margin:20px 10px 0 10px">
-      <van-button round block native-type="submit" style="background: #f3f5f8;color: #909192">登录</van-button>
+      <van-button round block native-type="submit" style="background: #f3f5f8;color: #909192" @click="login()">登录
+      </van-button>
     </div>
     <div id="clues"><span>没收到验证码，倒计时结束可重新获取</span></div>
   </div>
 </template>
 
 <script>
+  import {loginapi} from "../api/user";
+
   export default {
     name: "phoneLogin",
     data() {
       return {
-        value: '',
+        phone: '',
         sms: ''
+      }
+    },
+    methods: {
+      login() {
+            this.$toast.loading({
+              message: '登录中...',
+            });
+        loginapi({username: this.phone, password: this.sms}).then((res)=>{
+          if(res.data.errcode==200){
+            let token=res.data.data;
+            this.removeCookie("token");
+            this.addCookie("token",token,1000*60*2);
+            this.$toast.success("登录成功");
+            this.$router.push("/index");
+          }else{
+            this.$toast.fail(res.data.errmsg);
+          }
+        });
       }
     }
   }
