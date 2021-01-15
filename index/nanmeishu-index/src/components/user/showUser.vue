@@ -8,7 +8,7 @@
       @click-left="onClickLeft"
       @click-right="onClickRight"
     />
-    <userHead></userHead>
+    <userHead v-bind:user="user"></userHead>
     <van-field
       disabled
       v-model="user.username"
@@ -51,14 +51,13 @@
 
 <script>
   import userHead from "./userHead";
+
   export default {
     name: "showUser",
-    data(){
-      return{
-        user:{
-          phone:"1212",
-          username:"南美鼠"
-        }
+    data() {
+      return {
+        user: JSON.parse(decodeURIComponent(this.$route.query.user)),
+        token: this.getCookie("token")
       }
     },
     methods: {
@@ -69,12 +68,20 @@
       },
       onClickRight() {
         this.$router.push({
-          path: "/updateUser"
+          path: "/updateUser",
+          query:{
+            user:encodeURIComponent(JSON.stringify(this.user))
+          }
         })
       }
     },
-    components:{
+    components: {
       userHead
+    },
+    created() {
+      if (this.token.length == 0) {
+        this.$router.push("/login");
+      }
     }
   }
 </script>

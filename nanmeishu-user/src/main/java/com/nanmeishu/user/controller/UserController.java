@@ -189,4 +189,13 @@ public class UserController {
         return ResultUtil.success(false);
     }
 
+    @ApiOperation("通过token拿到用户信息记录")
+    @TokenVerifyAnnotation
+    @GetMapping("/getUserByToken")
+    public ResponseResult getUserByToken(HttpServletRequest request){
+        String token = request.getHeader("accessToken");
+        String userId = JwtUtil.get(token,"userId");
+        return get(userId);
+    }
+
 }
