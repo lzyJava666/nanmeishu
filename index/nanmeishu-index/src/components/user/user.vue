@@ -40,9 +40,9 @@
           this.$router.push("/login");
         } else {
           this.$router.push({
-            path:"/showUser",
-            query:{
-              user:encodeURIComponent(JSON.stringify(this.user))
+            path: "/showUser",
+            query: {
+              user: encodeURIComponent(JSON.stringify(this.user))
             }
           });
         }
@@ -51,7 +51,12 @@
         if (this.token.length == 0) {
           this.$router.push("/login");
         } else {
-          this.$router.push("/exit")
+          this.$router.push({
+            path: "/exit",
+            query: {
+              user: encodeURIComponent(JSON.stringify(this.user))
+            }
+          });
         }
       }
     },
@@ -67,6 +72,9 @@
         getUserBytokenApi({}, {"accessToken": this.token}).then(res => {
           this.user = res.data.data;
           this.$toast.clear(false);
+        })
+        .catch(res=>{
+          console.log(res);
         });
       }
     }

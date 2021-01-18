@@ -33,7 +33,11 @@ import { DatetimePicker } from 'vant';
 import { Picker } from 'vant';
 import { Popup } from 'vant';
 import { DropdownMenu, DropdownItem } from 'vant';
+import { Dialog } from 'vant';
+import { Uploader } from 'vant';
 
+Vue.use(Uploader);
+Vue.use(Dialog);
 Vue.use(DropdownMenu);
 Vue.use(DropdownItem);
 Vue.use(Popup);

@@ -62,7 +62,12 @@
         if (this.token.length == 0) {
           this.$router.push("/login");
         } else {
-          this.$router.push("/exit");
+          this.$router.push({
+            path: "/exit",
+            query: {
+              user: encodeURIComponent(JSON.stringify(this.user))
+            }
+          });
         }
       }
     },

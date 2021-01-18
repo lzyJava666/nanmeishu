@@ -55,5 +55,8 @@ public class User implements Serializable {
     private Long roleId;
     @ApiModelProperty("头像url")
     private String headPortrait;
-
+    @ApiModelProperty("QQKey")
+    private String qqKey;
+    @ApiModelProperty("微信key")
+    private String wxKey;
 }

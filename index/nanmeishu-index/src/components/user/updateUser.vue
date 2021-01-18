@@ -11,12 +11,14 @@
     <van-row type="flex" justify="center" style="margin-top: 13vh">
       <van-col span="8"></van-col>
       <van-col span="8">
-        <van-image
-          round
-          width="5rem"
-          height="5rem"
-          src="https://img.yzcdn.cn/vant/cat.jpeg"
-        />
+        <van-uploader>
+          <van-image
+            round
+            width="6rem"
+            height="6rem"
+            src="https://img.yzcdn.cn/vant/cat.jpeg"
+          />
+        </van-uploader>
       </van-col>
       <van-col span="8"></van-col>
     </van-row>
@@ -75,13 +77,24 @@
         name="户籍所在地"
         label="户籍所在地"
         readonly
+        @click="showPicker=true"
       />
+      <van-popup v-model="showPicker" round position="bottom">
+        <van-picker ref="area"
+          show-toolbar
+          :columns="areaAndDetails"
+          @cancel="showPicker = false"
+          @confirm="subAge()"
+        />
+      </van-popup>
       <van-divider/>
     </div>
   </div>
 </template>
 
 <script>
+  import {listAreaAndDetails} from '../api/area'
+
   export default {
     name: "updateUser",
     data() {
@@ -89,11 +102,13 @@
         user: JSON.parse(decodeURIComponent(this.$route.query.user)),
         minDate: new Date(2020, 0, 1),
         maxDate: new Date(2025, 10, 1),
-        showdateOfBirth:false,
-        value1:new Date(),
-        showAge:false,
-        ageList:["未知","男","女"]
-
+        showdateOfBirth: false,
+        value1: new Date(),
+        showAge: false,
+        ageList: ["未知", "男", "女"],
+        areaAndDetails: [],
+        //控制户籍选择器开关
+        showPicker: false
       }
     },
     methods: {
@@ -105,23 +120,48 @@
           }
         })
       },
+      //提交用户修改信息
       onClickRight() {
 
       },
-      dateOfBirth(value){
-        this.showdateOfBirth=false;
-        this.user.dateOfBirth=this.parseTime(value,"{y}-{m}-{d}");
+      dateOfBirth(value) {
+        this.showdateOfBirth = false;
+        this.user.dateOfBirth = this.parseTime(value, "{y}-{m}-{d}");
       },
-      closeDateOfBirth(){
-        this.showdateOfBirth=false;
+      closeDateOfBirth() {
+        this.showdateOfBirth = false;
       },
-      ageCancel(){
-        this.showAge=false;
+      ageCancel() {
+        this.showAge = false;
       },
-      ageConfirm(value,index){
-        this.user.age=index==0?"":value;
-        this.showAge=false;
+      ageConfirm(value, index) {
+        this.user.age = index == 0 ? "" : value;
+        this.showAge = false;
+      },
+      subAge(value) {
+        console.log(value);
+        console.log(this.$refs.area);
+        console.log(this.$refs.area.getValues);
+        console.log(this.$refs.area.getIndexes);
+        console.log(this.$refs.area.getColumnValue);
+        console.log(this.$refs.area.getColumnIndex);
+
       }
+    },
+    created() {
+        //  加载户籍所在地选项
+      listAreaAndDetails().then(res => {
+        if (res.data.errcode == 200) {
+          this.areaAndDetails = res.data.data;
+          this.areaAndDetails = JSON.parse(JSON.stringify(this.areaAndDetails)
+            .replace(/name/g, "text"));
+          this.areaAndDetails = JSON.parse(JSON.stringify(this.areaAndDetails)
+            .replace(/areaDetails/g, "children"));
+        }
+      })
+        .catch(err => {
+          console.log(err);
+        })
     }
   }
 </script>

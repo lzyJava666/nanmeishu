@@ -39,6 +39,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if(user.getPhone()!=null){
             User ifUserByPhone = userMapper.selectOne(new QueryWrapper<User>().eq("phone", user.getPhone()));
             if(ifUserByPhone!=null){
+                if(user.getUserId()!=ifUserByPhone.getUserId())
                 throw new RuntimeException("修改的手机号码已存在！");
             }
         }
@@ -46,6 +47,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if(user.getIdentityCard()!=null){
             User ifUserByIdentityCard = userMapper.selectOne(new QueryWrapper<User>().eq("identity_card", user.getIdentityCard()));
             if(ifUserByIdentityCard!=null){
+                if(user.getUserId()!=ifUserByIdentityCard.getUserId())
                 throw new RuntimeException("修改的身份证号已存在！");
             }
         }
