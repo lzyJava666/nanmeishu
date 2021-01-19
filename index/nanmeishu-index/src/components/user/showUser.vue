@@ -35,15 +35,9 @@
     />
     <van-field
       disabled
-      v-model="user.age"
+      v-model="age"
       name="性别"
       label="性别"
-    />
-    <van-field
-      disabled
-      v-model="user.areaDetailsId"
-      name="户籍所在地"
-      label="户籍所在地"
     />
     <van-divider/>
   </div>
@@ -57,7 +51,8 @@
     data() {
       return {
         user: JSON.parse(decodeURIComponent(this.$route.query.user)),
-        token: this.getCookie("token")
+        token: this.getCookie("token"),
+        age:""
       }
     },
     methods: {
@@ -81,6 +76,13 @@
     created() {
       if (this.token.length == 0) {
         this.$router.push("/login");
+      }
+      if(this.user.age==0){
+        this.age="";
+      }else if(this.user.age==1){
+        this.age="男";
+      }else{
+        this.age="女";
       }
     }
   }

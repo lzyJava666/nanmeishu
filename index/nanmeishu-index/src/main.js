@@ -13,6 +13,8 @@ import friend from "./components/friend/friend";
 import Exit from "./components/user/exit"
 import UpdateUser from "./components/user/updateUser";
 import ShowUser from "./components/user/showUser";
+import Caihongpi from "./components/index/caihongpi"
+import WriteDiary from "./components/index/writeDiary"
 
 import {Lazyload} from 'vant';
 import {Swipe, SwipeItem} from 'vant';
@@ -35,7 +37,11 @@ import { Popup } from 'vant';
 import { DropdownMenu, DropdownItem } from 'vant';
 import { Dialog } from 'vant';
 import { Uploader } from 'vant';
+import { Card } from 'vant';
+import { SwipeCell } from 'vant';
 
+Vue.use(SwipeCell);
+Vue.use(Card);
 Vue.use(Uploader);
 Vue.use(Dialog);
 Vue.use(DropdownMenu);
@@ -79,7 +85,9 @@ const router = new VueRouter({
     {path: "/friend", component: friend},
     {path: "/exit", component: Exit},
     {path: "/updateUser", component: UpdateUser},
-    {path: "/showUser", component: ShowUser, meta: {keepAlive: true}}
+    {path: "/showUser", component: ShowUser},
+    {path:"/caihongpi",component:Caihongpi},
+    {path:"/writeDiary",component:WriteDiary}
   ], mode: "history"
 })
 

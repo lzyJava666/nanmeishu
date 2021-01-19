@@ -14,6 +14,7 @@
 </template>
 
 <script>
+
   import Diary from './diary'
   import Tale from './tale'
   import Bottom from "../common/bottom";
@@ -28,6 +29,7 @@
       "diary":Diary,
       "tale":Tale,
       "bottom":Bottom
+
     }
   }
 </script>

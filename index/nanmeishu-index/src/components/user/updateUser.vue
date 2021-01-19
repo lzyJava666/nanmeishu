@@ -57,7 +57,7 @@
         label="详细地址"
       />
       <van-field
-        v-model="user.age"
+        v-model="age"
         name="性别"
         label="性别"
         readonly
@@ -72,43 +72,30 @@
           @cancel="ageCancel"
         />
       </van-popup>
-      <van-field
-        v-model="user.areaDetailsId"
-        name="户籍所在地"
-        label="户籍所在地"
-        readonly
-        @click="showPicker=true"
-      />
-      <van-popup v-model="showPicker" round position="bottom">
-        <van-picker ref="area"
-          show-toolbar
-          :columns="areaAndDetails"
-          @cancel="showPicker = false"
-          @confirm="subAge()"
-        />
-      </van-popup>
       <van-divider/>
     </div>
   </div>
 </template>
 
 <script>
-  import {listAreaAndDetails} from '../api/area'
+  import {updateUser} from '../api/user'
 
   export default {
     name: "updateUser",
     data() {
       return {
         user: JSON.parse(decodeURIComponent(this.$route.query.user)),
-        minDate: new Date(2020, 0, 1),
-        maxDate: new Date(2025, 10, 1),
+        minDate: new Date(1900, 0, 1),
+        maxDate: new Date(),
         showdateOfBirth: false,
         value1: new Date(),
         showAge: false,
         ageList: ["未知", "男", "女"],
         areaAndDetails: [],
-        //控制户籍选择器开关
-        showPicker: false
+        token: this.getCookie("token"),
+        age:"",
+        //记录user变化前的值
+        byUser:JSON.parse(decodeURIComponent(this.$route.query.user))
       }
     },
     methods: {
@@ -122,7 +109,21 @@
       },
       //提交用户修改信息
       onClickRight() {
-
+        let headers = {"accessToken": this.token};
+        updateUser(this.user,headers)
+          .then(res => {
+            if (res.data.errcode == 200) {
+                this.$toast.success("用户信息已更新");
+                this.byUser=this.user;
+            }else {
+              //出错提示，且数据回退
+              this.$toast.fail(res.data.errmsg);
+              this.user=this.byUser;
+            }
+          })
+        .catch(err=>{
+          console.log(err);
+        })
       },
       dateOfBirth(value) {
         this.showdateOfBirth = false;
@@ -135,33 +136,22 @@
         this.showAge = false;
       },
       ageConfirm(value, index) {
-        this.user.age = index == 0 ? "" : value;
+        this.user.age = index;
+        this.age=index==0?"":value;
         this.showAge = false;
       },
-      subAge(value) {
-        console.log(value);
-        console.log(this.$refs.area);
-        console.log(this.$refs.area.getValues);
-        console.log(this.$refs.area.getIndexes);
-        console.log(this.$refs.area.getColumnValue);
-        console.log(this.$refs.area.getColumnIndex);
 
-      }
     },
     created() {
-        //  加载户籍所在地选项
-      listAreaAndDetails().then(res => {
-        if (res.data.errcode == 200) {
-          this.areaAndDetails = res.data.data;
-          this.areaAndDetails = JSON.parse(JSON.stringify(this.areaAndDetails)
-            .replace(/name/g, "text"));
-          this.areaAndDetails = JSON.parse(JSON.stringify(this.areaAndDetails)
-            .replace(/areaDetails/g, "children"));
-        }
-      })
-        .catch(err => {
-          console.log(err);
-        })
+      if(this.user.age==0){
+        this.age="";
+      }else if(this.user.age==1){
+        this.age="男";
+      }else{
+        this.age="女";
+      }
+    },
+    watch:{
     }
   }
 </script>

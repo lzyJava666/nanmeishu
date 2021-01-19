@@ -24,4 +24,7 @@ public class Statu {
     @Range(max = 1,min = 0)
     @ApiModelProperty("是否启用 0 是 1 否")
     private Integer isDelete;
+    @Range(max = 99,min = 0)
+    @ApiModelProperty("排序 数值越大排前面")
+    private Integer sort;
 }
