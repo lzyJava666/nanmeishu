@@ -1,10 +1,20 @@
-import {Get,GetAndHeaders,url} from "./api";
+import {Get,GetAndHeaders,url,PostAndHeaders} from "./api";
 
 const urlList={
-  caihongpi:url+"/tale/getCaiHongPi"
+  caihongpi:url+"/tale/getCaiHongPi",
+  listStatu:url+"/statu/listStatu",
+  saveTaleAndDetails:url+"/tale/saveTaleAndDetails"
 };
 
 
 export function getCaihongPi() {
   return Get(urlList.caihongpi,{})
+}
+
+export function listStatu() {
+  return Get(urlList.listStatu,{})
+}
+
+export function saveTaleAndDetails(data,headers) {
+  return PostAndHeaders(urlList.saveTaleAndDetails,data,headers)
 }

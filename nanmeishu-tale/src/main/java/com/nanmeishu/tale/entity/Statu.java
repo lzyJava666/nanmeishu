@@ -18,7 +18,7 @@ public class Statu {
     @ApiModelProperty("心情名")
     private String name;
     @ApiModelProperty("心情描述")
-    private String describe;
+    private String statuDescribe;
     @ApiModelProperty("url")
     private String statuUrl;
     @Range(max = 1,min = 0)

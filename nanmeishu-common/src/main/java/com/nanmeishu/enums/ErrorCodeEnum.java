@@ -5,7 +5,8 @@ package com.nanmeishu.enums;
  */
 public enum ErrorCodeEnum {
     seccess(200),
-    error(0);
+    error(0),
+    NoToken(222);
     private int code;
 
    private ErrorCodeEnum(int code) {

@@ -15,6 +15,7 @@ import UpdateUser from "./components/user/updateUser";
 import ShowUser from "./components/user/showUser";
 import Caihongpi from "./components/index/caihongpi"
 import WriteDiary from "./components/index/writeDiary"
+import StatuList from "./components/index/statuList";
 
 import {Lazyload} from 'vant';
 import {Swipe, SwipeItem} from 'vant';
@@ -39,7 +40,10 @@ import { Dialog } from 'vant';
 import { Uploader } from 'vant';
 import { Card } from 'vant';
 import { SwipeCell } from 'vant';
+import { Grid, GridItem } from 'vant';
 
+Vue.use(Grid);
+Vue.use(GridItem);
 Vue.use(SwipeCell);
 Vue.use(Card);
 Vue.use(Uploader);
@@ -73,9 +77,12 @@ Vue.use(SwipeItem);
 Vue.use(Lazyload);
 
 Vue.config.productionTip = false
+
 Toast.setDefaultOptions("loading",{duration:0});
 
-const router = new VueRouter({
+export const toast=new Toast();
+
+export const router = new VueRouter({
   routes: [
     {path: "/index", component: index},
     {path: "/login", component: login, meta: {keepAlive: true}},
@@ -87,7 +94,8 @@ const router = new VueRouter({
     {path: "/updateUser", component: UpdateUser},
     {path: "/showUser", component: ShowUser},
     {path:"/caihongpi",component:Caihongpi},
-    {path:"/writeDiary",component:WriteDiary}
+    {path:"/writeDiary",component:WriteDiary},
+    {path:"/statuList",component:StatuList, meta: {keepAlive: true}}
   ], mode: "history"
 })
 

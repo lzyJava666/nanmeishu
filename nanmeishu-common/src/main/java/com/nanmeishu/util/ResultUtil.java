@@ -33,6 +33,14 @@ public class ResultUtil {
         return responseResult;
     }
 
+    public static ResponseResult NoToken() {
+        ResponseResult responseResult = ResponseResult.getInstance();
+        responseResult.setErrcode(ErrorCodeEnum.NoToken.getCode());
+        responseResult.setData("");
+        responseResult.setErrmsg(ErrorCodeEnum.NoToken.name());
+        return responseResult;
+    }
+
     public static ResponseResult error(String msg) {
         ResponseResult responseResult = ResponseResult.getInstance();
         responseResult.setErrcode(ErrorCodeEnum.error.getCode());

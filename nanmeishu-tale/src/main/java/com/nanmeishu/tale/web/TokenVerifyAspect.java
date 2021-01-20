@@ -23,10 +23,10 @@ public class TokenVerifyAspect {
         HttpServletRequest req = attributes.getRequest();
         String token = req.getHeader("accessToken");
         if(null==token){
-            throw new RuntimeException("token不存在");
+            throw new RuntimeException("noToken");
         }else{
             if(!isToken(token)){
-                throw new RuntimeException("您的token不正确或者已失效");
+                throw new RuntimeException("noToken");
             }
         }
     }

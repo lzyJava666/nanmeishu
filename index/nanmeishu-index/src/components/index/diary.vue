@@ -18,6 +18,7 @@
           <van-image width="80" height="80" :src="caihongpiImg"/>
         </template>
       </van-card>
+
     </van-swipe-cell>
     <div id="writeIcon" @click="toWriteDiary()">
       <van-icon name="edit" size="30" id="iconW"/>
@@ -82,7 +83,7 @@
 <style scoped>
   .goods-card {
     margin: 0;
-    background-color: #fdf9e8;
+    background-image: url("https://files.catbox.moe/mt30es.png");
     height: 15vh;
   }
 

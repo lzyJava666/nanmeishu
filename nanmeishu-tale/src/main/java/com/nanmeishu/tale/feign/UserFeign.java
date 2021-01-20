@@ -5,6 +5,8 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
+
 @FeignClient(value = "nanmeishu-user")
 public interface UserFeign {
 
@@ -13,5 +15,8 @@ public interface UserFeign {
 
     @GetMapping("/user/verifyToken")
     public ResponseResult verifyToken(@RequestParam("token") String token);
+
+    @GetMapping("/user/getUserByToken")
+    public ResponseResult getUserByToken(HttpServletRequest request);
 
 }

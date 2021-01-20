@@ -50,7 +50,9 @@ public class UserController {
         String password = String.valueOf(map.get("password"));
         //String password= DataUtil.md5Encrypt(String.valueOf(map.get("password")), AllConstant.getPasMd5());
         //验证登录是否成功
-        User user = userService.getOne(new QueryWrapper<User>().eq("username", username).eq("password", password));
+        User user = userService.getOne(new QueryWrapper<User>()
+                .eq("username", username)
+                .eq("password", password));
         if (user == null) {
             throw new RuntimeException("用户名或者密码出错！");
         }
@@ -203,6 +205,9 @@ public class UserController {
     @ApiOperation("通过token拿到用户信息记录")
     @TokenVerifyAnnotation
     @GetMapping("/getUserByToken")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "用户对象", response = User.class)
+    })
     public ResponseResult getUserByToken(HttpServletRequest request) {
         String token = request.getHeader("accessToken");
         String userId = JwtUtil.get(token, "userId");
