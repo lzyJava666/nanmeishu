@@ -9,6 +9,7 @@ import com.nanmeishu.tale.service.TaleService;
 import com.nanmeishu.util.DataUtil;
 import com.nanmeishu.util.JwtUtil;
 import com.nanmeishu.util.ResultUtil;
+import com.nanmeishu.web.TokenVerifyAnnotation;
 import io.swagger.annotations.*;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -90,6 +91,15 @@ public class TaleController {
     public ResponseResult listByUserId(@RequestParam("userId") String userId) {
         DataUtil.verifyData(userId, "用户id/userId");
         return ResultUtil.success(taleService.listByUserId(userId));
+    }
+
+    @TokenVerifyAnnotation
+    @ApiOperation("获取用户故事列表通过token")
+    @GetMapping("/listByToken")
+    public ResponseResult listByToken(HttpServletRequest req){
+        String token = req.getHeader("accessToken");
+        String userId = JwtUtil.get(token, "userId");
+        return listByUserId(userId);
     }
 
     @ApiOperation("获取彩虹屁")

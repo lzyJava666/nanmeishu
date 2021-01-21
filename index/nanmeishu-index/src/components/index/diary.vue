@@ -7,17 +7,35 @@
         @click="toCaihongpi()"
       >
         <template #title>
-          <div id="title"></div>
+          <div class="title"></div>
         </template>
         <template #desc>
-          <span id="titleDesc">放放彩虹屁</span>
+          <span class="titleDesc">放放彩虹屁</span>
           <br/>
-          <span id="desc">{{caihongpi}}</span>
+          <span class="desc">{{caihongpi}}</span>
         </template>
         <template #thumb>
           <van-image width="80" height="80" :src="caihongpiImg"/>
         </template>
       </van-card>
+      <div v-for="(tale,index) in tales" :key=tale.taleId>
+        <van-card
+          class="goods-card-content outSphere"
+          @click="toCaihongpi()"
+        >
+          <template #title>
+            <div class="title"></div>
+          </template>
+          <template #desc>
+            <span class="titleDesc">{{tale.taleDetails.taleTitle}}</span>
+            <br/>
+            <span class="desc">{{tale.taleDetails.titleHead}}</span>
+          </template>
+          <template #thumb>
+            <span style="display: block;margin-top: 0.3vh;font-size: 25px">一月<br>21号</span>
+          </template>
+        </van-card>
+      </div>
 
     </van-swipe-cell>
     <div id="writeIcon" @click="toWriteDiary()">
@@ -28,7 +46,7 @@
 
 <script>
   import StatuList from "./statuList";
-  import {getCaihongPi} from "../api/tale";
+  import {getCaihongPi, listByToken} from "../api/tale";
 
   export default {
     name: "diary",
@@ -40,9 +58,13 @@
         //彩虹屁url
         caihongpiImg: "",
         //彩虹屁文字
-        caihongpi: ""
+        caihongpi: "",
+        //当前用户的故事列表
+        tales: [],
+        token: this.getCookie("token")
       }
-    }, methods: {
+    },
+    methods: {
       //跳转到彩虹屁页面
       toCaihongpi() {
         this.$router.push({
@@ -54,9 +76,9 @@
         })
       },
       //写日记
-      toWriteDiary(){
+      toWriteDiary() {
         this.$router.push({
-          path:"/writeDiary"
+          path: "/writeDiary"
         })
       }
     },
@@ -75,6 +97,12 @@
         })
         .catch(err => {
           console.log(err);
+        });
+
+      listByToken({"accessToken": this.token})
+        .then(res => {
+          console.log(res);
+          this.tales = res.data.data;
         })
     }
   }
@@ -84,24 +112,30 @@
   .goods-card {
     margin: 0;
     background-image: url("https://files.catbox.moe/mt30es.png");
-    height: 15vh;
+    height: 13.5vh;
+  }
+  .goods-card-content{
+    margin: 0;
+    border:1px solid #dfdfdf ;
+    background: #ffffff;
+    height: 13vh;
   }
 
   .delete-button {
     height: 100%;
   }
 
-  #title {
+  .title {
     width: 100%;
     height: 1.7vh;
   }
 
-  #titleDesc {
+  .titleDesc {
     font-size: 14px;
     color: #666666;
   }
 
-  #desc {
+  .desc {
     font-size: 13px;
     color: #b6b2b6;
     margin-top: 7px;
@@ -112,7 +146,8 @@
     margin: 1.5vh;
     border-radius: 5px;
   }
-  #writeIcon{
+
+  #writeIcon {
     position: fixed;
     right: 8vw;
     bottom: 15vh;
@@ -121,7 +156,8 @@
     border-radius: 50px;
     background: #fdf9e8;
   }
-  #iconW{
+
+  #iconW {
     margin: 9px;
   }
 </style>

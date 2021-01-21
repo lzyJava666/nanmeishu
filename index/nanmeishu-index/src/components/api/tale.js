@@ -3,7 +3,8 @@ import {Get,GetAndHeaders,url,PostAndHeaders} from "./api";
 const urlList={
   caihongpi:url+"/tale/getCaiHongPi",
   listStatu:url+"/statu/listStatu",
-  saveTaleAndDetails:url+"/tale/saveTaleAndDetails"
+  saveTaleAndDetails:url+"/tale/saveTaleAndDetails",
+  listByToken:url+"/tale/listByToken"
 };
 
 
@@ -18,3 +19,8 @@ export function listStatu() {
 export function saveTaleAndDetails(data,headers) {
   return PostAndHeaders(urlList.saveTaleAndDetails,data,headers)
 }
+
+export function listByToken(headers) {
+  return GetAndHeaders(urlList.listByToken,{},headers)
+}
+
