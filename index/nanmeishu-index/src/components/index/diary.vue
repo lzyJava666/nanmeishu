@@ -21,7 +21,7 @@
       <div v-for="(tale,index) in tales" :key=tale.taleId>
         <van-card
           class="goods-card-content outSphere"
-          @click="toCaihongpi()"
+          @click="toTale(tale.taleId)"
         >
           <template #title>
             <div class="title"></div>
@@ -29,14 +29,25 @@
           <template #desc>
             <span class="titleDesc">{{tale.taleDetails.taleTitle}}</span>
             <br/>
-            <span class="desc">{{tale.taleDetails.titleHead}}</span>
+            <span class="desc" style="position: relative">{{(tale.taleDetails.content).length>10?(tale.taleDetails.content).substring(0,10)+'......':(tale.taleDetails.content)}}
+              <van-image style="position: absolute;right: 0;" round width="25" height="25"
+                         :src="getStatu(tale.objectt)"></van-image>
+            </span>
           </template>
           <template #thumb>
-            <span style="display: block;margin-top: 0.3vh;font-size: 25px">一月<br>21号</span>
+            <span style="display: block;margin-top: 0.3vh;font-size: 25px">{{dataToYear(tale.createTime)}}<br>{{dataToDay(tale.createTime)}}号</span>
           </template>
         </van-card>
       </div>
-
+      <van-pagination
+        id="pageStyle"
+        v-model="currentPage"
+        :total-items="total"
+        :show-page-size="3"
+        :items-per-page="4"
+        force-ellipses
+        @change="changePage"
+      />
     </van-swipe-cell>
     <div id="writeIcon" @click="toWriteDiary()">
       <van-icon name="edit" size="30" id="iconW"/>
@@ -46,7 +57,7 @@
 
 <script>
   import StatuList from "./statuList";
-  import {getCaihongPi, listByToken} from "../api/tale";
+  import {getCaihongPi, listByToken, listStatu} from "../api/tale";
 
   export default {
     name: "diary",
@@ -61,7 +72,13 @@
         caihongpi: "",
         //当前用户的故事列表
         tales: [],
-        token: this.getCookie("token")
+        token: this.getCookie("token"),
+        months: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+        //当前页码
+        currentPage: 1,
+        total: 0,
+        //心情集合类
+        status: []
       }
     },
     methods: {
@@ -80,6 +97,37 @@
         this.$router.push({
           path: "/writeDiary"
         })
+      },
+      //当前时间转月份
+      dataToYear(data) {
+        let m = Number(this.parseTime(data, "{m}"));
+        return this.months[m - 1];
+      },
+      //当前时间转具体哪天
+      dataToDay(data) {
+        let m = Number(this.parseTime(data, "{d}"));
+        return m;
+      },
+      //进入故事详情
+      toTale(id) {
+      },
+      //切换页码
+      changePage(value) {
+        listByToken({pageNum: value, pageSize: 4}, {"accessToken": this.token})
+          .then(res => {
+            this.tales = res.data.data.tales;
+            this.total = res.data.data.total;
+          })
+      },
+      getStatu(id) {
+        let statu1="";
+        this.status.map(statu => {
+          if (id == statu.statuId) {
+            statu1= statu.statuUrl;
+            return;
+          }
+        })
+        return statu1;
       }
     },
     created() {
@@ -99,10 +147,14 @@
           console.log(err);
         });
 
-      listByToken({"accessToken": this.token})
+      listByToken({pageNum: 1, pageSize: 4}, {"accessToken": this.token})
         .then(res => {
-          console.log(res);
-          this.tales = res.data.data;
+          this.tales = res.data.data.tales;
+          this.total = res.data.data.total;
+          listStatu()
+            .then(res => {
+              this.status = res.data.data;
+            })
         })
     }
   }
@@ -114,9 +166,10 @@
     background-image: url("https://files.catbox.moe/mt30es.png");
     height: 13.5vh;
   }
-  .goods-card-content{
+
+  .goods-card-content {
     margin: 0;
-    border:1px solid #dfdfdf ;
+    border: 1px solid #dfdfdf;
     background: #ffffff;
     height: 13vh;
   }
@@ -140,6 +193,7 @@
     color: #b6b2b6;
     margin-top: 7px;
     display: block;
+    text-overflow: ellipsis;
   }
 
   .outSphere {
@@ -159,5 +213,9 @@
 
   #iconW {
     margin: 9px;
+  }
+
+  #pageStyle {
+    margin-top: 3vh;
   }
 </style>

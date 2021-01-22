@@ -3,6 +3,7 @@ package com.nanmeishu.tale.service;
 import com.nanmeishu.tale.entity.Tale;
 
 import java.util.List;
+import java.util.Map;
 
 public interface TaleService {
     /**
@@ -16,5 +17,5 @@ public interface TaleService {
      * @param userId
      * @return
      */
-    List<Tale> listByUserId(String userId);
+    Map<String,Object> listByUserId(String userId,String pageNum,String pageSize);
 }

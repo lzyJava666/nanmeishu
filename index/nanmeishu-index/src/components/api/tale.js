@@ -20,7 +20,7 @@ export function saveTaleAndDetails(data,headers) {
   return PostAndHeaders(urlList.saveTaleAndDetails,data,headers)
 }
 
-export function listByToken(headers) {
-  return GetAndHeaders(urlList.listByToken,{},headers)
+export function listByToken(params,headers) {
+  return GetAndHeaders(urlList.listByToken,params,headers)
 }
 

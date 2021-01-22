@@ -65,7 +65,7 @@
       //新增日记
       onClickRight() {
         let date = new Date();
-        this.tale.createTime = date;
+        // this.tale.createTime = date;
         this.tale.frontDate = date;
         this.tale.endDate = date;
         this.tale.type = 0;

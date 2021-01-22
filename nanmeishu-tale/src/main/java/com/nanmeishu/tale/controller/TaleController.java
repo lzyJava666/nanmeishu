@@ -30,7 +30,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Api(tags = "故事模块接口")
@@ -86,20 +88,24 @@ public class TaleController {
     @GetMapping("/listByUserId")
     @ApiImplicitParam(name = "userId", value = "用户id", required = true)
     @ApiResponses({
-            @ApiResponse(code = 200, message = "故事对象", response = Tale.class)
+            @ApiResponse(code = 200, message = "tales:故事对象", response = Tale.class)
     })
-    public ResponseResult listByUserId(@RequestParam("userId") String userId) {
+    public ResponseResult listByUserId(@RequestParam("userId") String userId,
+                                       @RequestParam("pageNum") String pageNum,
+                                       @RequestParam("pageSize") String pageSize) {
         DataUtil.verifyData(userId, "用户id/userId");
-        return ResultUtil.success(taleService.listByUserId(userId));
+        return ResultUtil.success(taleService.listByUserId(userId,pageNum,pageSize));
     }
 
     @TokenVerifyAnnotation
     @ApiOperation("获取用户故事列表通过token")
     @GetMapping("/listByToken")
-    public ResponseResult listByToken(HttpServletRequest req){
+    public ResponseResult listByToken(HttpServletRequest req,
+                                      @RequestParam("pageNum") String pageNum,
+                                      @RequestParam("pageSize") String pageSize) {
         String token = req.getHeader("accessToken");
         String userId = JwtUtil.get(token, "userId");
-        return listByUserId(userId);
+        return listByUserId(userId,pageNum,pageSize);
     }
 
     @ApiOperation("获取彩虹屁")

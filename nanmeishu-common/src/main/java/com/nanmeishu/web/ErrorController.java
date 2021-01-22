@@ -70,7 +70,7 @@ public class ErrorController {
     public ResponseResult runtimeException(RuntimeException e) {
         errMsg=new StringBuffer()
                 .append(e.toString().substring(e.toString().indexOf("Exception") + 10));
-        if(e.toString().indexOf("token")>-1){
+        if(e.toString().toLowerCase().indexOf("token")>-1){
             logger.error(errMsg);
             return ResultUtil.NoToken();
         }
