@@ -40,8 +40,8 @@ public class TaleServiceImpl implements TaleService {
     }
 
     @Override
-    public Map<String,Object> listByUserId(String userId,String pageNum,String pageSize) {
-        Map<String,Object> map=new HashMap<>();
+    public Map<String, Object> listByUserId(String userId, String pageNum, String pageSize) {
+        Map<String, Object> map = new HashMap<>();
         IPage<Tale> page = new Page<>(Integer.parseInt(pageNum), Integer.parseInt(pageSize));
         IPage<Tale> taleIPage = taleMapper.selectPage(page, new QueryWrapper<Tale>()
                 .eq("user_id", userId)
@@ -51,8 +51,25 @@ public class TaleServiceImpl implements TaleService {
         for (Tale tale : taleList) {
             tale.setTaleDetails(taleDetailsMapper.selectOne(new QueryWrapper<TaleDetails>().eq("tale_id", tale.getTaleId())));
         }
-        map.put("tales",taleList);
-        map.put("total",taleIPage.getTotal());
+        map.put("tales", taleList);
+        map.put("total", taleIPage.getTotal());
         return map;
+    }
+
+    @Transactional
+    @Override
+    public void updateTaleAndDetails(Tale tale) {
+        int i = taleMapper.updateById(tale);
+        if (i <= 0) {
+            throw new RuntimeException("更新出错");
+        }
+        TaleDetails taleDetails = tale.getTaleDetails();
+        if (taleDetails == null || taleDetails.getTaleDetailsId() == null) {
+            return;
+        }
+        int i1 = taleDetailsMapper.updateById(taleDetails);
+        if(i1<=0){
+            throw new RuntimeException("更新出错");
+        }
     }
 }

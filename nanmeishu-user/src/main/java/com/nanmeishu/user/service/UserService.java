@@ -24,4 +24,9 @@ public interface UserService extends IService<User> {
      * @param reqMap
      */
     void updatePas(String userId, Map<String, Object> reqMap);
+
+    /**
+     * 返回用户人生进度条
+     */
+    Map<String, Object> getUserProgressBars(String userId);
 }

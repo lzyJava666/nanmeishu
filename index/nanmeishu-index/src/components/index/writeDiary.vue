@@ -28,7 +28,7 @@
       <van-icon name="arrow-up" size="30" style="text-shadow:#000 1px 1px 2px" v-show="actitySid==false"/>
       <van-image round :src="statuImg" style="height:30px;width: 30px;margin-bottom: 10px;" v-show="actitySid"/>
     </div>
-    <!--    弹出框-->
+    <!-- 弹出框-->
     <van-popup v-model="show" round closeable
                :overlay="false" position="bottom" style="height:70%;border-top: 1px solid #000 ">
       <van-grid :border="false" :column-num="3" id="statuContent">
@@ -40,7 +40,7 @@
 
 <script>
   import statuList from "./statuList";
-  import {saveTaleAndDetails} from "../api/tale";
+  import {saveTaleAndDetails,updateTaleAndDetails} from "../api/tale";
 
   export default {
     name: "writeDiary",
@@ -55,7 +55,8 @@
         //控制文本域行数
         rows: 2,
         tale: {},
-        token: this.getCookie("token")
+        token: this.getCookie("token"),
+        readTale:this.$route.query.readTale
       }
     },
     methods: {
@@ -64,24 +65,34 @@
       },
       //新增日记
       onClickRight() {
-        let date = new Date();
-        // this.tale.createTime = date;
-        this.tale.frontDate = date;
-        this.tale.endDate = date;
-        this.tale.type = 0;
         this.tale.objectt = this.statuId;
         this.tale.taleDetails = {
           content: this.content,
           taleTitle: this.taleTitle
         };
-        saveTaleAndDetails(this.tale, {"accessToken": this.token})
-          .then(res => {
-            this.$toast({closeOnClick: true, message: "保存成功", type: "success"});
-            setTimeout(()=> {
-              this.$router.push("/index")
-            }, 700);
+        if(this.readTale==null){
+          //新增
+          let date = new Date();
+          this.tale.frontDate = date;
+          this.tale.endDate = date;
+          this.tale.type = 0;
+          saveTaleAndDetails(this.tale, {"accessToken": this.token})
+            .then(res => {
+              this.$toast({closeOnClick: true, message: "保存成功", type: "success"});
+              setTimeout(()=> {
+                this.$router.push("/index")
+              }, 700);
+            })
+        }else{
+          //修改
+          this.tale.taleId=this.readTale.taleId;
+          this.tale.taleDetails.taleDetailsId=this.readTale.taleDetails.taleDetailsId;
+          updateTaleAndDetails(this.tale,{"accessToken":this.token})
+            .then(res=>{
+              this.$toast.success("保存成功");
+            })
+        }
 
-          })
       },
       statuListBy(data) {
         this.show = false;
@@ -107,6 +118,17 @@
       }
     },
     created() {
+      if(this.readTale==null){
+        return;
+      }else{
+        console.log(this.readTale);
+        this.taleTitle=this.readTale.taleDetails.taleTitle;
+        this.content=this.readTale.taleDetails.content;
+        this.actitySid=true;
+        this.statuImg=this.readTale.statuImg;
+        this.show=false;
+        this.statuId=this.readTale.objectt;
+      }
     },
     components: {
       statuList

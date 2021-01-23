@@ -42,7 +42,9 @@ import { Card } from 'vant';
 import { SwipeCell } from 'vant';
 import { Grid, GridItem } from 'vant';
 import { Pagination } from 'vant';
+import { Progress } from 'vant';
 
+Vue.use(Progress);
 Vue.use(Pagination);
 Vue.use(Grid);
 Vue.use(GridItem);

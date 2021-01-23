@@ -20,8 +20,6 @@ import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
-import sun.net.www.http.HttpClient;
-
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -30,9 +28,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Api(tags = "故事模块接口")
@@ -96,6 +92,21 @@ public class TaleController {
         DataUtil.verifyData(userId, "用户id/userId");
         return ResultUtil.success(taleService.listByUserId(userId,pageNum,pageSize));
     }
+
+    @ApiOperation("更新故事信息")
+    @TokenVerifyAnnotation
+    @PostMapping("/updateTaleAndDetails")
+    public ResponseResult updateTaleAndDetails(@RequestBody Tale tale){
+        updateTaleAndDetailsVerifyData(tale);
+        taleService.updateTaleAndDetails(tale);
+        return ResultUtil.success();
+    }
+
+    // 更新故事信息--数据有效性验证
+    private void updateTaleAndDetailsVerifyData(Tale tale) {
+        DataUtil.verifyData(tale.getTaleId(),"故事ID/taleId");
+    }
+
 
     @TokenVerifyAnnotation
     @ApiOperation("获取用户故事列表通过token")

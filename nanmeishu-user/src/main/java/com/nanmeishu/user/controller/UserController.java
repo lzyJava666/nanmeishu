@@ -19,6 +19,7 @@ import redis.clients.jedis.Jedis;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Map;
 
 @Api(tags = "用户接口")
@@ -212,6 +213,17 @@ public class UserController {
         String token = request.getHeader("accessToken");
         String userId = JwtUtil.get(token, "userId");
         return get(userId);
+    }
+
+    @ApiOperation("返回用户人生进度条数据")
+    @TokenVerifyAnnotation
+    @GetMapping("/getUserProgressBars")
+    public ResponseResult getUserProgressBars(HttpServletRequest request){
+        Map<String,Object> resMap;
+        String token = request.getHeader("accessToken");
+        String userId = JwtUtil.get(token, "userId");
+        resMap= userService.getUserProgressBars(userId);
+        return ResultUtil.success(resMap);
     }
 
 }

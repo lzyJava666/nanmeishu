@@ -18,4 +18,10 @@ public interface TaleService {
      * @return
      */
     Map<String,Object> listByUserId(String userId,String pageNum,String pageSize);
+
+    /**
+     * 更新故事及其明细
+     * @param tale
+     */
+    void updateTaleAndDetails(Tale tale);
 }

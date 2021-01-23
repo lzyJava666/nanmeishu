@@ -21,7 +21,7 @@
       <div v-for="(tale,index) in tales" :key=tale.taleId>
         <van-card
           class="goods-card-content outSphere"
-          @click="toTale(tale.taleId)"
+          @click="toTale(tale)"
         >
           <template #title>
             <div class="title"></div>
@@ -109,7 +109,15 @@
         return m;
       },
       //进入故事详情
-      toTale(id) {
+      toTale(myTale) {
+        let statuMap= this.getStatu(myTale.objectt);
+        myTale.statuImg=statuMap;
+        this.$router.push({
+          path:"/writeDiary",
+          query:{
+            readTale:myTale
+          }
+        })
       },
       //切换页码
       changePage(value) {
