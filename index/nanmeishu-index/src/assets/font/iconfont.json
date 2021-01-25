@@ -6,6 +6,27 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "1203552",
+      "name": "日历",
+      "font_class": "linedesign-18",
+      "unicode": "e672",
+      "unicode_decimal": 58994
+    },
+    {
+      "icon_id": "9297193",
+      "name": "饭",
+      "font_class": "fan",
+      "unicode": "e61a",
+      "unicode_decimal": 58906
+    },
+    {
+      "icon_id": "15123995",
+      "name": "夜晚",
+      "font_class": "yewan",
+      "unicode": "e634",
+      "unicode_decimal": 58932
+    },
+    {
       "icon_id": "2742663",
       "name": "手机",
       "font_class": "shouji1",

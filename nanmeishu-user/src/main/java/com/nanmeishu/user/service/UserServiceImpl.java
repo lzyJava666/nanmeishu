@@ -103,28 +103,31 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public Map<String, Object> getUserProgressBars(String userId) {
         Map<String, Object> resMap = new HashMap<>();
         User user = userMapper.selectById(userId);
-        LocalDateTime createTime = user.getCreateTime();
+        LocalDate createTime = user.getDateOfBirth();
         LocalDateTime currentLocal = LocalDateTime.now();
+        if(createTime==null){
+            throw new RuntimeException("请完善出生日期");
+        }
         //人生过去的几年
         int gobyYear = currentLocal.toLocalDate().getYear() - createTime.getYear();
         resMap.put("gobyYear", gobyYear);
         //吃过几顿饭
         resMap.put("meal", gobyYear * 366 * 3);
-        long until = createTime.toLocalDate().until(currentLocal.toLocalDate(), ChronoUnit.DAYS);
+        long until = createTime.until(currentLocal.toLocalDate(), ChronoUnit.DAYS);
         //度过几个夜晚
         resMap.put("day", until);
         //经过几个周末
-        resMap.put("weekend ", until / 7);
+        resMap.put("weekend", Integer.parseInt(String.valueOf(until / 7)));
         //今天已过去几小时
-        resMap.put("currentHour", currentLocal.getMinute() > 31 ? currentLocal.getHour() + 1 : currentLocal.getHour());
+        resMap.put("currentHour", Integer.parseInt(String.valueOf(currentLocal.getMinute() > 31 ? currentLocal.getHour() + 1 : currentLocal.getHour())));
         //本周已经过去几天
         //本周一
         LocalDate with = currentLocal.toLocalDate().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
-        resMap.put("currentWeek", currentLocal.getHour() > 13 ? currentLocal.getDayOfWeek().getValue() : currentLocal.getDayOfWeek().getValue() - 1);
+        resMap.put("currentWeek",  currentLocal.getDayOfWeek().getValue() );
         //本月过去几天
-        resMap.put("currentMonth", currentLocal.getHour() > 13 ? currentLocal.getDayOfMonth() + 1 : currentLocal.getDayOfMonth());
+        resMap.put("currentMonth",  currentLocal.getDayOfMonth());
         //今天已过去几天
-        resMap.put("currentYear", currentLocal.getHour() > 13 ? currentLocal.getDayOfYear() + 1 : currentLocal.getDayOfYear());
+        resMap.put("currentYear",  currentLocal.getDayOfYear());
         //获取今日份鸡汤
         String[] sentence = getSentence();
         resMap.put("sentence", sentence);
@@ -135,18 +138,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private String[] getSentence() {
         String[] sentence = new String[2];
         String get = HttpClientUtil.Get(progressBars);
-        Map map = JSON.parseObject(JSON.parseObject(get, Map.class).get("data").toString(), Map.class);
+        //Map map = JSON.parseObject(JSON.parseObject(get, Map.class).get("data").toString(), Map.class);
         while (true) {
-            System.out.println(map);
-            if (String.valueOf(map.get("content")).length() > 15) {
+            System.out.println(get);
+            if (get.length() > 25) {
                 get = HttpClientUtil.Get(progressBars);
-                map = JSON.parseObject(JSON.parseObject(get, Map.class).get("data").toString(), Map.class);
+                //map = JSON.parseObject(JSON.parseObject(get, Map.class).get("data").toString(), Map.class);
             }else {
                 break;
             }
         }
-        sentence[0] = map.get("content").toString();
-        sentence[1] = map.get("author").toString();
+        sentence[0] = get;
+        sentence[1] = "每日一言";
         return sentence;
     }
 }
