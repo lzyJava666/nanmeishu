@@ -43,7 +43,17 @@ import { SwipeCell } from 'vant';
 import { Grid, GridItem } from 'vant';
 import { Pagination } from 'vant';
 import { Progress } from 'vant';
+import { Calendar } from 'vant';
+import { List } from 'vant';
+import { RadioGroup, Radio } from 'vant';
+import { Checkbox, CheckboxGroup } from 'vant';
 
+Vue.use(Checkbox);
+Vue.use(CheckboxGroup);
+Vue.use(Radio);
+Vue.use(RadioGroup);
+Vue.use(List);
+Vue.use(Calendar);
 Vue.use(Progress);
 Vue.use(Pagination);
 Vue.use(Grid);
@@ -84,7 +94,6 @@ Vue.config.productionTip = false
 
 Toast.setDefaultOptions("loading",{duration:0});
 
-export const toast=new Toast();
 
 export const router = new VueRouter({
   routes: [

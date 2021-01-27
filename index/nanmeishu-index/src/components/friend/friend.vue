@@ -22,7 +22,7 @@
     <van-divider/>
     <div id="progressBars-bottom">
       <span class="exteriorSpan">今天已经过去了大约 <span class="interiorSpan"> {{progressBars.currentHour}} </span>小时</span>
-      <van-progress color="#f7ba2a" v-if="toPercentage(progressBars.currentHour,24)"  :percentage="toPercentage(progressBars.currentHour,24)" stroke-width="11"
+      <van-progress color="#f7ba2a"  :percentage="toPercentage(progressBars.currentHour,24)" stroke-width="11"
                     style="margin-bottom: 3vh"/>
       <span class="exteriorSpan">本周已经过去了大约 <span class="interiorSpan"> {{progressBars.currentWeek}} </span>天</span>
       <van-progress color="#13ce66" v-if="toPercentage(progressBars.currentWeek,7)" :percentage="toPercentage(progressBars.currentWeek,7)" stroke-width="11"
@@ -53,7 +53,9 @@
     data() {
       return {
         token: this.getCookie("token"),
-        progressBars: {},
+        progressBars: {
+
+        },
         sentence1: "",
         sentence2: ""
       }

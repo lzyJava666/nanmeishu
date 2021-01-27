@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nanmeishu.transaction.mapper.TransactionMapper">
+    <select id="getById" resultMap="transactionAndDetail">
+         select a.transaction_id,a.content acontent,a.create_time,duration,a.statuss astatus,extend_date,user_id,start_date,transaction_detail_id,b.content bcontent,commit_time,b.statuss bstatus
+            from s_transaction a left join s_transaction_detail b on a.transaction_id=b.transaction_id
+            where a.statuss=#{type} and user_id=#{userId} and start_date=#{startDate}
+        union all
+         select a.transaction_id,a.content acontent,a.create_time,duration,a.statuss astatus,extend_date,user_id,start_date,transaction_detail_id,b.content bcontent,commit_time,b.statuss bstatus
+            from s_transaction a left join s_transaction_detail b on a.transaction_id=b.transaction_id
+            where a.statuss=#{type} and user_id=#{userId} and start_date='2000-01-01'
+        order by start_date
+    </select>
+    <resultMap id="transactionAndDetail" type="com.nanmeishu.transaction.entity.Transaction">
+        <id column="transaction_id" property="transactionId" />
+        <result column="acontent" property="content"/>
+        <result column="create_time" property="createTime"/>
+        <result column="duration" property="duration"/>
+        <result column="astatuss" property="statuss"/>
+        <result column="extend_date" property="extendDate"/>
+        <result column="user_id" property="userId"/>
+        <result column="start_date" property="startDate"/>
+        <collection property="transactionDetails" ofType="com.nanmeishu.transaction.entity.TransactionDetail">
+            <id column="transaction_detail_id" property="transactionDetailId"/>
+            <result column="bcontent" property="content" />
+            <result column="commit_time" property="commitTime" />
+            <result column="bstatuss" property="statuss" />
+        </collection>
+    </resultMap>
+</mapper>
