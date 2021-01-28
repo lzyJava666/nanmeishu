@@ -114,7 +114,6 @@
           this.$toast.clear();
           this.sentence1 = this.progressBars.sentence[0];
           this.sentence2 = this.progressBars.sentence[1];
-          console.log(this.progressBars);
         })
     }
   }

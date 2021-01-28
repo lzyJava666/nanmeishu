@@ -12,6 +12,7 @@ import org.apache.tomcat.jni.Local;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Data
@@ -33,9 +34,13 @@ public class Transaction implements Serializable {
     private Integer extendDate;
     @ApiModelProperty("所属用户id")
     private Long userId;
-    @ApiModelProperty("开始时间")
+    @ApiModelProperty("开始日期 2000-01-01 为每日必做")
     private LocalDate startDate;
     @ApiModelProperty("事务明细列表对象")
     @TableField(exist = false)
     List<TransactionDetail> transactionDetails;
+    @ApiModelProperty("开始时间 00.00.44 为不规定时间")
+    private LocalTime startTime;
+    @ApiModelProperty("完成时间")
+    private LocalDateTime commitDateTime;
 }

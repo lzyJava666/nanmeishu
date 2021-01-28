@@ -12,4 +12,10 @@ public interface TransactionService {
      * @return
      */
     List<Transaction> getById(String userId, int type, LocalDate startDate);
+
+    /**
+     * 修改事务内容，通过id
+     * @param transaction
+     */
+    void update(Transaction transaction);
 }

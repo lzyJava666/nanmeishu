@@ -3,15 +3,14 @@ package com.nanmeishu.transaction.controller;
 import com.nanmeishu.entity.ResponseResult;
 import com.nanmeishu.transaction.entity.Transaction;
 import com.nanmeishu.transaction.service.TransactionService;
+import com.nanmeishu.util.DataUtil;
 import com.nanmeishu.util.JwtUtil;
 import com.nanmeishu.util.ResultUtil;
 import com.nanmeishu.web.TokenVerifyAnnotation;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
@@ -26,6 +25,7 @@ public class TransactionController {
     @Autowired
     TransactionService transactionService;
 
+    @ApiOperation("获取个人事务列表")
     @TokenVerifyAnnotation
     @GetMapping("/getById")
     public ResponseResult getById(HttpServletRequest req, @RequestParam("type") int type,
@@ -36,6 +36,15 @@ public class TransactionController {
         String userId = JwtUtil.get(token, "userId");
         List<Transaction> transactions= transactionService.getById(userId,type,parse);
         return ResultUtil.success(transactions);
+    }
+
+    @TokenVerifyAnnotation
+    @ApiOperation("修改事务内容")
+    @PostMapping("/update")
+    public ResponseResult update(@RequestBody Transaction transaction){
+        DataUtil.verifyData(transaction.getTransactionId(),"transactionId/id");
+        transactionService.update(transaction);
+        return ResultUtil.success();
     }
 
 

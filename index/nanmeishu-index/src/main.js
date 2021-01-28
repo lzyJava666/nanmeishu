@@ -47,7 +47,9 @@ import { Calendar } from 'vant';
 import { List } from 'vant';
 import { RadioGroup, Radio } from 'vant';
 import { Checkbox, CheckboxGroup } from 'vant';
+import { ContactCard } from 'vant';
 
+Vue.use(ContactCard);
 Vue.use(Checkbox);
 Vue.use(CheckboxGroup);
 Vue.use(Radio);
