@@ -2,7 +2,8 @@ import {Get,GetAndHeaders,url,PostAndHeaders} from "./api";
 
 const urlList={
   getById:url+"/transaction/getById",
-  update:url+"/transaction/update"
+  update:url+"/transaction/update",
+  delete:url+"/transaction/delete"
 };
 
 /**
@@ -22,5 +23,12 @@ export function getById(params,headers) {
  */
 export function update(data,headers) {
   return PostAndHeaders(urlList.update,data,headers)
+}
+
+/**
+ * 删除指定事务
+ */
+export function deleteById(params,headers) {
+  return GetAndHeaders(urlList.delete,params,headers);
 }
 

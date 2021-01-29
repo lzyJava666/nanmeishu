@@ -16,6 +16,7 @@ import ShowUser from "./components/user/showUser";
 import Caihongpi from "./components/index/caihongpi"
 import WriteDiary from "./components/index/writeDiary"
 import StatuList from "./components/index/statuList";
+import TransactionMenu from "./components/transaction/TransactionMenu";
 
 import {Lazyload} from 'vant';
 import {Swipe, SwipeItem} from 'vant';
@@ -48,7 +49,14 @@ import { List } from 'vant';
 import { RadioGroup, Radio } from 'vant';
 import { Checkbox, CheckboxGroup } from 'vant';
 import { ContactCard } from 'vant';
+import { Collapse, CollapseItem } from 'vant';
+import { Overlay } from 'vant';
+import { Switch } from 'vant';
 
+Vue.use(Switch);
+Vue.use(Overlay);
+Vue.use(Collapse);
+Vue.use(CollapseItem);
 Vue.use(ContactCard);
 Vue.use(Checkbox);
 Vue.use(CheckboxGroup);
@@ -110,7 +118,8 @@ export const router = new VueRouter({
     {path: "/showUser", component: ShowUser},
     {path:"/caihongpi",component:Caihongpi},
     {path:"/writeDiary",component:WriteDiary},
-    {path:"/statuList",component:StatuList, meta: {keepAlive: true}}
+    {path:"/statuList",component:StatuList, meta: {keepAlive: true}},
+    {path:"/TransactionMenu",component:TransactionMenu}
   ], mode: "history"
 })
 

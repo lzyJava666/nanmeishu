@@ -6,6 +6,55 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "2188",
+      "name": "全部",
+      "font_class": "quanbu",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    },
+    {
+      "icon_id": "700790",
+      "name": "本周",
+      "font_class": "benzhou",
+      "unicode": "e61d",
+      "unicode_decimal": 58909
+    },
+    {
+      "icon_id": "3884386",
+      "name": "明天见",
+      "font_class": "biaozhundaxiaotubiao-",
+      "unicode": "e61b",
+      "unicode_decimal": 58907
+    },
+    {
+      "icon_id": "4784074",
+      "name": "本月",
+      "font_class": "benyue",
+      "unicode": "e64e",
+      "unicode_decimal": 58958
+    },
+    {
+      "icon_id": "4784075",
+      "name": "本周",
+      "font_class": "benzhou1",
+      "unicode": "e64f",
+      "unicode_decimal": 58959
+    },
+    {
+      "icon_id": "4784096",
+      "name": "今天",
+      "font_class": "jintian",
+      "unicode": "e654",
+      "unicode_decimal": 58964
+    },
+    {
+      "icon_id": "14706450",
+      "name": "全部",
+      "font_class": "quanbu1",
+      "unicode": "e6c0",
+      "unicode_decimal": 59072
+    },
+    {
       "icon_id": "5959484",
       "name": "更多",
       "font_class": "gengduo",

@@ -29,12 +29,12 @@ public class TransactionController {
     @TokenVerifyAnnotation
     @GetMapping("/getById")
     public ResponseResult getById(HttpServletRequest req, @RequestParam("type") int type,
-                                  @RequestParam("startDate") String startDate){
+                                  @RequestParam("startDate") String startDate,@RequestParam("status") int status){
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate parse = LocalDate.parse(startDate, dateTimeFormatter);
         String token = req.getHeader("accessToken");
         String userId = JwtUtil.get(token, "userId");
-        List<Transaction> transactions= transactionService.getById(userId,type,parse);
+        List<Transaction> transactions= transactionService.getById(userId,type,parse,status);
         return ResultUtil.success(transactions);
     }
 
@@ -44,6 +44,12 @@ public class TransactionController {
     public ResponseResult update(@RequestBody Transaction transaction){
         DataUtil.verifyData(transaction.getTransactionId(),"transactionId/id");
         transactionService.update(transaction);
+        return ResultUtil.success();
+    }
+
+    @GetMapping("/delete")
+    public ResponseResult delete(@RequestParam("transactionId") long transactionId){
+        transactionService.delete(transactionId);
         return ResultUtil.success();
     }
 

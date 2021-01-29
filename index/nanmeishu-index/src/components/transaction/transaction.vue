@@ -2,13 +2,15 @@
   <div id="transaction">
     <van-nav-bar
       title="代办事务"
+      @click-right="showMenuAndOverlay"
+      @click-left="showDateMenuAndOverlay"
     >
       <template #left>
-        <span @click="showPicker=true">{{myDate}}<span style="margin-left: 1.2vw"
-                                                       class="icon-xiala iconfont"></span></span>
+        <span>{{myDate}}<span style="margin-left: 1.2vw"
+                              class="icon-xiala iconfont"></span></span>
       </template>
       <template #right>
-        <span><span class="icon-gengduo iconfont"></span></span>
+        <span id="gengduo"><span class="icon-gengduo iconfont"></span></span>
       </template>
     </van-nav-bar>
     <van-calendar v-model="showPicker" :min-date="new Date(2010,0,1)" :max-date="new Date(2030,0,1)"
@@ -22,39 +24,57 @@
       id="outerList"
     >
       <van-checkbox-group v-model="commitList" id="outerGroup">
-        <van-swipe-cell v-for="(transaction,index) in transactions" :key="transaction.transactionId">
+        <van-swipe-cell v-for="(transaction,index) in transactions" :key="transaction.transactionId" v-show="(!noStatus1)||(transaction.statuss==0)">
 
-          <template #right >
+          <template #right>
             <van-button square type="primary" text="置顶"/>
-            <van-button square type="danger" text="删除"/>
+            <van-button square type="danger" text="删除" @click="myDelete(transaction.transactionId,index)"/>
             <span style="width: 1vw;height: 100%"> 1</span>
           </template>
-          <van-cell @click="toggle(index,transaction.transactionId,transaction.statuss)">
+          <van-cell @click="toggle(index,transaction)">
             <template #icon>
-              <van-checkbox :name="transaction.transactionId" ref="checkboxes" />
+              <van-checkbox :name="transaction.transactionId" ref="checkboxes"/>
             </template>
             <template #title>
-              <span style="margin-left: 3vw;" v-bind:class="{finishSpan:isStatuss(transaction)}">{{transaction.content}}</span>
+              <span style="margin-left: 3vw;"
+                    v-bind:class="{finishSpan:isStatuss(transaction)}">{{transaction.content}}</span>
             </template>
             <template #right-icon>
               <span
-                style="margin-right: 3vw">{{(transaction.startTime=='00:00:44')?'无时间限制':transaction.startTime}}</span>
+                style="margin-right: 3vw">{{showRightDate(transaction)}}</span>
             </template>
           </van-cell>
         </van-swipe-cell>
       </van-checkbox-group>
     </van-list>
+    <TransactionMenu id="TransactionMenu" @menu-type="menuType" v-show="showMenu"></TransactionMenu>
+    <DateMenu id="DateMenu" @date-menu-type="dateMenuType" v-show="showDateMenu"></DateMenu>
+    <van-overlay :show="showOverlay" @click="clonseOverlay" :custom-style="{background:'rgba(255,255,255,0.2)'}"/>
+    <van-dialog v-model="showAdd" title="代办事务" show-cancel-button width="100vw" style="height: auto">
+      <addTransaction></addTransaction>
+    </van-dialog>
+    <van-dialog v-model="showSet" title="设置" show-cancel-button width="70vw" style="height: auto" :showCancelButton="false">
+      <Settings @is_set="isSet"></Settings>
+    </van-dialog>
   </div>
 </template>
 
 <script>
   import bottom from "../common/bottom";
-  import {getById,update} from "../api/transaction";
+  import {getById, update,deleteById} from "../api/transaction";
+  import TransactionMenu from "./TransactionMenu";
+  import DateMenu from "./DateMenu";
+  import addTransaction from "./addTransaction";
+  import Settings from "./Settings";
 
   export default {
     name: "transaction",
     components: {
-      bottom
+      bottom,
+      TransactionMenu,
+      DateMenu,
+      addTransaction,
+      Settings
     },
     data() {
       return {
@@ -64,63 +84,190 @@
         loading: false,
         finished: false,
         token: this.getCookie("token"),
-        commitList: []
+        commitList: [],
+        showMenu: false,
+        showOverlay: false,
+        showDateMenu: false,
+        showAdd: false,
+        showSet: false,
+        noStatus1:false
       }
     },
     methods: {
+      isSet(value){
+        this.noStatus1=value;
+      },
       //日期选择
       onConfirm(second) {
-        let first = new Date()
+        let first = new Date();
+        let date = null;
         if (first.getFullYear() === second.getFullYear() &&
           first.getMonth() === second.getMonth() &&
           first.getDate() === second.getDate()) {
           this.myDate = "今天";
         } else {
-          this.myDate = this.parseTime(second, "{y}-{m}-{d}");
+          date = this.parseTime(second, "{y}-{m}-{d}");
+          this.myDate = date;
         }
-        this.showPicker = false;
-      },
-      onLoad() {
-        let date = this.parseTime(new Date(), "{y}-{m}-{d}");
-        console.log(date);
-        getById({type: -1, startDate: date}, {"accessToken": this.token})
+        getById({type: -1, startDate: date, status: 1}, {"accessToken": this.token})
           .then(res => {
             this.transactions = res.data.data;
             this.finished = true;
+            this.transactions.map(transaction => {
+              if (transaction.statuss == 1) {
+                this.commitList[this.commitList.length] = transaction.transactionId;
+              }
+            })
+          })
+        this.showPicker = false;
+      },
+      clonseOverlay() {
+        this.showMenu = false;
+        this.showOverlay = false;
+        this.showDateMenu = false;
+      },
+      showMenuAndOverlay() {
+        this.showMenu = true;
+        this.showOverlay = true;
+      },
+      showDateMenuAndOverlay() {
+        this.showDateMenu = true;
+        this.showOverlay = true;
+      },
+      showRightDate(transaction) {
+        if (this.myDate == '今天') {
+          return (transaction.startTime == '00.00.44' ? '无限制时间' : transaction.startTime);
+        } else {
+          return (transaction.startDate == '2000-01-01' ? '每日事务' : transaction.startDate) + " " +
+            (transaction.startTime == '00.00.44' ? '无限制时间' : transaction.startTime)
+        }
+      },
+      onLoad() {
+        let date = this.parseTime(new Date(2021, 0, 28), "{y}-{m}-{d}");
+        getById({type: -1, startDate: date, status: 1}, {"accessToken": this.token})
+          .then(res => {
+            this.transactions = res.data.data;
+            this.finished = true;
+            this.transactions.map(transaction => {
+              if (transaction.statuss == 1) {
+                this.commitList[this.commitList.length] = transaction.transactionId;
+              }
+            })
           })
       },
-      toggle(index,id,statuss) {
-        this.$refs.checkboxes[index].toggle();
-        statuss=statuss==0?1:0;
-        let data={
-          transactionId:id,
-          statuss:statuss
-        };
-        update(data,{"accessToken": this.token})
-          .then(res=>{
-            if(statuss==0){
-              this.commitList.remove(id);
-              // let i;
-              // for(i=0;i<this.commitList.length;i++){
-              //   if(id==this.commitList[i]){
-              //     return;
-              //   }
-              // }
+      myDelete(id,index){
+        this.$dialog.confirm({
+          title: '提示',
+          message: '您是否删除此事务?',
+        })
+          .then(() => {
+            deleteById({transactionId:id},{"accessToken":this.token})
+              .then(res=>{
+                this.$toast.fail("删除成功");
+                this.transactions.splice(index, 1);
+              })
+          })
+          .catch(() => {
+            // on cancel
+          });
 
-            }else{
-            this.commitList[this.commitList.length]=id;
-            console.log(this.commitList)
+      },
+      toggle(index, transaction) {
+        this.$refs.checkboxes[index].toggle();
+        transaction.statuss = transaction.statuss == 0 ? 1 : 0;
+        let data = {
+          transactionId: transaction.transactionId,
+          statuss: transaction.statuss
+        };
+        update(data, {"accessToken": this.token})
+          .then(res => {
+            if (transaction.statuss == 0) {
+              let i;
+              for (i = 0; i < this.commitList.length; i++) {
+                if (transaction.transactionId == this.commitList[i]) {
+                  break;
+                }
+              }
+              this.commitList.splice(i, 1);
             }
           })
       },
       //判断状态是否已完成
-      isStatuss(transaction){
-        if(transaction.statuss==1){
-          this.commitList[this.commitList.length]=transaction.transactionId;
+      isStatuss(transaction) {
+        if (transaction.statuss == 1) {
           return true;
-        }else{
+        } else {
           return false;
         }
+      },
+      menuType(data) {
+        if (data == 1) {
+          this.showAdd = true;
+        } else {
+          this.showSet=true;
+        }
+      },
+      dateMenuType(date) {
+        let falg = false;
+        switch (date) {
+          case 1: {
+            if (this.myDate != '今天') {
+              this.myDate = '今天';
+              falg = true;
+            }
+          }
+            break;
+          case 2: {
+            if (this.myDate != '明天') {
+              this.myDate = '明天';
+              falg = true;
+            }
+          }
+            break;
+          case 3: {
+            if (this.myDate != '本周') {
+              this.myDate = '本周';
+              falg = true;
+            }
+          }
+            break;
+          case 4: {
+            if (this.myDate != '本月') {
+              this.myDate = '本月';
+              falg = true;
+            }
+          }
+            break;
+          case 5: {
+            if (this.myDate != '全部') {
+              this.myDate = '全部';
+              falg = true;
+            }
+          }
+            break;
+          case 6: {
+            this.showPicker = true;
+          }
+            break;
+        }
+        if (falg) {
+          this.getByIdAndS(date);
+        }
+      },
+      //获取指定日期的事务
+      getByIdAndS(status) {
+        console.log(status);
+        let date = this.parseTime(new Date(2021, 0, 28), "{y}-{m}-{d}");
+        getById({type: -1, startDate: date, status: status}, {"accessToken": this.token})
+          .then(res => {
+            this.transactions = res.data.data;
+            this.finished = true;
+            this.transactions.map(transaction => {
+              if (transaction.statuss == 1) {
+                this.commitList[this.commitList.length] = transaction.transactionId;
+              }
+            })
+          })
       }
     }
   }
@@ -147,9 +294,24 @@
     height: 100%;
     overflow-y: scroll;
   }
-  .finishSpan{
-    text-decoration:line-through;
-    color:rgba(0,0,0,0.5)
+
+  .finishSpan {
+    text-decoration: line-through;
+    color: rgba(0, 0, 0, 0.5)
+  }
+
+  #TransactionMenu {
+    position: fixed;
+    right: 4vw;
+    top: 5vh;
+    z-index: 10;
+  }
+
+  #DateMenu {
+    position: fixed;
+    left: 2vw;
+    top: 6vh;
+    z-index: 10;
   }
 
 </style>
