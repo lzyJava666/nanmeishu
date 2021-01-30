@@ -40,8 +40,7 @@
                     v-bind:class="{finishSpan:isStatuss(transaction)}">{{transaction.content}}</span>
             </template>
             <template #right-icon>
-              <span
-                style="margin-right: 3vw">{{showRightDate(transaction)}} <van-icon color="red" size="19" style="font-weight: bold" name="back-top" v-show="transaction.tops!=0"/></span>
+              <span style="margin-right: 3vw">{{showRightDate(transaction)}} <span class="iconfont icon-ziyuan" v-show="transaction.tops!=0" style="font-size:18px;color: red;"></span></span>
             </template>
           </van-cell>
         </van-swipe-cell>
