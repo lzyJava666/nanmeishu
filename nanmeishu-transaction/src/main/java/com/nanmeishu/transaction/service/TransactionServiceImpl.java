@@ -28,7 +28,7 @@ public class TransactionServiceImpl implements TransactionService {
         List<Transaction> transactions=null;
             switch (status){
                 case 1:{
-                    //类型一 明天事务
+                    //类型一 今天事务
                     transactions = transactionMapper.getById(userId,type,startDate.toString());
                 }
                 break;
@@ -61,9 +61,6 @@ public class TransactionServiceImpl implements TransactionService {
                 }
                 break;
             }
-
-
-
         return transactions;
     }
 
@@ -82,6 +79,14 @@ public class TransactionServiceImpl implements TransactionService {
         int i = transactionMapper.deleteById(transactionId);
         if(i<=0){
             throw new RuntimeException("删除失败");
+        }
+    }
+
+    @Override
+    public void save(Transaction transaction) {
+        int insert = transactionMapper.insert(transaction);
+        if(insert<=0){
+            throw new RuntimeException("添加失败");
         }
     }
 }

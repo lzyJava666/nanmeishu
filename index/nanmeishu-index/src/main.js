@@ -17,6 +17,7 @@ import Caihongpi from "./components/index/caihongpi"
 import WriteDiary from "./components/index/writeDiary"
 import StatuList from "./components/index/statuList";
 import TransactionMenu from "./components/transaction/TransactionMenu";
+import black from "./components/common/black";
 
 import {Lazyload} from 'vant';
 import {Swipe, SwipeItem} from 'vant';
@@ -112,6 +113,7 @@ export const router = new VueRouter({
     {path: "/login/phone", component: phoneLogin},
     {path: "/user", component: user, meta: {keepAlive: true}},
     {path: "/transaction", component: transaction},
+    {path:"/black",component:black},
     {path: "/friend", component: friend},
     {path: "/exit", component: Exit},
     {path: "/updateUser", component: UpdateUser},

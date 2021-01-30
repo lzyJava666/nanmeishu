@@ -8,12 +8,16 @@ import com.nanmeishu.util.JwtUtil;
 import com.nanmeishu.util.ResultUtil;
 import com.nanmeishu.web.TokenVerifyAnnotation;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
+import org.apiguardian.api.API;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -47,10 +51,36 @@ public class TransactionController {
         return ResultUtil.success();
     }
 
+    @TokenVerifyAnnotation
+    @ApiOperation("删除指定事务")
     @GetMapping("/delete")
-    public ResponseResult delete(@RequestParam("transactionId") long transactionId){
-        transactionService.delete(transactionId);
+    public ResponseResult delete(@RequestParam("transactionId") String transactionId){
+        transactionService.delete(Long.parseLong(transactionId));
         return ResultUtil.success();
+    }
+
+    @ApiOperation("添加新事务")
+    @TokenVerifyAnnotation
+    @PostMapping("/save")
+    public ResponseResult save(@RequestBody Transaction transaction,HttpServletRequest req){
+        saveVerifyData(transaction,req);
+        transactionService.save(transaction);
+        return ResultUtil.success();
+    }
+
+    //添加新事务---数据有效性验证
+    private void saveVerifyData(Transaction transaction, HttpServletRequest req) {
+        DataUtil.verifyData(transaction.getContent(),"content/内容");
+        if(transaction.getCreateTime()==null){
+            transaction.setCreateTime(LocalDateTime.now());
+        }
+        DataUtil.verifyData(transaction.getStartDate(),"startDate/开始日期");
+        DataUtil.verifyData(transaction.getStartTime(),"startTime/开始时间");
+        if(transaction.getUserId()==null){
+            String token = req.getHeader("accessToken");
+            String userId = JwtUtil.get(token, "userId");
+            transaction.setUserId(Long.parseLong(userId));
+        }
     }
 
 

@@ -24,4 +24,10 @@ public interface TransactionService {
      * @param transactionId
      */
     void delete(long transactionId);
+
+    /**
+     * 添加新事务---不包含事务明细
+     * @param transaction
+     */
+    void save(Transaction transaction);
 }

@@ -3,7 +3,8 @@ import {Get,GetAndHeaders,url,PostAndHeaders} from "./api";
 const urlList={
   getById:url+"/transaction/getById",
   update:url+"/transaction/update",
-  delete:url+"/transaction/delete"
+  delete:url+"/transaction/delete",
+  save:url+"/transaction/save"
 };
 
 /**
@@ -30,5 +31,12 @@ export function update(data,headers) {
  */
 export function deleteById(params,headers) {
   return GetAndHeaders(urlList.delete,params,headers);
+}
+
+/**
+ * 新增代办事务
+ */
+export function save(data,headers) {
+  return PostAndHeaders(urlList.save,data,headers)
 }
 

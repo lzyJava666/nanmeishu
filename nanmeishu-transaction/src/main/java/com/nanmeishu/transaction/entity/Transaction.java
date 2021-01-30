@@ -10,6 +10,7 @@ import lombok.Data;
 import org.apache.tomcat.jni.Local;
 
 import java.io.Serializable;
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -21,7 +22,7 @@ import java.util.List;
 public class Transaction implements Serializable {
     @TableId(type = IdType.ASSIGN_ID)
     @ApiModelProperty("事务ID类")
-    private Long transactionId;
+    private String transactionId;
     @ApiModelProperty("事务内容")
     private String content;
     @ApiModelProperty("事务创建时间")
@@ -43,4 +44,6 @@ public class Transaction implements Serializable {
     private LocalTime startTime;
     @ApiModelProperty("完成时间")
     private LocalDateTime commitDateTime;
+    @ApiModelProperty("是否置顶 0 不置顶 1-9置顶，越大排越前")
+    private Integer tops;
 }

@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.nanmeishu.transaction.mapper.TransactionMapper">
     <select id="getById" resultMap="transactionAndDetail">
-        select a.transaction_id,a.content acontent,a.create_time,duration,start_time,a.statuss
+        select a.transaction_id,tops,a.content acontent,a.create_time,duration,start_time,a.statuss
         astatus,extend_date,user_id,start_date,transaction_detail_id,b.content bcontent,commit_time,b.statuss bstatus
         from s_transaction a left join s_transaction_detail b on a.transaction_id=b.transaction_id
         <where>
@@ -19,7 +19,7 @@
             </if>
         </where>
         union all
-        select a.transaction_id,a.content acontent,a.create_time,start_time,duration,a.statuss
+        select a.transaction_id,tops,a.content acontent,a.create_time,duration,start_time,a.statuss
         astatus,extend_date,user_id,start_date,transaction_detail_id,b.content bcontent,commit_time,b.statuss bstatus
         from s_transaction a left join s_transaction_detail b on a.transaction_id=b.transaction_id
         <where>
@@ -33,10 +33,10 @@
                 and start_date='2000-01-01'
             </if>
         </where>
-        order by start_time
+        order by tops desc,start_time asc
     </select>
     <select id="getByIdAndWeek" resultMap="transactionAndDetail">
-        select a.transaction_id,a.content acontent,a.create_time,duration,start_time,a.statuss
+        select a.transaction_id,tops,a.content acontent,a.create_time,duration,start_time,a.statuss
         astatus,extend_date,user_id,start_date,transaction_detail_id,b.content bcontent,commit_time,b.statuss bstatus
         from s_transaction a left join s_transaction_detail b on a.transaction_id=b.transaction_id
         <where>
@@ -51,7 +51,7 @@
             </if>
         </where>
         union all
-        select a.transaction_id,a.content acontent,a.create_time,start_time,duration,a.statuss
+        select a.transaction_id,tops,a.content acontent,a.create_time,duration,start_time,a.statuss
         astatus,extend_date,user_id,start_date,transaction_detail_id,b.content bcontent,commit_time,b.statuss bstatus
         from s_transaction a left join s_transaction_detail b on a.transaction_id=b.transaction_id
         <where>
@@ -65,18 +65,20 @@
                 and start_date='2000-01-01'
             </if>
         </where>
-        order by start_time
+        order by tops desc,start_time asc
     </select>
 
     <select id="getByIdAll" resultMap="transactionAndDetail">
-        select a.transaction_id,a.content acontent,a.create_time,duration,start_time,a.statuss
+        select a.transaction_id,tops,a.content acontent,a.create_time,duration,start_time,a.statuss
         astatus,extend_date,user_id,start_date,transaction_detail_id,b.content bcontent,commit_time,b.statuss bstatus
         from s_transaction a left join s_transaction_detail b on a.transaction_id=b.transaction_id
 				where  user_id=#{userId}
+		order by tops desc,start_time asc
     </select>
 
     <resultMap id="transactionAndDetail" type="com.nanmeishu.transaction.entity.Transaction">
         <id column="transaction_id" property="transactionId"/>
+        <result column="tops" property="tops" />
         <result column="acontent" property="content"/>
         <result column="create_time" property="createTime"/>
         <result column="duration" property="duration"/>

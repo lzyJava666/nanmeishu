@@ -16,12 +16,12 @@ import java.time.LocalDateTime;
 public class TransactionDetail implements Serializable {
     @TableId(type = IdType.ASSIGN_ID)
     @ApiModelProperty("代办事务明细ID")
-    private Long transactionDetailId;
+    private String transactionDetailId;
     @ApiModelProperty("代办事务明细内容")
     private String content;
     @ApiModelProperty("事务明细完成时间")
     private LocalDateTime commitTime;
     @ApiModelProperty("0:未完成 1：已完成 2：暂停 3：已过时 ")
     private Integer statuss;
-    private Long transactionId;
+    private String transactionId;
 }
