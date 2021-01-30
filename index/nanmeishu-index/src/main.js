@@ -18,6 +18,7 @@ import WriteDiary from "./components/index/writeDiary"
 import StatuList from "./components/index/statuList";
 import TransactionMenu from "./components/transaction/TransactionMenu";
 import black from "./components/common/black";
+import pasLogin from "./components/login/pasLogin";
 
 import {Lazyload} from 'vant';
 import {Swipe, SwipeItem} from 'vant';
@@ -121,7 +122,8 @@ export const router = new VueRouter({
     {path:"/caihongpi",component:Caihongpi},
     {path:"/writeDiary",component:WriteDiary},
     {path:"/statuList",component:StatuList, meta: {keepAlive: true}},
-    {path:"/TransactionMenu",component:TransactionMenu}
+    {path:"/TransactionMenu",component:TransactionMenu},
+    {path:"/login/pasLogin",component:pasLogin}
   ], mode: "history"
 })
 

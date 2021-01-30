@@ -24,6 +24,13 @@
         </router-link>
       </van-col>
     </van-row>
+    <br/>
+    <van-row>
+      <van-col span="19"></van-col>
+      <router-link to="/login/pasLogin">
+        <van-col span="5" style="font-size: 15px;color:#c7c9ca">密码登录</van-col>
+      </router-link>
+    </van-row>
 
 
   </div>
