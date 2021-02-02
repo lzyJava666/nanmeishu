@@ -14,10 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLOutput;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Period;
+import java.time.*;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.HashMap;
@@ -104,7 +101,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         Map<String, Object> resMap = new HashMap<>();
         User user = userMapper.selectById(userId);
         LocalDate createTime = user.getDateOfBirth();
-        LocalDateTime currentLocal = LocalDateTime.now();
+        LocalDateTime currentLocal = LocalDateTime.now(ZoneId.of(ZoneId.SHORT_IDS.get("CTT")));
         if(createTime==null){
             throw new RuntimeException("请完善出生日期");
         }
@@ -131,6 +128,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         //获取今日份鸡汤
         String[] sentence = getSentence();
         resMap.put("sentence", sentence);
+            System.out.println(currentLocal+"===============================================");
         return resMap;
     }
 

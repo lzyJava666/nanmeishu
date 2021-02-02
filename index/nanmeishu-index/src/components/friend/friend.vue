@@ -80,7 +80,7 @@
         const maxWeek = [1, 3, 5, 7, 8, 10, 12];
         if (week == 2) {
           let year = this.parseTime(new Date(), "{y}");
-          if (isLeapYear(year)) {
+          if (this.isLeapYear(year)) {
             res = 29;
           } else {
             res = 31;

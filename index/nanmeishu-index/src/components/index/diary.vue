@@ -35,7 +35,7 @@
             </span>
           </template>
           <template #thumb>
-            <span style="display: block;margin-top: 0.3vh;font-size: 25px">{{dataToYear(tale.createTime)}}<br>{{dataToDay(tale.createTime)}}号</span>
+            <span style="display: block;margin-top: 0.3vh;font-size: 25px">{{dataToYear(tale.createTime)}}<br>{{dataToDay(tale.createTime)<10?'0'+dataToDay(tale.createTime):dataToDay(tale.createTime)}}号</span>
           </template>
         </van-card>
       </div>

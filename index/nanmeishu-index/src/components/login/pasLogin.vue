@@ -24,7 +24,7 @@
       <van-button round block native-type="submit" style="background: #f3f5f8;color: #909192" @click="login()">登录
       </van-button>
     </div>
-    <div id="clues"><span>没收到验证码，倒计时结束可重新获取</span></div>
+    <div id="clues"><span>请输入正确的账号和密码</span></div>
   </div>
 </template>
 

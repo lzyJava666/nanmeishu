@@ -167,7 +167,7 @@
         }
       },
       onLoad() {
-        let date = this.parseTime(new Date(2021, 0, 28), "{y}-{m}-{d}");
+        let date = this.parseTime(new Date(), "{y}-{m}-{d}");
         getById({type: -1, startDate: date, status: 1}, {"accessToken": this.token})
           .then(res => {
             this.transactions = res.data.data;
@@ -177,6 +177,7 @@
                 this.commitList[this.commitList.length] = transaction.transactionId;
               }
             })
+            this.$toast.clear();
           })
       },
       myDelete(id,index){
