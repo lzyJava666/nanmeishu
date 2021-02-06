@@ -40,7 +40,7 @@
 
 <script>
   import statuList from "./statuList";
-  import {saveTaleAndDetails,updateTaleAndDetails} from "../api/tale";
+  import {saveTaleAndDetails, updateTaleAndDetails} from "../api/tale";
 
   export default {
     name: "writeDiary",
@@ -56,7 +56,7 @@
         rows: 2,
         tale: {},
         token: this.getCookie("token"),
-        readTale:this.$route.query.readTale
+        readTale: this.$route.query.readTale
       }
     },
     methods: {
@@ -70,7 +70,7 @@
           content: this.content,
           taleTitle: this.taleTitle
         };
-        if(this.readTale==null){
+        if (this.readTale == null) {
           //新增
           let date = new Date();
           this.tale.frontDate = date;
@@ -79,16 +79,16 @@
           saveTaleAndDetails(this.tale, {"accessToken": this.token})
             .then(res => {
               this.$toast({closeOnClick: true, message: "保存成功", type: "success"});
-              setTimeout(()=> {
+              setTimeout(() => {
                 this.$router.push("/index")
               }, 700);
             })
-        }else{
+        } else {
           //修改
-          this.tale.taleId=this.readTale.taleId;
-          this.tale.taleDetails.taleDetailsId=this.readTale.taleDetails.taleDetailsId;
-          updateTaleAndDetails(this.tale,{"accessToken":this.token})
-            .then(res=>{
+          this.tale.taleId = this.readTale.taleId;
+          this.tale.taleDetails.taleDetailsId = this.readTale.taleDetails.taleDetailsId;
+          updateTaleAndDetails(this.tale, {"accessToken": this.token})
+            .then(res => {
               this.$toast.success("保存成功");
             })
         }
@@ -118,16 +118,16 @@
       }
     },
     created() {
-      if(this.readTale==null){
+      if (this.readTale == null) {
         return;
-      }else{
+      } else {
         console.log(this.readTale);
-        this.taleTitle=this.readTale.taleDetails.taleTitle;
-        this.content=this.readTale.taleDetails.content;
-        this.actitySid=true;
-        this.statuImg=this.readTale.statuImg;
-        this.show=false;
-        this.statuId=this.readTale.objectt;
+        this.taleTitle = this.readTale.taleDetails.taleTitle;
+        this.content = this.readTale.taleDetails.content;
+        this.actitySid = true;
+        this.statuImg = this.readTale.statuImg;
+        this.show = false;
+        this.statuId = this.readTale.objectt;
       }
     },
     components: {

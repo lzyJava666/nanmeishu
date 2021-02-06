@@ -8,18 +8,21 @@ import java.util.Map;
 public interface UserService extends IService<User> {
     /**
      * 注册接口
+     *
      * @param user
      */
     void register(User user);
 
     /**
      * 修改用户信息
+     *
      * @param user
      */
     void updateUser(User user);
 
     /**
      * 修改用户密码
+     *
      * @param userId
      * @param reqMap
      */

@@ -9,7 +9,7 @@ public enum ErrorCodeEnum {
     NoToken(222);
     private int code;
 
-   private ErrorCodeEnum(int code) {
+    private ErrorCodeEnum(int code) {
         this.code = code;
     }
 

@@ -20,22 +20,25 @@ public class AllConstant {
     public static String getPasMd5() {
         return PAS_MD5;
     }
+
     @Value("${PAS.MD5}")
-    public  void setPasMd5(String pasMd5) {
+    public void setPasMd5(String pasMd5) {
         PAS_MD5 = pasMd5;
     }
 
     public static int getExpireDate() {
         return EXPIRE_DATE;
     }
+
     @Value("${TOKEN.DATE}")
-    public  void setExpireDate(int expireDate) {
+    public void setExpireDate(int expireDate) {
         EXPIRE_DATE = expireDate;
     }
 
     public static String getTokenSecret() {
         return TOKEN_SECRET;
     }
+
     @Value("${TOKEN.SECRET}")
     public void setTokenSecret(String tokenSecret) {
         TOKEN_SECRET = tokenSecret;

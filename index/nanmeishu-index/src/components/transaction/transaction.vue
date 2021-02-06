@@ -24,7 +24,8 @@
       id="outerList"
     >
       <van-checkbox-group v-model="commitList" id="outerGroup">
-        <van-swipe-cell v-for="(transaction,index) in transactions" :key="transaction.transactionId" v-show="(!noStatus1)||(transaction.statuss==0)">
+        <van-swipe-cell v-for="(transaction,index) in transactions" :key="transaction.transactionId"
+                        v-show="(!noStatus1)||(transaction.statuss==0)">
 
           <template #right>
             <van-button square type="primary" :text="transaction.tops==0?'置顶':'取消置顶'" @click="setTop(transaction)"/>
@@ -40,7 +41,9 @@
                     v-bind:class="{finishSpan:isStatuss(transaction)}">{{transaction.content}}</span>
             </template>
             <template #right-icon>
-              <span style="margin-right: 3vw">{{showRightDate(transaction)}} <span class="iconfont icon-ziyuan" v-show="transaction.tops!=0" style="font-size:18px;color: red;"></span></span>
+              <span style="margin-right: 3vw">{{showRightDate(transaction)}} <span class="iconfont icon-ziyuan"
+                                                                                   v-show="transaction.tops!=0"
+                                                                                   style="font-size:18px;color: red;"></span></span>
             </template>
           </van-cell>
         </van-swipe-cell>
@@ -49,10 +52,12 @@
     <TransactionMenu id="TransactionMenu" @menu-type="menuType" v-show="showMenu"></TransactionMenu>
     <DateMenu id="DateMenu" @date-menu-type="dateMenuType" v-show="showDateMenu"></DateMenu>
     <van-overlay :show="showOverlay" @click="clonseOverlay" :custom-style="{background:'rgba(255,255,255,0.2)'}"/>
-    <van-dialog v-model="showAdd" title="代办事务" show-cancel-button width="100vw" style="height: 60vh" :showConfirmButton="false" :showCancelButton="false">
+    <van-dialog v-model="showAdd" title="代办事务" show-cancel-button width="100vw" style="height: 60vh"
+                :showConfirmButton="false" :showCancelButton="false">
       <addTransaction @exit_add="exitAdd"></addTransaction>
     </van-dialog>
-    <van-dialog v-model="showSet" title="设置" show-cancel-button width="70vw" style="height: auto" :showCancelButton="false">
+    <van-dialog v-model="showSet" title="设置" show-cancel-button width="70vw" style="height: auto"
+                :showCancelButton="false">
       <Settings @is_set="isSet"></Settings>
     </van-dialog>
   </div>
@@ -60,7 +65,7 @@
 
 <script>
   import bottom from "../common/bottom";
-  import {getById, update,deleteById} from "../api/transaction";
+  import {getById, update, deleteById} from "../api/transaction";
   import TransactionMenu from "./TransactionMenu";
   import DateMenu from "./DateMenu";
   import addTransaction from "./addTransaction";
@@ -89,16 +94,16 @@
         showDateMenu: false,
         showAdd: false,
         showSet: false,
-        noStatus1:false
+        noStatus1: false
       }
     },
     methods: {
-      isSet(value){
-        this.noStatus1=value;
+      isSet(value) {
+        this.noStatus1 = value;
       },
-      exitAdd(value){
-        if(value==1){
-          this.showAdd=false;
+      exitAdd(value) {
+        if (value == 1) {
+          this.showAdd = false;
         }
       },
       //日期选择
@@ -114,7 +119,7 @@
           date = this.parseTime(second, "{y}-{m}-{d}");
           this.myDate = date;
         }
-        let params={type: -1, startDate: date, status: 1};
+        let params = {type: -1, startDate: date, status: 1};
         console.log(params);
         getById(params, {"accessToken": this.token})
           .then(res => {
@@ -128,22 +133,22 @@
           })
         this.showPicker = false;
       },
-      setTop(transaction){
-        if(transaction.tops==0){
+      setTop(transaction) {
+        if (transaction.tops == 0) {
           //置顶操作
-          transaction.tops=1;
-        }else{
+          transaction.tops = 1;
+        } else {
           //取消置顶
-          transaction.tops=0;
+          transaction.tops = 0;
         }
-        update(transaction,{"accessToken":this.token})
-            .then(res=>{
-              this.$toast.success("操作成功");
-              this.$router.push({
-                path: 'black',
-                query: {url: '/transaction'}
-              })
+        update(transaction, {"accessToken": this.token})
+          .then(res => {
+            this.$toast.success("操作成功");
+            this.$router.push({
+              path: 'black',
+              query: {url: '/transaction'}
             })
+          })
       },
       clonseOverlay() {
         this.showMenu = false;
@@ -180,15 +185,15 @@
             this.$toast.clear();
           })
       },
-      myDelete(id,index){
+      myDelete(id, index) {
         console.log(id);
         this.$dialog.confirm({
           title: '提示',
           message: '您是否删除此事务?',
         })
           .then(() => {
-            deleteById({transactionId:id},{"accessToken":this.token})
-              .then(res=>{
+            deleteById({transactionId: id}, {"accessToken": this.token})
+              .then(res => {
                 this.$toast.success("删除成功");
                 this.transactions.splice(index, 1);
               })
@@ -200,12 +205,12 @@
       },
       toggle(index, transaction) {
         this.$refs.checkboxes[index].toggle();
-        let commitDateTime=transaction.statuss == 0?new Date():null;
+        let commitDateTime = transaction.statuss == 0 ? new Date() : null;
         transaction.statuss = transaction.statuss == 0 ? 1 : 0;
         let data = {
           transactionId: transaction.transactionId,
           statuss: transaction.statuss,
-          commitDateTime:commitDateTime
+          commitDateTime: commitDateTime
         };
         update(data, {"accessToken": this.token})
           .then(res => {
@@ -232,7 +237,7 @@
         if (data == 1) {
           this.showAdd = true;
         } else {
-          this.showSet=true;
+          this.showSet = true;
         }
       },
       dateMenuType(date) {
@@ -285,7 +290,7 @@
       //获取指定日期的事务
       getByIdAndS(status) {
         let date = this.parseTime(new Date(2021, 0, 28), "{y}-{m}-{d}");
-        let params={type: -1, startDate: date, status: status};
+        let params = {type: -1, startDate: date, status: status};
         getById(params, {"accessToken": this.token})
           .then(res => {
             this.transactions = res.data.data;

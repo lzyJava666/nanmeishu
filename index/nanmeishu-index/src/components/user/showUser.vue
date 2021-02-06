@@ -52,7 +52,7 @@
       return {
         user: JSON.parse(decodeURIComponent(this.$route.query.user)),
         token: this.getCookie("token"),
-        age:""
+        age: ""
       }
     },
     methods: {
@@ -64,8 +64,8 @@
       onClickRight() {
         this.$router.push({
           path: "/updateUser",
-          query:{
-            user:encodeURIComponent(JSON.stringify(this.user))
+          query: {
+            user: encodeURIComponent(JSON.stringify(this.user))
           }
         })
       }
@@ -77,12 +77,12 @@
       if (this.token.length == 0) {
         this.$router.push("/login");
       }
-      if(this.user.age==0){
-        this.age="";
-      }else if(this.user.age==1){
-        this.age="男";
-      }else{
-        this.age="女";
+      if (this.user.age == 0) {
+        this.age = "";
+      } else if (this.user.age == 1) {
+        this.age = "男";
+      } else {
+        this.age = "女";
       }
     }
   }

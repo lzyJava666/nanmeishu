@@ -1,10 +1,10 @@
-import {Get,GetAndHeaders,url,PostAndHeaders} from "./api";
+import {Get, GetAndHeaders, url, PostAndHeaders} from "./api";
 
-const urlList={
-  getById:url+"/transaction/getById",
-  update:url+"/transaction/update",
-  delete:url+"/transaction/delete",
-  save:url+"/transaction/save"
+const urlList = {
+  getById: url + "/transaction/getById",
+  update: url + "/transaction/update",
+  delete: url + "/transaction/delete",
+  save: url + "/transaction/save"
 };
 
 /**
@@ -13,8 +13,8 @@ const urlList={
  * @param headers 请求头
  * @returns {Promise<AxiosResponse<T>>}
  */
-export function getById(params,headers) {
-  return GetAndHeaders(urlList.getById,params,headers);
+export function getById(params, headers) {
+  return GetAndHeaders(urlList.getById, params, headers);
 }
 
 /**
@@ -22,21 +22,21 @@ export function getById(params,headers) {
  * @param data 内容
  * @param headers 请求头
  */
-export function update(data,headers) {
-  return PostAndHeaders(urlList.update,data,headers)
+export function update(data, headers) {
+  return PostAndHeaders(urlList.update, data, headers)
 }
 
 /**
  * 删除指定事务
  */
-export function deleteById(params,headers) {
-  return GetAndHeaders(urlList.delete,params,headers);
+export function deleteById(params, headers) {
+  return GetAndHeaders(urlList.delete, params, headers);
 }
 
 /**
  * 新增代办事务
  */
-export function save(data,headers) {
-  return PostAndHeaders(urlList.save,data,headers)
+export function save(data, headers) {
+  return PostAndHeaders(urlList.save, data, headers)
 }
 

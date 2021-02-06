@@ -29,35 +29,58 @@
 </template>
 
 <script>
-    import {loginapi} from "../api/user";
+  import {loginapi} from "../api/user";
 
-    export default {
-        name: "pasLogin",
-      data(){
-          return{
-            username:'',
-            password:''
+  export default {
+    name: "pasLogin",
+    data() {
+      return {
+        username: '',
+        password: ''
+      }
+    },
+    methods: {
+      login() {
+        this.$toast.loading({
+          message: '登录中...',
+        });
+        let messageProtocol = {
+          content: {username: this.username, password: this.password},
+          type: 1
+        };
+
+        this.socket.ws.send(JSON.stringify(messageProtocol));
+
+        this.socket.ws.onmessage = e => {
+          let res = JSON.parse(e.data);
+          console.log(res);
+          let token="";
+          if(res.errcode==200){
+            token=res.data;
+            this.removeCookie("token");
+            this.addCookie("token", token, 1000 * 60 * 2);
+            this.$toast.success("登录成功");
+            this.$router.push("/index");
+          }else{
+            this.$toast.fail(res.errmsg);
           }
-      },
-      methods:{
-        login(){
-          this.$toast.loading({
-            message: '登录中...',
-          });
-          loginapi({username: this.username, password: this.password}).then((res)=>{
-            if(res.data.errcode==200){
-              let token=res.data.data;
-              this.removeCookie("token");
-              this.addCookie("token",token,1000*60*2);
-              this.$toast.success("登录成功");
-              this.$router.push("/index");
-            }else{
-              this.$toast.fail(res.data.errmsg);
-            }
-          });
+
         }
+
+        // loginapi({username: this.username, password: this.password}).then((res) => {
+        //   if (res.data.errcode == 200) {
+        //     let token = res.data.data;
+        //     this.removeCookie("token");
+        //     this.addCookie("token", token, 1000 * 60 * 2);
+        //     this.$toast.success("登录成功");
+        //     this.$router.push("/index");
+        //   } else {
+        //     this.$toast.fail(res.data.errmsg);
+        //   }
+        // });
       }
     }
+  }
 </script>
 
 <style scoped>

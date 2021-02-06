@@ -28,29 +28,30 @@ public class AreaController {
 
     /**
      * 拿到所有地区及其详情
+     *
      * @return
      */
     @ApiResponses({
-            @ApiResponse(code = 200,message = "地区对象列表",response = Area.class)
+            @ApiResponse(code = 200, message = "地区对象列表", response = Area.class)
     })
     @ApiOperation("拿到所有地区及其详情列表")
     @GetMapping("/listAreaAndDetails")
-    public ResponseResult listAreaAndDetails(){
+    public ResponseResult listAreaAndDetails() {
         return ResultUtil.success(areaService.listAreaAndDetails());
     }
 
     @ApiResponses({
-            @ApiResponse(code = 200,message = "地区详情对象列表",response = AreaDetails.class)
+            @ApiResponse(code = 200, message = "地区详情对象列表", response = AreaDetails.class)
     })
     @ApiOperation("通过地区ID获取到对应地区详情列表")
     @GetMapping("/listDetailsByAreaId")
-    public ResponseResult listDetailsByAreaId(@RequestParam("areaId") String areaId){
-        DataUtil.verifyData(areaId,"地区ID/areaId");
+    public ResponseResult listDetailsByAreaId(@RequestParam("areaId") String areaId) {
+        DataUtil.verifyData(areaId, "地区ID/areaId");
         return ResultUtil.success(areaService.listDetailsByAreaId(areaId));
     }
 
     @PostMapping("/listSave")
-    public ResponseResult listSave(@RequestBody String json){
+    public ResponseResult listSave(@RequestBody String json) {
         List<Map> lists = JSON.parseArray(json, Map.class);
         areaService.listSave(lists);
 

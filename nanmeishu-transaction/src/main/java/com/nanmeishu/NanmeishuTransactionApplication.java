@@ -1,4 +1,4 @@
-package com.nanmeishu.transaction;
+package com.nanmeishu;
 
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;

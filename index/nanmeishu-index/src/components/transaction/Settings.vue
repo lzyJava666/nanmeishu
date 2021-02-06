@@ -16,9 +16,9 @@
         isStatus1: false
       }
     },
-    methods:{
-      updateSettings(value){
-        this.$emit('is_set',value);
+    methods: {
+      updateSettings(value) {
+        this.$emit('is_set', value);
       }
     }
   }

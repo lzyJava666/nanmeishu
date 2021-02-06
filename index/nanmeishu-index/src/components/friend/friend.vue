@@ -10,7 +10,8 @@
       <span id="head2">———&#160;{{sentence2}}</span><br/>
       <span class="exteriorSpan">你的<span class="interiorSpan">人生</span>已经走了大约<span
         class="interiorSpan">{{progressBars.gobyYear}}</span>年</span>
-      <van-progress color="#50bfff" v-if="toPercentage(progressBars.gobyYear,77)" :percentage="toPercentage(progressBars.gobyYear,77)" stroke-width="11"/>
+      <van-progress color="#50bfff" v-if="toPercentage(progressBars.gobyYear,77)"
+                    :percentage="toPercentage(progressBars.gobyYear,77)" stroke-width="11"/>
       <span class="exteriorSpan">你可能已经吃过了<span class="interiorSpan">{{progressBars.meal}}</span>顿饭<span
         class="interiorSpan"><span
         class="iconfont icon-fan"></span></span><br/>度过了
@@ -22,13 +23,15 @@
     <van-divider/>
     <div id="progressBars-bottom">
       <span class="exteriorSpan">今天已经过去了大约 <span class="interiorSpan"> {{progressBars.currentHour}} </span>小时</span>
-      <van-progress color="#f7ba2a"  :percentage="toPercentage(progressBars.currentHour,24)" stroke-width="11"
+      <van-progress color="#f7ba2a" :percentage="toPercentage(progressBars.currentHour,24)" stroke-width="11"
                     style="margin-bottom: 3vh"/>
       <span class="exteriorSpan">本周已经过去了大约 <span class="interiorSpan"> {{progressBars.currentWeek}} </span>天</span>
-      <van-progress color="#13ce66" v-if="toPercentage(progressBars.currentWeek,7)" :percentage="toPercentage(progressBars.currentWeek,7)" stroke-width="11"
+      <van-progress color="#13ce66" v-if="toPercentage(progressBars.currentWeek,7)"
+                    :percentage="toPercentage(progressBars.currentWeek,7)" stroke-width="11"
                     style="margin-bottom: 3vh"/>
       <span class="exteriorSpan">这个月已经过去了<span class="interiorSpan"> {{progressBars.currentMonth}} </span>天</span>
-      <van-progress color="#ff4949" v-if="toPercentage(progressBars.currentMonth,getWeekDay())" :percentage="toPercentage(progressBars.currentMonth,getWeekDay())" stroke-width="11"
+      <van-progress color="#ff4949" v-if="toPercentage(progressBars.currentMonth,getWeekDay())"
+                    :percentage="toPercentage(progressBars.currentMonth,getWeekDay())" stroke-width="11"
                     style="margin-bottom: 3vh"/>
       <span class="exteriorSpan"><span class="interiorSpan">{{this.parseTime(new Date(),"{y}")}}</span>年已经过去了 <span
         class="interiorSpan"> {{progressBars.currentYear}} </span>天</span>
@@ -53,9 +56,7 @@
     data() {
       return {
         token: this.getCookie("token"),
-        progressBars: {
-
-        },
+        progressBars: {},
         sentence1: "",
         sentence2: ""
       }
@@ -68,9 +69,9 @@
        * @returns {string} 转化值
        */
       toPercentage(value, percentage) {
-        let val=(value / percentage * 100).toFixed(0);
-        val=val==0?1:val;
-        val=val==100?99:val;
+        let val = (value / percentage * 100).toFixed(0);
+        val = val == 0 ? 1 : val;
+        val = val == 100 ? 99 : val;
         return val;
       },
       //获取本月共有几天

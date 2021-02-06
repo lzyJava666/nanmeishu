@@ -57,7 +57,8 @@
       />
     </van-popup>
     <div id="btnBootom">
-      <van-button hairline plain class="btnStyle" @click="exitAdd">取消</van-button><van-button @click="saveT()" hairline plain class="btnStyle" style="color: red">确认</van-button>
+      <van-button hairline plain class="btnStyle" @click="exitAdd">取消</van-button>
+      <van-button @click="saveT()" hairline plain class="btnStyle" style="color: red">确认</van-button>
     </div>
   </div>
 </template>
@@ -77,7 +78,7 @@
         dateFild: true,
         timeFild: true,
         currentDate: false,
-        tops:false
+        tops: false
       }
     },
     methods: {
@@ -124,7 +125,7 @@
           content: this.content,
           startDate: startDate,
           startTime: startTime,
-          tops:this.tops?1:0
+          tops: this.tops ? 1 : 0
         };
         save(data, hearders)
           .then(res => {
@@ -147,7 +148,8 @@
     color: #000;
     font-size: 16px;
   }
-  #btnBootom{
+
+  #btnBootom {
     position: fixed;
     bottom: 0;
   }

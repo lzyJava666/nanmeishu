@@ -72,16 +72,21 @@
       },
       // 注销
       exit() {
+        let messageProtocol = {
+          content:{token: this.getCookie("token")},
+          type: 0
+        };
         this.removeCookie("token");
+        this.socket.ws.send(JSON.stringify(messageProtocol));
         this.$router.push("/login")
       },
       //取消绑定通用方法
       updateUBy(type) {
         let byUser = {
-          wxKey:this.user.wxKey,
-          qqKey:this.user.qqKey,
-          identityCard:this.user.identityCard,
-          phone:this.user.phone
+          wxKey: this.user.wxKey,
+          qqKey: this.user.qqKey,
+          identityCard: this.user.identityCard,
+          phone: this.user.phone
         }
         //标记哪个类型
         let typeStr = "";
@@ -144,7 +149,7 @@
               });
           })
           .catch(() => {
-            Object.assign(this.user,byUser);
+            Object.assign(this.user, byUser);
             this.userToBind();
           });
       },

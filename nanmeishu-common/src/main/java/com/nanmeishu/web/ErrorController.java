@@ -26,8 +26,8 @@ public class ErrorController {
 
     @ExceptionHandler(value = {JSONException.class})
     public ResponseResult jSONException(JSONException e) {
-        errMsg=new StringBuffer();
-        errMsg.append("传入的json串格式出错：" ).append(e.toString().substring(e.toString().indexOf("Exception") + 10));
+        errMsg = new StringBuffer();
+        errMsg.append("传入的json串格式出错：").append(e.toString().substring(e.toString().indexOf("Exception") + 10));
         logger.error(errMsg);
         return ResultUtil.error(errMsg);
     }
@@ -35,7 +35,7 @@ public class ErrorController {
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     public ResponseResult methodArgumentNotValidException(MethodArgumentNotValidException e) {
         FieldError fieldError = e.getBindingResult().getFieldError();
-        errMsg=new StringBuffer();
+        errMsg = new StringBuffer();
         errMsg.append("字段：")
                 .append(fieldError.getField())
                 .append(" 的值必须满足以下条件：")
@@ -46,20 +46,20 @@ public class ErrorController {
 
     @ExceptionHandler(value = {MissingServletRequestParameterException.class})
     public ResponseResult missingServletRequestParameterException(MissingServletRequestParameterException e) {
-        errMsg=new StringBuffer("请求缺少参数：").append(e.getParameterName());
+        errMsg = new StringBuffer("请求缺少参数：").append(e.getParameterName());
         logger.error(errMsg);
         return ResultUtil.error(errMsg);
     }
 
     @ExceptionHandler(value = {HttpMediaTypeNotSupportedException.class})
     public ResponseResult httpMediaTypeNotSupportedException(HttpMediaTypeNotSupportedException e) {
-        errMsg=new StringBuffer("出现参数格式错误！请检查请求头是否正确");
+        errMsg = new StringBuffer("出现参数格式错误！请检查请求头是否正确");
         return ResultUtil.error(errMsg);
     }
 
     @ExceptionHandler(value = {NullPointerException.class})
     public ResponseResult nullPointerException(NullPointerException e) {
-        errMsg=new StringBuffer()
+        errMsg = new StringBuffer()
                 .append("空指针异常错误：")
                 .append(e.toString().substring(e.toString().indexOf("Exception") + 10));
         logger.error(errMsg);
@@ -68,9 +68,9 @@ public class ErrorController {
 
     @ExceptionHandler(value = {RuntimeException.class})
     public ResponseResult runtimeException(RuntimeException e) {
-        errMsg=new StringBuffer()
+        errMsg = new StringBuffer()
                 .append(e.toString().substring(e.toString().indexOf("Exception") + 10));
-        if(e.toString().toLowerCase().indexOf("token")>-1){
+        if (e.toString().toLowerCase().indexOf("token") > -1) {
             logger.error(errMsg);
             return ResultUtil.NoToken();
         }
@@ -81,14 +81,14 @@ public class ErrorController {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseResult httpMessageNotReadableException(HttpMessageNotReadableException e) {
         e.printStackTrace();
-        errMsg=new StringBuffer("post请求缺少请求体");
+        errMsg = new StringBuffer("post请求缺少请求体");
         logger.error(errMsg);
         return ResultUtil.error(errMsg);
     }
 
     @ExceptionHandler(value = {HttpRequestMethodNotSupportedException.class})
     public ResponseResult httpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
-        errMsg=new StringBuffer()
+        errMsg = new StringBuffer()
                 .append("请求类型出错，错误类型：")
                 .append(e.getMethod());
         logger.error(errMsg);
@@ -99,7 +99,7 @@ public class ErrorController {
 
     @ExceptionHandler(value = {Exception.class})
     private ResponseResult exception(Throwable e) {
-        errMsg=new StringBuffer()
+        errMsg = new StringBuffer()
                 .append("未知错误:")
                 .append(e);
         logger.error(errMsg);

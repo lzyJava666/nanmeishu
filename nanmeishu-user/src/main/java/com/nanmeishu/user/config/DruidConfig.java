@@ -20,28 +20,28 @@ public class DruidConfig {
 
     @ConfigurationProperties(prefix = "spring.datasource")
     @Bean
-    public DataSource dataSource(){
+    public DataSource dataSource() {
         return new DruidDataSource();
     }
 
     @Bean
-    public ServletRegistrationBean setViewServlet(){
+    public ServletRegistrationBean setViewServlet() {
         ServletRegistrationBean bean = new ServletRegistrationBean(new StatViewServlet());
         bean.setUrlMappings(Arrays.asList(new String[]{"/druid/*"}));
-        Map<String,String> initParams=new HashMap<>();
-        initParams.put("loginUsername","root");
-        initParams.put("loginPassword","123456");
-        initParams.put("allow","");
+        Map<String, String> initParams = new HashMap<>();
+        initParams.put("loginUsername", "root");
+        initParams.put("loginPassword", "123456");
+        initParams.put("allow", "");
         bean.setInitParameters(initParams);
         return bean;
     }
 
     @Bean
-    public FilterRegistrationBean setFilter(){
-        FilterRegistrationBean bean=new FilterRegistrationBean(new WebStatFilter());
+    public FilterRegistrationBean setFilter() {
+        FilterRegistrationBean bean = new FilterRegistrationBean(new WebStatFilter());
         bean.setUrlPatterns(Arrays.asList(new String[]{"/*"}));
-        Map<String,String> initParams=new HashMap<>();
-        initParams.put("exclusions","*.js,*.css,*.jpg,*.png,/druid/*");
+        Map<String, String> initParams = new HashMap<>();
+        initParams.put("exclusions", "*.js,*.css,*.jpg,*.png,/druid/*");
         bean.setInitParameters(initParams);
         return bean;
     }

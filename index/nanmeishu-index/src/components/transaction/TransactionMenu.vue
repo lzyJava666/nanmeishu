@@ -1,8 +1,14 @@
 <template>
   <div id="transactionMenu">
     <div id="bodyStyle">
-      <van-button type="default" class="btnClass" @click="toTransaction(1)"><van-icon name="edit" class="iconStyle"  />添加</van-button>
-      <van-button type="default" class="btnClass"  @click="toTransaction(2)"><van-icon name="discount" class="iconStyle" />设置</van-button>
+      <van-button type="default" class="btnClass" @click="toTransaction(1)">
+        <van-icon name="edit" class="iconStyle"/>
+        添加
+      </van-button>
+      <van-button type="default" class="btnClass" @click="toTransaction(2)">
+        <van-icon name="discount" class="iconStyle"/>
+        设置
+      </van-button>
     </div>
   </div>
 </template>
@@ -14,8 +20,8 @@
       return {}
     },
     methods: {
-      toTransaction(data){
-        this.$emit('menu-type',data);
+      toTransaction(data) {
+        this.$emit('menu-type', data);
       }
     },
   }
@@ -36,9 +42,10 @@
   }
 
   .btnClass:hover {
-    background: #F3F4F6 ;
+    background: #F3F4F6;
   }
-  .iconStyle{
+
+  .iconStyle {
     margin-right: 2vw;
   }
 </style>

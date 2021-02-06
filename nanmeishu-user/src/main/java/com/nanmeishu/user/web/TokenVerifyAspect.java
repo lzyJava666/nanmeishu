@@ -19,14 +19,14 @@ public class TokenVerifyAspect {
 
     //有@GetNoTokenAnnotation注释的方法处理，需判断token是否可用
     @Before(value = "@annotation(com.nanmeishu.web.TokenVerifyAnnotation)")
-    public void tokenVerifyBefore(JoinPoint joinPoint){
+    public void tokenVerifyBefore(JoinPoint joinPoint) {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest req = attributes.getRequest();
         String token = req.getHeader("accessToken");
-        if(null==token){
+        if (null == token) {
             throw new RuntimeException("token不存在");
-        }else{
-            if(!isToken(token)){
+        } else {
+            if (!isToken(token)) {
                 throw new RuntimeException("您的token不正确或者已失效");
             }
         }
@@ -34,16 +34,17 @@ public class TokenVerifyAspect {
 
     /**
      * 判断token是否有效
+     *
      * @param token
      * @return
      */
     private boolean isToken(String token) {
-        RedisUtil redisUtil= SpringUtil.getBean(RedisUtil.class);
+        RedisUtil redisUtil = SpringUtil.getBean(RedisUtil.class);
         Jedis jedis = redisUtil.getJedis();
-        if(jedis.get(token)!=null){
+        if (jedis.get(token) != null) {
             //token存在
             jedis.close();
-            if(JwtUtil.verify(token)) {
+            if (JwtUtil.verify(token)) {
                 return true;
             }
         }

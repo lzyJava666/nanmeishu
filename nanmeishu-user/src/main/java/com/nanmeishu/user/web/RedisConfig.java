@@ -16,13 +16,14 @@ class RedisConfig {    //读取配置文件中的redis的ip地址
     private int database;
     @Value("${redis.password}")
     private String password;
+
     @Bean
     public RedisUtil getRedisUtil() {
         if (host.equals("disabled")) {
             return null;
         }
         RedisUtil redisUtil = new RedisUtil();
-        redisUtil.initPool(host, port, database,password);
+        redisUtil.initPool(host, port, database, password);
         return redisUtil;
     }
 }

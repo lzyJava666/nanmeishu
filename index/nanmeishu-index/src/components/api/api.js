@@ -1,7 +1,7 @@
 import axios from "axios";
 import {router} from "../../main";
 
-export const url = "http://47.100.137.41:8888"
+export const url = "http://127.0.0.1:8888"
 
 axios.interceptors.response.use(
   res => {

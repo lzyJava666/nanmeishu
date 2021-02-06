@@ -102,7 +102,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         User user = userMapper.selectById(userId);
         LocalDate createTime = user.getDateOfBirth();
         LocalDateTime currentLocal = LocalDateTime.now(ZoneId.of(ZoneId.SHORT_IDS.get("CTT")));
-        if(createTime==null){
+        if (createTime == null) {
             throw new RuntimeException("请完善出生日期");
         }
         //人生过去的几年
@@ -120,15 +120,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         //本周已经过去几天
         //本周一
         LocalDate with = currentLocal.toLocalDate().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
-        resMap.put("currentWeek",  currentLocal.getDayOfWeek().getValue() );
+        resMap.put("currentWeek", currentLocal.getDayOfWeek().getValue());
         //本月过去几天
-        resMap.put("currentMonth",  currentLocal.getDayOfMonth());
+        resMap.put("currentMonth", currentLocal.getDayOfMonth());
         //今天已过去几天
-        resMap.put("currentYear",  currentLocal.getDayOfYear());
+        resMap.put("currentYear", currentLocal.getDayOfYear());
         //获取今日份鸡汤
         String[] sentence = getSentence();
         resMap.put("sentence", sentence);
-            System.out.println(currentLocal+"===============================================");
+        System.out.println(currentLocal + "===============================================");
         return resMap;
     }
 
@@ -142,7 +142,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             if (get.length() > 25) {
                 get = HttpClientUtil.Get(progressBars);
                 //map = JSON.parseObject(JSON.parseObject(get, Map.class).get("data").toString(), Map.class);
-            }else {
+            } else {
                 break;
             }
         }

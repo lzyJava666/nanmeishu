@@ -22,7 +22,7 @@ public class Area implements Serializable {
     @ApiModelProperty("地区名")
     private String name;
     @ApiModelProperty("是否删除 0 否 1是")
-    @Range(max = 1,min = 0)
+    @Range(max = 1, min = 0)
     private Integer isDelete;
     @ApiModelProperty("备注")
     private String br;

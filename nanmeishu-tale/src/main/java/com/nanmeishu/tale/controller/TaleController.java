@@ -20,6 +20,7 @@ import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -90,13 +91,13 @@ public class TaleController {
                                        @RequestParam("pageNum") String pageNum,
                                        @RequestParam("pageSize") String pageSize) {
         DataUtil.verifyData(userId, "用户id/userId");
-        return ResultUtil.success(taleService.listByUserId(userId,pageNum,pageSize));
+        return ResultUtil.success(taleService.listByUserId(userId, pageNum, pageSize));
     }
 
     @ApiOperation("更新故事信息")
     @TokenVerifyAnnotation
     @PostMapping("/updateTaleAndDetails")
-    public ResponseResult updateTaleAndDetails(@RequestBody Tale tale){
+    public ResponseResult updateTaleAndDetails(@RequestBody Tale tale) {
         updateTaleAndDetailsVerifyData(tale);
         taleService.updateTaleAndDetails(tale);
         return ResultUtil.success();
@@ -104,7 +105,7 @@ public class TaleController {
 
     // 更新故事信息--数据有效性验证
     private void updateTaleAndDetailsVerifyData(Tale tale) {
-        DataUtil.verifyData(tale.getTaleId(),"故事ID/taleId");
+        DataUtil.verifyData(tale.getTaleId(), "故事ID/taleId");
     }
 
 
@@ -116,7 +117,7 @@ public class TaleController {
                                       @RequestParam("pageSize") String pageSize) {
         String token = req.getHeader("accessToken");
         String userId = JwtUtil.get(token, "userId");
-        return listByUserId(userId,pageNum,pageSize);
+        return listByUserId(userId, pageNum, pageSize);
     }
 
     @ApiOperation("获取彩虹屁")

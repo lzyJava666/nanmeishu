@@ -110,12 +110,12 @@
       },
       //进入故事详情
       toTale(myTale) {
-        let statuMap= this.getStatu(myTale.objectt);
-        myTale.statuImg=statuMap;
+        let statuMap = this.getStatu(myTale.objectt);
+        myTale.statuImg = statuMap;
         this.$router.push({
-          path:"/writeDiary",
-          query:{
-            readTale:myTale
+          path: "/writeDiary",
+          query: {
+            readTale: myTale
           }
         })
       },
@@ -128,10 +128,10 @@
           })
       },
       getStatu(id) {
-        let statu1="";
+        let statu1 = "";
         this.status.map(statu => {
           if (id == statu.statuId) {
-            statu1= statu.statuUrl;
+            statu1 = statu.statuUrl;
             return;
           }
         })

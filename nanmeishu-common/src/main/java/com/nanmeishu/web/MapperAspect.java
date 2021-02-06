@@ -21,16 +21,17 @@ import java.util.Arrays;
 @Component
 public class MapperAspect {
 
-    private Logger logger= LogManager.getLogger(MapperAspect.class);
+    private Logger logger = LogManager.getLogger(MapperAspect.class);
 
     @Pointcut("execution( * com.nanmeishu.*.mapper.*.*(..))")
-    public void pointCut() {}
+    public void pointCut() {
+    }
 
     @Before("pointCut()")
-    public void before(JoinPoint joinPoint){
+    public void before(JoinPoint joinPoint) {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         logger.info("--------------------操作数据库开始--------------------");
-        logger.info("请求进入方法："+joinPoint.getSignature().getName());
+        logger.info("请求进入方法：" + joinPoint.getSignature().getName());
 
         logger.info("参数：" + Arrays.toString(joinPoint.getArgs()));
     }

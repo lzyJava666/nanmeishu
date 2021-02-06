@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 @RequestMapping("/statu")
 @RestController
 public class StatuController {
@@ -15,8 +16,8 @@ public class StatuController {
     private StatuService statuService;
 
     @GetMapping("/listStatu")
-    public ResponseResult listStatu(){
-        List<Statu> status= statuService.listPageStatu();
+    public ResponseResult listStatu() {
+        List<Statu> status = statuService.listPageStatu();
         return ResultUtil.success(status);
     }
 }

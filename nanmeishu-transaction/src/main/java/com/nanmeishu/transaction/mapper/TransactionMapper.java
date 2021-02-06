@@ -9,15 +9,17 @@ import java.util.List;
 public interface TransactionMapper extends BaseMapper<Transaction> {
     /**
      * 查看用户当天事务，通过用户id
+     *
      * @param userId
      * @param type
      * @param startDate
      * @return
      */
-    List<Transaction> getById(@Param("userId") String userId,@Param("type") int type,@Param("startDate") String startDate);
+    List<Transaction> getById(@Param("userId") String userId, @Param("type") int type, @Param("startDate") String startDate);
 
     /**
      * 获取一个时间段的事务，通过用户id
+     *
      * @param userId
      * @param type
      * @param weekDate1
@@ -31,6 +33,7 @@ public interface TransactionMapper extends BaseMapper<Transaction> {
 
     /**
      * 获取当前用户全部事务
+     *
      * @param userId
      * @return
      */

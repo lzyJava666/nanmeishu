@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 @SuppressWarnings("deprecation")
 @Retention(RetentionPolicy.RUNTIME)
-@Target(value = {ElementType.METHOD,ElementType.TYPE})
+@Target(value = {ElementType.METHOD, ElementType.TYPE})
 public @interface TokenVerifyAnnotation {
     //定义在注解类中
     int value() default 0;

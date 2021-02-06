@@ -18,6 +18,7 @@
   import Diary from './diary'
   import Tale from './tale'
   import Bottom from "../common/bottom";
+
   export default {
     name: "index",
     data() {
@@ -26,9 +27,9 @@
       };
     },
     components: {
-      "diary":Diary,
-      "tale":Tale,
-      "bottom":Bottom
+      "diary": Diary,
+      "tale": Tale,
+      "bottom": Bottom
 
     }
   }

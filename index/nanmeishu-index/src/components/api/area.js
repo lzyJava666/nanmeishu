@@ -4,6 +4,6 @@ const urlList = {
   areaAndDetails: url + "/area/listAreaAndDetails",
 };
 
-export function listAreaAndDetails(){
-  return Get(urlList.areaAndDetails,{});
+export function listAreaAndDetails() {
+  return Get(urlList.areaAndDetails, {});
 }

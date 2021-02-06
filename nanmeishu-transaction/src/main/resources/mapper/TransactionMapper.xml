@@ -78,7 +78,7 @@
 
     <resultMap id="transactionAndDetail" type="com.nanmeishu.transaction.entity.Transaction">
         <id column="transaction_id" property="transactionId"/>
-        <result column="tops" property="tops" />
+        <result column="tops" property="tops"/>
         <result column="acontent" property="content"/>
         <result column="create_time" property="createTime"/>
         <result column="duration" property="duration"/>

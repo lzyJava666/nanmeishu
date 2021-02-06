@@ -93,9 +93,9 @@
         ageList: ["未知", "男", "女"],
         areaAndDetails: [],
         token: this.getCookie("token"),
-        age:"",
+        age: "",
         //记录user变化前的值
-        byUser:JSON.parse(decodeURIComponent(this.$route.query.user))
+        byUser: JSON.parse(decodeURIComponent(this.$route.query.user))
       }
     },
     methods: {
@@ -110,20 +110,20 @@
       //提交用户修改信息
       onClickRight() {
         let headers = {"accessToken": this.token};
-        updateUser(this.user,headers)
+        updateUser(this.user, headers)
           .then(res => {
             if (res.data.errcode == 200) {
-                this.$toast.success("用户信息已更新");
-                this.byUser=this.user;
-            }else {
+              this.$toast.success("用户信息已更新");
+              this.byUser = this.user;
+            } else {
               //出错提示，且数据回退
               this.$toast.fail(res.data.errmsg);
-              this.user=this.byUser;
+              this.user = this.byUser;
             }
           })
-        .catch(err=>{
-          console.log(err);
-        })
+          .catch(err => {
+            console.log(err);
+          })
       },
       dateOfBirth(value) {
         this.showdateOfBirth = false;
@@ -137,22 +137,21 @@
       },
       ageConfirm(value, index) {
         this.user.age = index;
-        this.age=index==0?"":value;
+        this.age = index == 0 ? "" : value;
         this.showAge = false;
       },
 
     },
     created() {
-      if(this.user.age==0){
-        this.age="";
-      }else if(this.user.age==1){
-        this.age="男";
-      }else{
-        this.age="女";
+      if (this.user.age == 0) {
+        this.age = "";
+      } else if (this.user.age == 1) {
+        this.age = "男";
+      } else {
+        this.age = "女";
       }
     },
-    watch:{
-    }
+    watch: {}
   }
 </script>
 

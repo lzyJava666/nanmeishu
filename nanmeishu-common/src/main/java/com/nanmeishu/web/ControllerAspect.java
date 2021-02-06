@@ -5,11 +5,9 @@ import org.apache.logging.log4j.Logger;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -18,34 +16,35 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * controller方法的切面
  */
-@Aspect
-@Component
+//@Aspect
+//@Component
 public class ControllerAspect {
-    private Logger logger= LogManager.getLogger(ControllerAspect.class);
+    private Logger logger = LogManager.getLogger(ControllerAspect.class);
 
     //为了记录执行时间 方便调试 如果不需要可以去掉
     ThreadLocal<Long> startTime = new ThreadLocal<>();
 
     @Pointcut("execution(public * com.nanmeishu.*.controller.*.*(..))")
-    public void pointCut() {}
+    public void pointCut() {
+    }
 
     @Before("pointCut()")
-    public void before(JoinPoint joinPoint){
+    public void before(JoinPoint joinPoint) {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
         logger.info("--------------------当前请求开始---------------------");
-        logger.info("请求进入方法："+request.getRequestURL().toString());
-        logger.info("请求类型："+request.getMethod());
-        String[] argNames = ((MethodSignature)joinPoint.getSignature()).getParameterNames();
+        logger.info("请求进入方法：" + request.getRequestURL().toString());
+        logger.info("请求类型：" + request.getMethod());
+        String[] argNames = ((MethodSignature) joinPoint.getSignature()).getParameterNames();
         Object[] args = joinPoint.getArgs();
-        StringBuffer canshu=new StringBuffer();
+        StringBuffer canshu = new StringBuffer();
         for (int i = 0; i < argNames.length; i++) {
-            if(args[i]==null||args[i].equals("")){
+            if (args[i] == null || args[i].equals("")) {
                 continue;
             }
-            canshu.append(argNames[i]+": "+args[i]+"  ");
+            canshu.append(argNames[i] + ": " + args[i] + "  ");
         }
-        logger.info("请求参数："+canshu );
+        logger.info("请求参数：" + canshu);
     }
 
     //环绕执行

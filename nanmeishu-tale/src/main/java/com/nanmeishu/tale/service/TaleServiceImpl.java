@@ -68,7 +68,7 @@ public class TaleServiceImpl implements TaleService {
             return;
         }
         int i1 = taleDetailsMapper.updateById(taleDetails);
-        if(i1<=0){
+        if (i1 <= 0) {
             throw new RuntimeException("更新出错");
         }
     }

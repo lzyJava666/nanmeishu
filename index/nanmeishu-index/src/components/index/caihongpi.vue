@@ -9,7 +9,7 @@
         :border="isborder"
       >
         <template #left>
-          <van-icon name="arrow-left" color="#fff" size="26" />
+          <van-icon name="arrow-left" color="#fff" size="26"/>
 
         </template>
         <template #title>
@@ -100,13 +100,14 @@
     font-weight: bolder;
     font-size: 17px;
   }
-#button{
-  position: fixed;
-  display: block;
-  bottom: 5%;
-  left: 5%;
-  background: rgba(0,0,0,0.3);
-  border: none;
-  border-radius:6px;
-}
+
+  #button {
+    position: fixed;
+    display: block;
+    bottom: 5%;
+    left: 5%;
+    background: rgba(0, 0, 0, 0.3);
+    border: none;
+    border-radius: 6px;
+  }
 </style>

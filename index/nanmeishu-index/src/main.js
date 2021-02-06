@@ -19,6 +19,10 @@ import StatuList from "./components/index/statuList";
 import TransactionMenu from "./components/transaction/TransactionMenu";
 import black from "./components/common/black";
 import pasLogin from "./components/login/pasLogin";
+import websocketTest from "./components/test/websocketTest";
+
+import socket from './components/api/websocket'
+Vue.prototype.socket = socket
 
 import {Lazyload} from 'vant';
 import {Swipe, SwipeItem} from 'vant';
@@ -35,25 +39,25 @@ import {Cell, CellGroup} from 'vant';
 import {NavBar} from 'vant';
 import {Divider} from 'vant';
 import {Toast} from 'vant';
-import { DatetimePicker } from 'vant';
-import { Picker } from 'vant';
-import { Popup } from 'vant';
-import { DropdownMenu, DropdownItem } from 'vant';
-import { Dialog } from 'vant';
-import { Uploader } from 'vant';
-import { Card } from 'vant';
-import { SwipeCell } from 'vant';
-import { Grid, GridItem } from 'vant';
-import { Pagination } from 'vant';
-import { Progress } from 'vant';
-import { Calendar } from 'vant';
-import { List } from 'vant';
-import { RadioGroup, Radio } from 'vant';
-import { Checkbox, CheckboxGroup } from 'vant';
-import { ContactCard } from 'vant';
-import { Collapse, CollapseItem } from 'vant';
-import { Overlay } from 'vant';
-import { Switch } from 'vant';
+import {DatetimePicker} from 'vant';
+import {Picker} from 'vant';
+import {Popup} from 'vant';
+import {DropdownMenu, DropdownItem} from 'vant';
+import {Dialog} from 'vant';
+import {Uploader} from 'vant';
+import {Card} from 'vant';
+import {SwipeCell} from 'vant';
+import {Grid, GridItem} from 'vant';
+import {Pagination} from 'vant';
+import {Progress} from 'vant';
+import {Calendar} from 'vant';
+import {List} from 'vant';
+import {RadioGroup, Radio} from 'vant';
+import {Checkbox, CheckboxGroup} from 'vant';
+import {ContactCard} from 'vant';
+import {Collapse, CollapseItem} from 'vant';
+import {Overlay} from 'vant';
+import {Switch} from 'vant';
 
 Vue.use(Switch);
 Vue.use(Overlay);
@@ -104,7 +108,7 @@ Vue.use(Lazyload);
 
 Vue.config.productionTip = false
 
-Toast.setDefaultOptions("loading",{duration:0});
+Toast.setDefaultOptions("loading", {duration: 0});
 
 
 export const router = new VueRouter({
@@ -114,24 +118,29 @@ export const router = new VueRouter({
     {path: "/login/phone", component: phoneLogin},
     {path: "/user", component: user, meta: {keepAlive: true}},
     {path: "/transaction", component: transaction},
-    {path:"/black",component:black},
+    {path: "/black", component: black},
     {path: "/friend", component: friend},
     {path: "/exit", component: Exit},
     {path: "/updateUser", component: UpdateUser},
     {path: "/showUser", component: ShowUser},
-    {path:"/caihongpi",component:Caihongpi},
-    {path:"/writeDiary",component:WriteDiary},
-    {path:"/statuList",component:StatuList, meta: {keepAlive: true}},
-    {path:"/TransactionMenu",component:TransactionMenu},
-    {path:"/login/pasLogin",component:pasLogin}
+    {path: "/caihongpi", component: Caihongpi},
+    {path: "/writeDiary", component: WriteDiary},
+    {path: "/statuList", component: StatuList, meta: {keepAlive: true}},
+    {path: "/TransactionMenu", component: TransactionMenu},
+    {path: "/login/pasLogin", component: pasLogin},
+    {path: "/test", component: websocketTest}
   ], mode: "history"
 })
+
 
 new Vue({
   router,
   el: '#app',
   render: h => h(App)
 })
+
+
+
 
 Vue.prototype.getCookie = function (objName) {
   var arrStr = document.cookie.split("; ");
@@ -177,50 +186,48 @@ Vue.prototype.removeCookie = function (cookieName) {
   }
 }
 
-Vue.prototype.parseTime = function (time,  cFormat)  {
-  if (arguments.length  ===  0  ||  !time)  {
-    return  null;
+Vue.prototype.parseTime = function (time, cFormat) {
+  if (arguments.length === 0 || !time) {
+    return null;
   }
-  const  format  =  cFormat  ||  "{y}-{m}-{d} {h}:{i}:{s}";
-  let  date;
-  if (typeof  time  ===  "object")  {
-    date  =  time;
-  }
-  else  {
-    if (typeof  time  ===  "string")  {
-      if (/^[0-9]+$/.test(time))  {         // support "1548221490638"
+  const format = cFormat || "{y}-{m}-{d} {h}:{i}:{s}";
+  let date;
+  if (typeof time === "object") {
+    date = time;
+  } else {
+    if (typeof time === "string") {
+      if (/^[0-9]+$/.test(time)) {         // support "1548221490638"
 
-        time  =  parseInt(time);
-      }
-      else  {         // support safari
+        time = parseInt(time);
+      } else {         // support safari
         // https://stackoverflow.com/questions/4310953/invalid-date-in-safari
 
-        time  =  time.replace(new  RegExp(/-/gm),  "/");
+        time = time.replace(new RegExp(/-/gm), "/");
       }
     }
-    if (typeof  time  ===  "number"  &&  time.toString().length  ===  10)  {
-      time  =  time  *  1000;
+    if (typeof time === "number" && time.toString().length === 10) {
+      time = time * 1000;
     }
-    date  =  new  Date(time);
+    date = new Date(time);
   }
-  const  formatObj  =   {
-    y:  date.getFullYear(),
-    m:  date.getMonth()  +  1,
-    d:  date.getDate(),
-    h:  date.getHours(),
-    i:  date.getMinutes(),
-    s:  date.getSeconds(),
-    a:  date.getDay()
+  const formatObj = {
+    y: date.getFullYear(),
+    m: date.getMonth() + 1,
+    d: date.getDate(),
+    h: date.getHours(),
+    i: date.getMinutes(),
+    s: date.getSeconds(),
+    a: date.getDay()
   };
-  const  time_str  =  format.replace(/{([ymdhisa])+}/g,   (result,  key)  =>  {
-    const  value  =  formatObj[key];     // Note: getDay() returns 0 on Sunday
+  const time_str = format.replace(/{([ymdhisa])+}/g, (result, key) => {
+    const value = formatObj[key];     // Note: getDay() returns 0 on Sunday
 
-    if (key  ===  "a")  {
-      return  ["日",  "一",  "二",  "三",  "四",  "五",  "六"][value];
+    if (key === "a") {
+      return ["日", "一", "二", "三", "四", "五", "六"][value];
     }
-    return  value.toString().padStart(2,  "0");
+    return value.toString().padStart(2, "0");
   });
-  return  time_str;
+  return time_str;
 }
 
 

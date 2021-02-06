@@ -73,10 +73,10 @@
           this.user = res.data.data;
           this.$toast.clear(false);
         })
-        .catch(res=>{
-          console.log(res);
-          this.$toast.clear(false);
-        });
+          .catch(res => {
+            console.log(res);
+            this.$toast.clear(false);
+          });
       }
     }
   }
