@@ -4,6 +4,7 @@
       title="代办事务"
       @click-right="showMenuAndOverlay"
       @click-left="showDateMenuAndOverlay"
+      style="background: #f9f9f9"
     >
       <template #left>
         <span>{{myDate}}<span style="margin-left: 1.2vw"

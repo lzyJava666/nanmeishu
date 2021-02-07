@@ -20,6 +20,7 @@ import TransactionMenu from "./components/transaction/TransactionMenu";
 import black from "./components/common/black";
 import pasLogin from "./components/login/pasLogin";
 import websocketTest from "./components/test/websocketTest";
+import message from "./components/message/message";
 
 import socket from './components/api/websocket'
 Vue.prototype.socket = socket
@@ -58,7 +59,9 @@ import {ContactCard} from 'vant';
 import {Collapse, CollapseItem} from 'vant';
 import {Overlay} from 'vant';
 import {Switch} from 'vant';
+import { Popover } from 'vant';
 
+Vue.use(Popover);
 Vue.use(Switch);
 Vue.use(Overlay);
 Vue.use(Collapse);
@@ -128,7 +131,8 @@ export const router = new VueRouter({
     {path: "/statuList", component: StatuList, meta: {keepAlive: true}},
     {path: "/TransactionMenu", component: TransactionMenu},
     {path: "/login/pasLogin", component: pasLogin},
-    {path: "/test", component: websocketTest}
+    {path: "/test", component: websocketTest},
+    {path:"/message",component:message}
   ], mode: "history"
 })
 

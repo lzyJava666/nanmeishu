@@ -3,8 +3,10 @@
     <van-nav-bar
       title="人生进度条"
       :border="true"
+      left-arrow
+      @click-left="toUser"
+      style="margin-bottom: 3vh;background: #f9f9f9"
     />
-    <van-divider/>
     <div id="progressBars-head">
       <span id="head1">" {{sentence1}} "</span><br/>
       <span id="head2">———&#160;{{sentence2}}</span><br/>
@@ -40,7 +42,6 @@
                     :percentage="toPercentage(progressBars.currentYear,isLeapYear(this.parseTime(new Date(),'{y}'))?366:365)"
                     stroke-width="11" style="margin-bottom: 3vh"/>
     </div>
-    <bottom v-bind:tabIndex="2"></bottom>
   </div>
 </template>
 
@@ -62,6 +63,9 @@
       }
     },
     methods: {
+      toUser(){
+        this.$router.push('/user')
+      },
       /**
        *转化为百分比
        * @param value 转化数

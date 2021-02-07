@@ -6,9 +6,9 @@
         <van-col span="24">
           <van-cell title="信息管理" is-link @click="xxgl()"/>
           <van-cell title="账号管理" is-link @click="zhgl()"/>
-          <van-cell title="修改密码" is-link/>
-          <van-cell title="单元格" is-link/>
-          <van-cell title="单元格" is-link/>
+          <van-cell title="修改密码" is-link />
+          <van-cell title="人生进度条" is-link to="/friend" />
+          <van-cell title="我的分享" is-link/>
           <van-cell title="单元格" is-link/>
         </van-col>
       </div>

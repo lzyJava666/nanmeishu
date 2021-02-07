@@ -1,10 +1,14 @@
 package com.nanmeishu.im.handler;
 
 import com.alibaba.fastjson.JSON;
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
 import com.nanmeishu.entity.ResponseResult;
+import com.nanmeishu.im.entity.MessageCode;
 import com.nanmeishu.im.entity.MessageProtocol;
 import com.nanmeishu.im.entity.UserChannel;
 import com.nanmeishu.im.feign.UserFeign;
+import com.nanmeishu.util.JwtUtil;
 import com.nanmeishu.util.ResultUtil;
 import com.nanmeishu.util.SpringUtil;
 import io.netty.channel.Channel;
@@ -19,90 +23,110 @@ import org.apache.tomcat.jni.Local;
 import javax.swing.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ImServerHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> {
 
-    //存放游客信息
-    public static List<UserChannel> userChannels = new ArrayList<>();
-    //存放登录用户信息
-    public static Map<String,Object> userChannelMap=new ConcurrentHashMap<String,Object>();
+    /**
+     * 存放登录用户信息 格式为：userId，userChannel类信息，是否在线
+     */
+    public static Map<String, Object[]> userChannelTable = new ConcurrentHashMap<>();
 
+    //存放连接用户的组
+    public static ChannelGroup channelGroup = new DefaultChannelGroup("ChannelGroups", GlobalEventExecutor.INSTANCE);
 
+    /**
+     * 读取消息
+     *
+     * @param ctx
+     * @param msg
+     * @throws Exception
+     */
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame msg) throws Exception {
         System.out.println("服务器收到消息：" + msg.text());
         System.out.println("id:" + ctx.channel().id().asLongText());
         String res = msg.text();
         MessageProtocol messageProtocol = JSON.parseObject(res, MessageProtocol.class);
-        switch (messageProtocol.getType()){
-            case 1:{
+        switch (messageProtocol.getType()) {
+            case MessageCode.LOGIN: {
                 //登录
-                toLogin(messageProtocol,ctx);
+                toLogin(messageProtocol, ctx);
             }
             break;
-            case 0:{
+            case MessageCode.EXIT_LOGIN: {
                 // 退出登录
-                toExit(messageProtocol,ctx);
+                toExit(messageProtocol, ctx);
             }
             break;
         }
-
 
 
     }
 
     //退出登录
     private void toExit(MessageProtocol messageProtocol, ChannelHandlerContext ctx) {
-        String token = messageProtocol.getContent().get("token").toString();
-        for (UserChannel userChannel : userChannels) {
-            if(userChannel.getToken().equals(token)){
-                userChannel.setCreateTime(null);
-                userChannel.setEndTime(LocalDateTime.now());
-            }
-        }
-        System.out.println("用户："+token+"已经断开了连接\n当前人数为："+count());
+        String token = JSON.parseObject(messageProtocol.getContent(),Map.class).get("token").toString();
+        String userId = JwtUtil.get(token, "userId");
+        Object[] objects = userChannelTable.get(userId);
+        UserChannel userChannel = (UserChannel) objects[0];
+        userChannel.setCreateTime(null);
+        userChannel.setEndTime(LocalDateTime.now());
+        objects[0]=userChannel;
+        objects[1]=false;
+        userChannelTable.put(userId,objects);
+        System.out.println("用户：" + token + "已经断开了连接\n当前人数为：" + count());
         ctx.channel().writeAndFlush(new TextWebSocketFrame("true"));
     }
 
     //登录操作
-    private void toLogin(MessageProtocol messageProtocol,ChannelHandlerContext ctx){
+    private void toLogin(MessageProtocol messageProtocol, ChannelHandlerContext ctx) {
+        Channel channel = ctx.channel();
         UserFeign userFeign = SpringUtil.getBean(UserFeign.class);
         System.out.println("传入内容：" + messageProtocol.getContent());
         //获取登录信息
-        ResponseResult login = userFeign.login(messageProtocol.getContent());
+        ResponseResult login = userFeign.login(JSON.parseObject(messageProtocol.getContent(),Map.class));
         if (login.getErrcode() == 200) {
-            String token=login.getData().toString();
+            String token = login.getData().toString();
+            String userId = JwtUtil.get(token, "userId");
             //登录成功
-            boolean flag=false; //标记，找到相同id时会变true
-            for (UserChannel userChannel : userChannels) {
-                if (ctx.channel().id().asLongText().equals(userChannel.getChannelId())&&(!userChannel.getToken().equals(token))) {
-                    //找到通过通道id，且
-                    flag=true;
-                    userChannel.setToken(login.getData().toString());
-                    userChannel.setCreateTime(LocalDateTime.now());
-                    userChannel.setEndTime(null);
-                    break;
+            //判断是否为已登陆过的用户
+            if (userChannelTable.get(userId) == null) {
+                //用户从未登录过,将用户添加到userChannelTable中，
+                Object[] objects = new Object[2];
+                UserChannel newUserChannel = new UserChannel();
+                newUserChannel.setChannel(channel);
+                newUserChannel.setEndTime(null);
+                newUserChannel.setCreateTime(LocalDateTime.now());
+                newUserChannel.setToken(token);
+                objects[0] = newUserChannel;
+                objects[1] = true;
+                userChannelTable.put(userId, objects);
+            } else {
+                //用户已登录过服务器
+                Object[] objects = userChannelTable.get(userId);
+                //判断用户是否在线
+                if ((Boolean) objects[1]) {
+                    //用户在线，强制退出在线账号
+                    exitCurrentLogin(objects);
                 }
+                //上线处理
+                loginFlag(userId,channel,token);
+                //离线消息推送
+                offLineCharPush(userId);
             }
-            if(!flag){
-                //服务器上找不到系统channel id
-                UserChannel myUser=new UserChannel();
-                myUser.setToken(login.getData().toString());
-                myUser.setCreateTime(LocalDateTime.now());
-                myUser.setEndTime(null);
-                myUser.setChannelId(ctx.channel().id().asLongText());
-                myUser.setChannel(ctx.channel());
-                userChannels.add(myUser);
-            }
-            System.out.println(login.getData().toString());
             ctx.channel().writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(ResultUtil.success(token))));
         } else {
             //登录失败
             ctx.channel().writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(ResultUtil.error("账号或密码出错"))));
         }
+    }
+
+    //被强制下线处理
+    private void exitCurrentLogin(Object[] objects) {
     }
 
     @Override
@@ -115,25 +139,32 @@ public class ImServerHandler extends SimpleChannelInboundHandler<TextWebSocketFr
     @Override
     public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
         Channel channel = ctx.channel();
-        UserChannel userChannel = new UserChannel();
-        userChannel.setChannelId(channel.id().asLongText());
-        userChannel.setChannel(channel);
-        userChannel.setToken("-1");
-        userChannel.setCreateTime(LocalDateTime.now());
-        userChannels.add(userChannel);
+        //统计在线人数
+        channelGroup.add(channel);
         System.out.println("------连接-----" + ctx.channel().id().asLongText());
-        System.out.println("当前连接游客人数："+count());
+        System.out.println("当前连接人数：" + count());
+    }
+
+    //将连接人员标记为上线
+    private void loginFlag(String userId,Channel channel,String token) {
+        Object[] currentObject = userChannelTable.get(userId);
+        UserChannel userChannel = (UserChannel) currentObject[0];
+        userChannel.setCreateTime(LocalDateTime.now());
+        userChannel.setEndTime(null);
+        userChannel.setChannel(channel);
+        userChannel.setToken(token);
+        currentObject[0] = userChannel;
+        currentObject[1] = true;
+        userChannelTable.put(userId, currentObject);
+    }
+
+    //离线消息推送
+    private void offLineCharPush(String token) {
     }
 
     //统计在线人数
-    private int count(){
-        int c=0;
-        for (UserChannel userChannel : userChannels) {
-            if(userChannel.getCreateTime()!=null){
-               c++;
-            }
-        }
-        return c;
+    private int count() {
+        return channelGroup.size();
     }
 
     /**
@@ -145,25 +176,24 @@ public class ImServerHandler extends SimpleChannelInboundHandler<TextWebSocketFr
     @Override
     public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
         Channel channel = ctx.channel();
-        UserChannel u = null;
-        if (userChannels == null || userChannels.size() == 0) {
-            return;
-        }
-        for (UserChannel userChannel : userChannels) {
-            if (userChannel.getChannelId().equals(channel.id().asLongText())) {
-                u = userChannel;
-                if (userChannel.getToken().equals("-1")) {
-                    //游客 直接移除出数组
-                    userChannels.remove(userChannel);
-                } else {
-                    userChannel.setEndTime(LocalDateTime.now());
-                    userChannel.setCreateTime(null);
-                }
-                break;
-            }
-        }
-        System.out.println(u);
-        System.out.println("[成员：]" + (u.getToken().equals("-1") ? "游客" : u.getToken()) + " 断开连接");
+        //将断开成员标记为离线,并更改用户状态信息
+        exitLoginFlag(channel);
         System.out.println("当前服务器成员人数：" + count());
+    }
+
+    //将断开成员标记为离线,并更改用户状态信息
+    private void exitLoginFlag(Channel channel) {
+        userChannelTable.forEach((key,value)->{
+            Object[] objects=(Object[]) value;
+            UserChannel userChannel=(UserChannel) objects[0];
+            if(channel == userChannel.getChannel()){
+                userChannel.setEndTime(LocalDateTime.now());
+                userChannel.setCreateTime(null);
+                objects[1]=false;
+                objects[0]=userChannel;
+                userChannelTable.put(key,objects);
+                return;
+            }
+        });
     }
 }

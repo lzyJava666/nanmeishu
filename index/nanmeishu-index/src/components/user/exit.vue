@@ -5,6 +5,7 @@
       left-arrow
       fixed
       @click-left="onClickLeft"
+      style="background: #f9f9f9"
     />
     <div id="exit-head">
       <van-cell is-link :value="phone" @click="phoneUpdate()">
@@ -34,7 +35,6 @@
           <span v-bind:class="{bindingSpanText:(identityCard!='未实名')}">实名认证</span>
         </template>
       </van-cell>
-      <van-divider/>
     </div>
     <div id="exit-bottom">
       <van-button block style="background: #eeeeee;border-radius:5px;margin-bottom: 10px" @click="exit()">退出登录
@@ -203,7 +203,7 @@
   #exit-head {
     height: 40vh;
     width: 100vw;
-    margin-top: 11vh;
+    margin-top: 8vh;
   }
 
   #exit-bottom {
