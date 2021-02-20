@@ -21,6 +21,7 @@ import black from "./components/common/black";
 import pasLogin from "./components/login/pasLogin";
 import websocketTest from "./components/test/websocketTest";
 import message from "./components/message/message";
+import AddFriend from "./components/message/addFriend";
 
 import socket from './components/api/websocket'
 Vue.prototype.socket = socket
@@ -60,7 +61,13 @@ import {Collapse, CollapseItem} from 'vant';
 import {Overlay} from 'vant';
 import {Switch} from 'vant';
 import { Popover } from 'vant';
+import { Tag } from 'vant';
+import { Search } from 'vant';
+import { Empty } from 'vant';
 
+Vue.use(Empty);
+Vue.use(Search);
+Vue.use(Tag);
 Vue.use(Popover);
 Vue.use(Switch);
 Vue.use(Overlay);
@@ -124,6 +131,7 @@ export const router = new VueRouter({
     {path: "/black", component: black},
     {path: "/friend", component: friend},
     {path: "/exit", component: Exit},
+    {path:"/addFriend",component:AddFriend},
     {path: "/updateUser", component: UpdateUser},
     {path: "/showUser", component: ShowUser},
     {path: "/caihongpi", component: Caihongpi},

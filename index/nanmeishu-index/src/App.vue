@@ -9,6 +9,7 @@
 
 <script>
 
+  import {socketUrl} from "./components/api/websocket";
 
   export default {
     name: 'App',
@@ -32,7 +33,7 @@
       },
       initWebSocket() {
         if (window.WebSocket) {
-          this.socket.ws = new WebSocket("ws://localhost:7777/im");
+          this.socket.ws = new WebSocket("ws://"+socketUrl);
           // this.socket.setWs(this.socket.ws);
           this.socket.ws.onmessage = this.websocketonmessage;
           this.socket.ws.onopen = this.websocketonopen;

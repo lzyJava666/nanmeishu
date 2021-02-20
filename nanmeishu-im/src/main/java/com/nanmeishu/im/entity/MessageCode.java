@@ -21,5 +21,7 @@ public class MessageCode {
     public static final int USER_DELETE=113;
     //个人添加好友
     public static final int USER_ADD=114;
+    //个人特别关心好友
+    public static final int USER_MES_TOP=115;
 
 }

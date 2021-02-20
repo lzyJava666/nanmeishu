@@ -1,9 +1,7 @@
 package com.nanmeishu.user.service;
 
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.nanmeishu.user.entity.Area;
 import com.nanmeishu.user.entity.AreaDetails;
-
 import java.util.List;
 import java.util.Map;
 
