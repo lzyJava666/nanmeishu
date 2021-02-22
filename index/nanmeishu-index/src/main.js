@@ -22,6 +22,9 @@ import pasLogin from "./components/login/pasLogin";
 import websocketTest from "./components/test/websocketTest";
 import message from "./components/message/message";
 import AddFriend from "./components/message/addFriend";
+import ShowFriend from "./components/message/showFriend";
+import AddFriendDetails from "./components/message/addFriendDetails";
+import FriendList from "./components/message/friendList";
 
 import socket from './components/api/websocket'
 Vue.prototype.socket = socket
@@ -132,6 +135,9 @@ export const router = new VueRouter({
     {path: "/friend", component: friend},
     {path: "/exit", component: Exit},
     {path:"/addFriend",component:AddFriend},
+    {path:"/addFriendDetails",component:AddFriendDetails},
+    {path:"/friendList",component:FriendList},
+    {path:"/showFriend",component:ShowFriend},
     {path: "/updateUser", component: UpdateUser},
     {path: "/showUser", component: ShowUser},
     {path: "/caihongpi", component: Caihongpi},
@@ -152,8 +158,6 @@ new Vue({
 })
 
 
-
-
 Vue.prototype.getCookie = function (objName) {
   var arrStr = document.cookie.split("; ");
   for (var i = 0; i < arrStr.length; i++) {
@@ -172,6 +176,18 @@ Vue.prototype.addCookie = function (objName, objValue, objHours) {
     str += "; expires=" + date.toGMTString();
   }
   document.cookie = str;
+}
+
+//封装一个消息对象
+Vue.prototype.createMessage=function(content,type,token,fromId){
+  let messageProtocol={
+    content:content,
+    type:type,
+    token:token,
+    fromId:fromId,
+    createTime:new Date(),
+    isShow:0
+  };
 }
 
 //用javascript删除某一个cookie的方法，该方法传入要删除cookie的名称

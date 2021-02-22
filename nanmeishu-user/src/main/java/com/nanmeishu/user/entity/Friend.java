@@ -1,6 +1,7 @@
 package com.nanmeishu.user.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
@@ -15,8 +16,11 @@ public class Friend implements Serializable {
     @ApiModelProperty("id")
     @TableId(type = IdType.ASSIGN_ID, value = "friend_id")
     private Long friendId;
-    @ApiModelProperty("好友的user_id\t")
+    @ApiModelProperty("好友的user_id")
     private Long userId;
+    @ApiModelProperty("好友对象")
+    @TableField(exist = false)
+    private User user;
     @ApiModelProperty("本人user_id")
     private Long myUserId;
     @ApiModelProperty("添加时间")

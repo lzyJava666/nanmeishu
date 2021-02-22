@@ -34,7 +34,7 @@
       <template #title>
           <span style="margin-top: 2vh;display: block;position: relative;">用户名：{{user.username}}
             <div style="position: absolute;right: 5vw;margin-top: -2.5vh">
-               <van-button type="primary" style="border-radius: 5px" size="small" @click="addUser(user.userId)">
+               <van-button type="primary" style="border-radius: 5px" size="small" @click="addUser(user)">
                  <span style="letter-spacing:1px">添加好友</span>
                </van-button>
             </div>
@@ -81,8 +81,14 @@
           })
       },
       //添加好友功能
-      addUser(userId){
-        console.log(userId);
+      addUser(user){
+        this.$router.push({
+          path:"/showFriend",
+          query:{
+            user:encodeURIComponent(JSON.stringify(user)),
+            isFriend:false
+          }
+        })
       }
     }
   }

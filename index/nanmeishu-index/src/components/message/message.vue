@@ -7,7 +7,7 @@
       id="barStyle"
     >
       <template #right>
-        <van-icon name="friends-o" class="barRight"/>
+        <van-icon name="friends-o" class="barRight" @click="toFriendList"/>
         <van-popover
           v-model="showPopover"
           trigger="click"
@@ -203,7 +203,7 @@
       return {
         showPopover: false,
         // 通过 actions 属性来定义菜单选项
-        actions: [{text: '添加好友'}, {text: '选项二'}, {text: '选项三'}],
+        actions: [{text: '添加好友'}, {text: '好友列表'}, {text: '选项三'}],
         isList: false,
         isBootemList: false,
         messageList: []
@@ -217,11 +217,18 @@
             this.$router.push("/addFriend")
           }
             break;
+          case '好友列表':{
+            this.$router.push("/friendList")
+          }
+          break;
         }
 
       },
       onLoadMesList() {
 
+      },
+      toFriendList(){
+        this.$router.push("/friendList")
       }
     }
   }
