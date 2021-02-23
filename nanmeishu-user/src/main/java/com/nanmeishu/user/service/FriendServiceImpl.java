@@ -1,5 +1,6 @@
 package com.nanmeishu.user.service;
 
+import com.nanmeishu.user.entity.Friend;
 import com.nanmeishu.user.entity.User;
 import com.nanmeishu.user.mapper.FriendMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,5 +19,10 @@ public class FriendServiceImpl implements FriendService {
     public List<User> listUserByPhoneOrName(String content, String userId) {
 
         return friendMapper.listUserByPhoneOrName(content,userId);
+    }
+
+    @Override
+    public List<Friend> listFriendByMe(String userId) {
+        return friendMapper.listFriendByMe(userId);
     }
 }

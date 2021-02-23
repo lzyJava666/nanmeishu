@@ -17,4 +17,40 @@
         where my_user_id=#{userId}
        )
    </select>
+    <select id="listFriendByMe" resultMap="friendAndUser">
+        select
+            a.friend_id,a.user_id fuid,my_user_id,a.create_time,a.group_id,a.statuss,a.br_name,a.mes_top,
+            b.username,b.create_time btime,identity_card,age,sex,address,date_of_birth,is_delete,phone,head_portrait,qq_key,wx_key
+        from uu_friend a
+        join uu_user b
+        on a.user_id=b.user_id
+        where my_user_id=#{userId}
+    </select>
+
+<!--    friend对象 包含user对象-->
+    <resultMap id="friendAndUser" type="com.nanmeishu.user.entity.Friend">
+        <id property="friendId" column="friend_id"/>
+        <result property="userId" column="fuid"/>
+        <result property="myUserId" column="my_user_id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="groupId" column="group_id"/>
+        <result property="statuss" column="statuss"/>
+        <result property="brName" column="br_name"/>
+        <result property="mesTop" column="mes_top"/>
+        <association property="user" javaType="com.nanmeishu.user.entity.User">
+            <id property="userId" column="fuid"/>
+            <result property="phone" column="phone"/>
+            <result property="username" column="username"/>
+            <result property="createTime" column="btime"/>
+            <result property="identityCard" column="identity_card"/>
+            <result property="age" column="age"/>
+            <result property="sex" column="sex"/>
+            <result property="dateOfBirth" column="date_of_birth"/>
+            <result property="isDelete" column="is_delete"/>
+            <result property="headPortrait" column="head_portrait"/>
+            <result property="qqKey" column="qq_key"/>
+            <result property="wxKey" column="wx_key"/>
+        </association>
+    </resultMap>
+
 </mapper>

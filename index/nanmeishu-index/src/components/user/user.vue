@@ -9,7 +9,7 @@
           <van-cell title="修改密码" is-link />
           <van-cell title="人生进度条" is-link to="/friend" />
           <van-cell title="我的分享" is-link/>
-          <van-cell title="单元格" is-link/>
+          <van-cell title="我的好友" is-link to="/friendList"/>
         </van-col>
       </div>
     </van-row>

@@ -25,6 +25,7 @@ import AddFriend from "./components/message/addFriend";
 import ShowFriend from "./components/message/showFriend";
 import AddFriendDetails from "./components/message/addFriendDetails";
 import FriendList from "./components/message/friendList";
+import NewFriend from "./components/message/newFriend";
 
 import socket from './components/api/websocket'
 Vue.prototype.socket = socket
@@ -67,7 +68,10 @@ import { Popover } from 'vant';
 import { Tag } from 'vant';
 import { Search } from 'vant';
 import { Empty } from 'vant';
+import { IndexBar, IndexAnchor } from 'vant';
 
+Vue.use(IndexBar);
+Vue.use(IndexAnchor);
 Vue.use(Empty);
 Vue.use(Search);
 Vue.use(Tag);
@@ -136,6 +140,7 @@ export const router = new VueRouter({
     {path: "/exit", component: Exit},
     {path:"/addFriend",component:AddFriend},
     {path:"/addFriendDetails",component:AddFriendDetails},
+    {path:"/newFriend",component:NewFriend},
     {path:"/friendList",component:FriendList},
     {path:"/showFriend",component:ShowFriend},
     {path: "/updateUser", component: UpdateUser},

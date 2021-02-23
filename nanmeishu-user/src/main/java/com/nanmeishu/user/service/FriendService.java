@@ -1,5 +1,6 @@
 package com.nanmeishu.user.service;
 
+import com.nanmeishu.user.entity.Friend;
 import com.nanmeishu.user.entity.User;
 
 import java.util.List;
@@ -12,4 +13,11 @@ public interface FriendService {
      * @return 用户列表
      */
     List<User> listUserByPhoneOrName(String content,String userId);
+
+    /**
+     * 获取当前用户的好友列表
+     * @param userId 当前用户
+     * @return
+     */
+    List<Friend> listFriendByMe(String userId);
 }

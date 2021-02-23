@@ -1,6 +1,7 @@
 package com.nanmeishu.user.controller;
 
 import com.nanmeishu.entity.ResponseResult;
+import com.nanmeishu.user.entity.Friend;
 import com.nanmeishu.user.entity.User;
 import com.nanmeishu.user.service.FriendService;
 import com.nanmeishu.util.JwtUtil;
@@ -31,6 +32,16 @@ public class FriendController {
         String userId = JwtUtil.get(token, "userId");
         List<User> users=friendService.listUserByPhoneOrName(content,userId);
         return ResultUtil.success(users);
+    }
+
+    @ApiOperation("获取当前用户的好友列表")
+    @TokenVerifyAnnotation
+    @GetMapping("/listFriendByMe")
+    public ResponseResult listFriendByMe(HttpServletRequest req){
+        String token = req.getHeader("accessToken");
+        String userId = JwtUtil.get(token, "userId");
+        List<Friend> friends= friendService.listFriendByMe(userId);
+        return ResultUtil.success(friends);
     }
 
 

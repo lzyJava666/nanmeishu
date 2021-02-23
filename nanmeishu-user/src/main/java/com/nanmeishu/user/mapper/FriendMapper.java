@@ -15,4 +15,9 @@ public interface FriendMapper extends BaseMapper<Friend> {
      * @return 用户列表
      */
     List<User> listUserByPhoneOrName(@Param("content") String content,@Param("userId") String userId);
+
+    /**
+     * 获取当前用户的好友列表
+     */
+    List<Friend> listFriendByMe(@Param("userId") String userId);
 }

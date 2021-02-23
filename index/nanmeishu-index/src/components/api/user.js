@@ -5,7 +5,8 @@ const urlList = {
   userBytokenApi: url + "/user/getUserByToken",
   userUpdate: url + "/user/update",
   getUserProgressBars: url + "/user/getUserProgressBars",
-  listUserByPhoneOrName:url+"/friend/listUserByPhoneOrName"
+  listUserByPhoneOrName:url+"/friend/listUserByPhoneOrName",
+  listFriendByMe:url+"/friend/listFriendByMe"
 }
 
 //登录接口
@@ -31,6 +32,11 @@ export function getUserProgressBars(headers) {
 //通过条件查找好友
 export function listUserByPhoneOrName(params, headers) {
   return GetAndHeaders(urlList.listUserByPhoneOrName, params, headers)
+}
+
+//返回当前用户好友列表
+export function listFriendByMe(headers) {
+  return GetAndHeaders(urlList.listFriendByMe,{},headers)
 }
 
 

@@ -23,7 +23,7 @@
       </van-col>
       <van-col span="16">
         <span style="margin: 0.5vh 0 0.5vh 3vw;display: block;font-size: 23px;font-weight: bold;">
-          {{friend==null?user.username:friend.brName}}
+          {{friend!=null&&friend.brName==null?user.username:friend.brName}}
           <span class="iconfont icon-nan" v-show="user.sex==1"
                 style="font-weight: normal;font-size: 19px">
           </span>
@@ -31,7 +31,8 @@
                 style="font-weight: normal;font-size: 19px">
           </span>
         </span>
-        <span class="userSty" v-show="friend!=null">昵称:{{user.username}}</span><br v-show="friend!=null"/>
+        <span class="userSty" v-show="friend!=null&&friend.brName!=null">昵称:{{user.username}}</span>
+        <br v-show="friend!=null&&friend.brName!=null"/>
         <span class="userSty">年龄:{{user.age==null?'未知年龄':user.age}}</span><br/>
         <span class="userSty">地区:{{user.address==null||user.address==''?'归属地不详':user.address}}</span>
       </van-col>
@@ -70,7 +71,7 @@
     },
     methods: {
       onClickLeft() {
-        this.$router.push("/addFriend")
+        history.go(-1)
       },
       onClickRight() {
 
@@ -95,6 +96,7 @@
     font-size: 13px;
     margin-left: 3vw;
     color:#484b4e;
+    letter-spacing:1px;
   }
 
   .icon-nv2 {
