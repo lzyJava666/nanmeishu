@@ -9,7 +9,7 @@
       @click-right="onClickRight"
     />
     <van-card
-      title="昵称：南美鼠"
+      :title="'昵称：'+user.username"
       style="height: 7.5vh"
     >
       <template #thumb>
@@ -17,11 +17,11 @@
           width="38"
           height="38"
           style="margin-left: 4vw;"
-          src="https://img01.yzcdn.cn/vant/cat.jpeg"
+          :src="user.headPortrait"
         />
       </template>
       <template #desc style="position: relative">
-        <span>备注：我是你爸爸
+        <span>备注：{{user.username}}
           <div style="position: absolute;right: 1.2vw;display: inline;top: 1vh;font-size: 15px;">
             <span style="background: #fa514b;color:#fff;text-align: center;padding: 5px;border-radius: 7px;">同意</span>
             <span style="background:#8ee431;color:#fff;text-align: center;padding: 5px;border-radius: 7px;">拒绝</span>
@@ -35,8 +35,15 @@
 </template>
 
 <script>
+  import {get} from "../api/user";
+
   export default {
     name: "newFriend",
+    data() {
+      return {
+        user: {}
+      }
+    },
     methods: {
       onClickLeft() {
         this.$router.push("/friendList")
@@ -44,6 +51,9 @@
       onClickRight() {
         this.$router.push("/addFriend")
       }
+    },
+    created() {
+
     }
   }
 </script>

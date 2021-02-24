@@ -86,7 +86,7 @@
           path:"/showFriend",
           query:{
             user:encodeURIComponent(JSON.stringify(user)),
-            isFriend:false
+            friend:''
           }
         })
       }

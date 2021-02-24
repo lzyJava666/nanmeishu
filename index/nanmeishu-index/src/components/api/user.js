@@ -6,7 +6,14 @@ const urlList = {
   userUpdate: url + "/user/update",
   getUserProgressBars: url + "/user/getUserProgressBars",
   listUserByPhoneOrName:url+"/friend/listUserByPhoneOrName",
-  listFriendByMe:url+"/friend/listFriendByMe"
+  listFriendByMe:url+"/friend/listFriendByMe",
+  get:url+"/user/get"
+}
+
+//通过用户id获取用户信息
+export function get(params) {
+  return Get(urlList.get,params);
+
 }
 
 //登录接口

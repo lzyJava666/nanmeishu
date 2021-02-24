@@ -1,13 +1,12 @@
 package com.nanmeishu.im.handler;
 
 import com.alibaba.fastjson.JSON;
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Table;
 import com.nanmeishu.entity.ResponseResult;
 import com.nanmeishu.im.entity.MessageCode;
 import com.nanmeishu.im.entity.MessageProtocol;
 import com.nanmeishu.im.entity.UserChannel;
 import com.nanmeishu.im.feign.UserFeign;
+import com.nanmeishu.im.util.RedisUtil;
 import com.nanmeishu.util.JwtUtil;
 import com.nanmeishu.util.ResultUtil;
 import com.nanmeishu.util.SpringUtil;
@@ -18,12 +17,10 @@ import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.util.concurrent.GlobalEventExecutor;
-import org.apache.tomcat.jni.Local;
+import redis.clients.jedis.Jedis;
 
-import javax.swing.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -62,9 +59,57 @@ public class ImServerHandler extends SimpleChannelInboundHandler<TextWebSocketFr
                 toExit(messageProtocol, ctx);
             }
             break;
+            case MessageCode.USER_ADD:{
+                //添加好友
+                toUserAdd(messageProtocol, ctx);
+            }
+            break;
         }
+    }
 
+    //添加好友处理
+    private void toUserAdd(MessageProtocol messageProtocol, ChannelHandlerContext ctx) {
+        System.out.println(messageProtocol);
+        //判断用户是否在线
+        boolean exitUser = isExitUser(messageProtocol.getFromId());
+        String userId = JwtUtil.get(messageProtocol.getToken(), "userId");
+        messageProtocol.setUserId(Long.parseLong(userId));
+        RedisUtil redisUtil = SpringUtil.getBean(RedisUtil.class);
+        Jedis jedis = redisUtil.getJedis();
+        if(exitUser){
+            //用户在线 推送消息
+            messageProtocol.setIsSuccess(1);
+            //获取用户通道信息
+            Object[] userObj = userChannelTable.get(messageProtocol.getFromId().toString());
+            UserChannel userChannel = (UserChannel) userObj[0];
+            Channel channel = userChannel.getChannel();
+            System.out.println("对方用户的channel："+channel.remoteAddress());
+            System.out.println("本人用户的channel"+ctx.channel().remoteAddress());
+            //推送给目标用户
+            channel.writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(messageProtocol)));
+        }
+        // 记录存入redis中，存二份 user1:user2  user2:user1
+        List<MessageProtocol> messageProtocols=new ArrayList<>();
+        messageProtocols.add(messageProtocol);
+        jedis.set(userId+":"+messageProtocol.getFromId(),JSON.toJSONString(messageProtocols));
+        jedis.set(messageProtocol.getFromId()+":"+userId,JSON.toJSONString(messageProtocols));
+        jedis.close();
+    }
 
+    //指定用户是否在线
+    private boolean isExitUser(Long userId){
+        Object[] userObj = userChannelTable.get(userId.toString());
+        System.out.println(userObj);
+        if(userObj==null){
+            return false;
+        }
+        boolean isExit= true;
+        if(isExit){
+            //用户在线
+            return true;
+        }else{
+            return false;
+        }
     }
 
     //退出登录

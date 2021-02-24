@@ -61,23 +61,27 @@
             this.addCookie("token", token, 1000 * 60 * 2);
             this.$toast.success("登录成功");
             this.$router.push("/index");
-          }else{
+          }else if(res.type==114){
+            this.num++;
+            console.log(this.num);
+          }
+          else {
             this.$toast.fail(res.errmsg);
           }
 
         }
 
-        // loginapi({username: this.username, password: this.password}).then((res) => {
-        //   if (res.data.errcode == 200) {
-        //     let token = res.data.data;
-        //     this.removeCookie("token");
-        //     this.addCookie("token", token, 1000 * 60 * 2);
-        //     this.$toast.success("登录成功");
-        //     this.$router.push("/index");
-        //   } else {
-        //     this.$toast.fail(res.data.errmsg);
-        //   }
-        // });
+        loginapi({username: this.username, password: this.password}).then((res) => {
+          if (res.data.errcode == 200) {
+            let token = res.data.data;
+            this.removeCookie("token");
+            this.addCookie("token", token, 1000 * 60 * 2);
+            this.$toast.success("登录成功");
+            this.$router.push("/index");
+          } else {
+            this.$toast.fail(res.data.errmsg);
+          }
+        });
       }
     }
   }

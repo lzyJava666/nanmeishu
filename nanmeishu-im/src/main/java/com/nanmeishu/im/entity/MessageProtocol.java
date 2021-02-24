@@ -19,7 +19,7 @@ public class MessageProtocol {
     private int len;
     //内容
     private String content;
-    //发送消息的对象,0:退出登录 1:登录 2：私聊
+    //发送消息的对象
     private int type;
     //所属用户
     private Long userId;
@@ -33,5 +33,7 @@ public class MessageProtocol {
     private LocalDateTime readTime;
     //接收消息用户id
     private Long fromId;
+    //是否推送成功
+    private int isSuccess;
 }
 

@@ -23,7 +23,7 @@
       </van-col>
       <van-col span="16">
         <span style="margin: 0.5vh 0 0.5vh 3vw;display: block;font-size: 23px;font-weight: bold;">
-          {{friend!=null&&friend.brName==null?user.username:friend.brName}}
+          {{friend==''&&friend.brName==null?user.username:friend.brName}}
           <span class="iconfont icon-nan" v-show="user.sex==1"
                 style="font-weight: normal;font-size: 19px">
           </span>
@@ -31,8 +31,8 @@
                 style="font-weight: normal;font-size: 19px">
           </span>
         </span>
-        <span class="userSty" v-show="friend!=null&&friend.brName!=null">昵称:{{user.username}}</span>
-        <br v-show="friend!=null&&friend.brName!=null"/>
+        <span class="userSty" v-show="friend!=''&&friend.brName!=null">昵称:{{user.username}}</span>
+        <br v-show="friend!=''&&friend.brName!=null"/>
         <span class="userSty">年龄:{{user.age==null?'未知年龄':user.age}}</span><br/>
         <span class="userSty">地区:{{user.address==null||user.address==''?'归属地不详':user.address}}</span>
       </van-col>
@@ -44,11 +44,11 @@
     <van-cell title="待开发" is-link/>
     <van-cell title="待开发" is-link/>
     <div style="width: 100%;height: 1vh;background: #f0efef"></div>
-    <van-cell style="text-align: center" to="addFriendDetails">
+    <van-cell style="text-align: center" @click="toAddOrChar()">
       <template #title>
         <span style="font-size: 15px">
         <van-icon name="chat-o" size="15"/>
-          {{friend==null?'添加好友':'发消息'}}
+          {{friend==''?'添加好友':'发消息'}}
         </span>
       </template>
     </van-cell>
@@ -63,11 +63,12 @@
       return {
         //查看的用户对象
         user: JSON.parse(decodeURIComponent(this.$route.query.user)),
-        friend: this.$route.query.friend == null ? null : JSON.parse(decodeURIComponent(this.$route.query.friend))
+        friend: this.$route.query.friend == '' ? '' : JSON.parse(decodeURIComponent(this.$route.query.friend))
       }
     },
     created() {
-
+      console.log("1",this.num);
+      this.num=5;
     },
     methods: {
       onClickLeft() {
@@ -84,6 +85,19 @@
         } else {
           return 'icon-nv2';
         }
+      },
+      toAddOrChar() {
+        if(this.friend==''){
+          this.$router.push({
+            path:"/addFriendDetails",
+            query:{
+              fromId:this.user.userId
+            }
+          })
+        }else{
+
+        }
+
       }
     }
   }
@@ -95,8 +109,8 @@
   .userSty {
     font-size: 13px;
     margin-left: 3vw;
-    color:#484b4e;
-    letter-spacing:1px;
+    color: #484b4e;
+    letter-spacing: 1px;
   }
 
   .icon-nv2 {

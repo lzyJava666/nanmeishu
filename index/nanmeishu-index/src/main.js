@@ -162,6 +162,8 @@ new Vue({
   render: h => h(App)
 })
 
+//存放所有未读信息
+Vue.prototype.num=0;
 
 Vue.prototype.getCookie = function (objName) {
   var arrStr = document.cookie.split("; ");
@@ -190,9 +192,11 @@ Vue.prototype.createMessage=function(content,type,token,fromId){
     type:type,
     token:token,
     fromId:fromId,
-    createTime:new Date(),
-    isShow:0
+    createTime:new Date().getTime(),
+    isShow:0,
+    isSuccess:0
   };
+  return messageProtocol;
 }
 
 //用javascript删除某一个cookie的方法，该方法传入要删除cookie的名称

@@ -91,7 +91,8 @@
         topMes: false,
         pb: false,
         youToMe: false,
-        meToYou: false
+        meToYou: false,
+        fromId:this.$route.query.fromId
       }
     },
     methods: {
@@ -99,7 +100,10 @@
         window.history.back(-1);
       },
       onClickRight() {
-
+        let content;
+        let mess= this.createMessage(content,114,this.getCookie("token"),this.fromId);
+        console.log(mess);
+        this.socket.ws.send(JSON.stringify(mess));
       }
     }
   }
