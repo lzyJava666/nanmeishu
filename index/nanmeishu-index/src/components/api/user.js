@@ -7,7 +7,8 @@ const urlList = {
   getUserProgressBars: url + "/user/getUserProgressBars",
   listUserByPhoneOrName:url+"/friend/listUserByPhoneOrName",
   listFriendByMe:url+"/friend/listFriendByMe",
-  get:url+"/user/get"
+  get:url+"/user/get",
+  listAddFriend:url+"/friend/listAddFriend"
 }
 
 //通过用户id获取用户信息
@@ -44,6 +45,11 @@ export function listUserByPhoneOrName(params, headers) {
 //返回当前用户好友列表
 export function listFriendByMe(headers) {
   return GetAndHeaders(urlList.listFriendByMe,{},headers)
+}
+
+//返回当前用户的好友申请列表
+export function listAddFriend(headers) {
+  return GetAndHeaders(urlList.listAddFriend,{},headers)
 }
 
 

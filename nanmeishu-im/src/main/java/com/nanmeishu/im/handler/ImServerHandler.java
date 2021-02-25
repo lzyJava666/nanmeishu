@@ -163,7 +163,10 @@ public class ImServerHandler extends SimpleChannelInboundHandler<TextWebSocketFr
                 //离线消息推送
                 offLineCharPush(userId);
             }
-            ctx.channel().writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(ResultUtil.success(token))));
+            MessageProtocol messageProtocol1=new MessageProtocol();
+            messageProtocol.setType(MessageCode.LOGIN);
+            messageProtocol.setContent(token);
+            ctx.channel().writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(messageProtocol1)));
         } else {
             //登录失败
             ctx.channel().writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(ResultUtil.error("账号或密码出错"))));

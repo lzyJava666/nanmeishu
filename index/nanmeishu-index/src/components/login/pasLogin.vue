@@ -55,20 +55,26 @@
           let res = JSON.parse(e.data);
           console.log(res);
           let token="";
-          if(res.errcode==200){
-            token=res.data;
-            this.removeCookie("token");
-            this.addCookie("token", token, 1000 * 60 * 2);
-            this.$toast.success("登录成功");
-            this.$router.push("/index");
-          }else if(res.type==114){
-            this.num++;
-            console.log(this.num);
+          switch (res.type) {
+            case 114:{
+              //添加好友请求
+              this.$store.commit('addFriendNum')
+              console.log(this.$store.state.num);
+            }
+            break;
+            case 1:{
+              token=res.data;
+              this.removeCookie("token");
+              this.addCookie("token", token, 1000 * 60 * 2);
+              this.$toast.success("登录成功");
+              this.$router.push("/index");
+            }
+            break;
+            default:{
+              this.$toast.fail(res.errmsg);
+            }
+            break;
           }
-          else {
-            this.$toast.fail(res.errmsg);
-          }
-
         }
 
         loginapi({username: this.username, password: this.password}).then((res) => {

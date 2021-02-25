@@ -455,3 +455,103 @@ export function oneMaxFirst(str) {
     return ConvertPinyin(str).substring(0,1).toUpperCase();
   }
 }
+//添加cookie
+export function addCookie(objName, objValue, objHours) {
+  var str = objName + "=" + escape(objValue); //编码
+  if (objHours > 0) {//为0时不设定过期时间，浏览器关闭时cookie自动消失
+    var date = new Date();
+    var ms = objHours * 3600 * 1000;
+    date.setTime(date.getTime() + ms);
+    str += "; expires=" + date.toGMTString();
+  }
+  document.cookie = str;
+}
+//获取cookie
+export function getCookie(objName) {
+  var arrStr = document.cookie.split("; ");
+  for (var i = 0; i < arrStr.length; i++) {
+    var temp = arrStr[i].split("=");
+    if (temp[0] == objName) return unescape(temp[1]);  //解码
+  }
+  return "";
+}
+//删除指定cookie
+export function removeCookie(cookieName) {
+  var cookies = document.cookie.split(";");//将所有cookie键值对通过分号分割为数组
+
+  //循环遍历所有cookie键值对
+  for (var i = 0; i < cookies.length; i++) {
+    //有些cookie键值对前面会莫名其妙产生一个空格，将空格去掉
+    if (cookies[i].indexOf(" ") == 0) {
+      cookies[i] = cookies[i].substring(1);
+    }
+    //比较每个cookie的名称，找到要删除的那个cookie键值对
+    if (cookies[i].indexOf(cookieName) == 0) {
+      var exp = new Date();//获取客户端本地当前系统时间
+      exp.setTime(exp.getTime() - 60 * 1000);//将exp设置为客户端本地时间1分钟以前，将exp赋值给cookie作为过期时间后，就表示该cookie已经过期了, 那么浏览器就会将其立刻删除掉
+
+      document.cookie = cookies[i] + ";expires=" + exp.toUTCString();//设置要删除的cookie的过期时间，即在该cookie的键值对后面再添加一个expires键值对，并将上面的exp赋给expires作为值(注意expires的值必须为UTC或者GMT时间，不能用本地时间），那么浏览器就会将该cookie立刻删除掉
+      //注意document.cookie的用法很巧妙，在对其进行赋值的时候是设置单个cookie的信息，但是获取document.cookie的值的时候是返回所有cookie的信息
+
+      break;//要删除的cookie已经在客户端被删除掉，跳出循环
+    }
+  }
+}
+
+//时间指定格式返回
+export function parseTime(time, cFormat) {
+  if (arguments.length === 0 || !time) {
+    return null;
+  }
+  const format = cFormat || "{y}-{m}-{d} {h}:{i}:{s}";
+  let date;
+  if (typeof time === "object") {
+    date = time;
+  } else {
+    if (typeof time === "string") {
+      if (/^[0-9]+$/.test(time)) {         // support "1548221490638"
+
+        time = parseInt(time);
+      } else {         // support safari
+        // https://stackoverflow.com/questions/4310953/invalid-date-in-safari
+
+        time = time.replace(new RegExp(/-/gm), "/");
+      }
+    }
+    if (typeof time === "number" && time.toString().length === 10) {
+      time = time * 1000;
+    }
+    date = new Date(time);
+  }
+  const formatObj = {
+    y: date.getFullYear(),
+    m: date.getMonth() + 1,
+    d: date.getDate(),
+    h: date.getHours(),
+    i: date.getMinutes(),
+    s: date.getSeconds(),
+    a: date.getDay()
+  };
+  const time_str = format.replace(/{([ymdhisa])+}/g, (result, key) => {
+    const value = formatObj[key];     // Note: getDay() returns 0 on Sunday
+
+    if (key === "a") {
+      return ["日", "一", "二", "三", "四", "五", "六"][value];
+    }
+    return value.toString().padStart(2, "0");
+  });
+  return time_str;
+}
+
+export function createMessage(content,type,token,fromId){
+  let messageProtocol={
+    content:content,
+    type:type,
+    token:token,
+    fromId:fromId,
+    createTime:new Date().getTime(),
+    isShow:0,
+    isSuccess:0
+  };
+  return messageProtocol;
+}

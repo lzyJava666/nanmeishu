@@ -20,4 +20,11 @@ public interface FriendService {
      * @return
      */
     List<Friend> listFriendByMe(String userId);
+
+    /**
+     * 获取当前用户的好友申请列表
+     * @param userId
+     * @return
+     */
+    List<User> listAddFriend(String userId);
 }

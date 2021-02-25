@@ -35,7 +35,7 @@
 </template>
 
 <script>
-  import {get} from "../api/user";
+  import {listAddFriend} from "../api/user";
 
   export default {
     name: "newFriend",
@@ -53,7 +53,15 @@
       }
     },
     created() {
+      let friend=this.$store.state.addFriendNum;
+      if(friend !=0){
+        //有新好友添加
+        listAddFriend({"accessToken":this.getCookie("token")})
+            .then(res=>{
 
+            })
+      }
+      this.$store.commit('zeroAddFriendNum')
     }
   }
 </script>

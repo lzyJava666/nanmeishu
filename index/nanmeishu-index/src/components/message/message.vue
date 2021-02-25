@@ -7,7 +7,9 @@
       id="barStyle"
     >
       <template #right>
-        <van-icon name="friends-o" class="barRight" @click="toFriendList"/>
+        <van-badge :content="$store.state.addFriendNum">
+          <van-icon name="friends-o" class="barRight" @click="toFriendList"/>
+        </van-badge>
         <van-popover
           v-model="showPopover"
           trigger="click"
@@ -217,17 +219,17 @@
             this.$router.push("/addFriend")
           }
             break;
-          case '好友列表':{
+          case '好友列表': {
             this.$router.push("/friendList")
           }
-          break;
+            break;
         }
 
       },
       onLoadMesList() {
 
       },
-      toFriendList(){
+      toFriendList() {
         this.$router.push("/friendList")
       }
     }

@@ -3,7 +3,7 @@
     <van-tabbar v-model="val">
       <van-tabbar-item icon="home-o">记录</van-tabbar-item>
       <van-tabbar-item icon="search">事务</van-tabbar-item>
-      <van-tabbar-item icon="chat-o" :badge="n">消息</van-tabbar-item>
+      <van-tabbar-item icon="chat-o" :badge="$store.state.num">消息</van-tabbar-item>
       <van-tabbar-item icon="user-o">我的</van-tabbar-item>
     </van-tabbar>
   </div>
@@ -14,17 +14,13 @@
     name: "bottom",
     data() {
       return {
-        val: -1,
-        n:0
+        val: -1
       }
     },
     props: ["tabIndex"]
     ,
     methods: {},
     watch: {
-      num:function(newVal, oldVal){
-        this.n=newVal;
-      },
       val: function (newVal, oldVal) {
         if (oldVal == -1) {
           return;
@@ -62,7 +58,7 @@
     },
     created() {
       this.val = this.val == -1 ? this.tabIndex : this.val;
-    }
+  }
   }
 </script>
 

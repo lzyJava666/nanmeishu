@@ -44,6 +44,16 @@ public class FriendController {
         return ResultUtil.success(friends);
     }
 
+    @ApiOperation("获取当前用户的好友请求列表")
+    @TokenVerifyAnnotation
+    @GetMapping("/listAddFriend")
+    public ResponseResult listAddFriend(HttpServletRequest req){
+        String token = req.getHeader("accessToken");
+        String userId = JwtUtil.get(token, "userId");
+        List<User> users=friendService.listAddFriend(userId);
+        return ResultUtil.success(users);
+    }
+
 
 
 }
