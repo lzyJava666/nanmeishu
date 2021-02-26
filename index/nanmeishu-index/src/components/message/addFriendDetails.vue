@@ -100,7 +100,17 @@
         window.history.back(-1);
       },
       onClickRight() {
-        let content;
+        let content={
+          message:this.message,
+          statuss:this.pb?1:0,
+          brName:this.bz,
+          mesTop:this.topMes?1:0,
+          isMyYour:this.meToYou?1:0,
+          isYourMy:this.youToMe?1:0,
+          userId:this.fromId,
+          isAddStatus:0,  //0: 未处理 1：通过 2：拒绝
+          createTime:new Date().getTime()
+        };
         let mess= this.createMessage(content,114,this.getCookie("token"),this.fromId);
         console.log(mess);
         this.socket.ws.send(JSON.stringify(mess));

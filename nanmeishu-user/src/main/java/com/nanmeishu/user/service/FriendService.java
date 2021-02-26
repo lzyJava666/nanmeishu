@@ -4,6 +4,7 @@ import com.nanmeishu.user.entity.Friend;
 import com.nanmeishu.user.entity.User;
 
 import java.util.List;
+import java.util.Map;
 
 public interface FriendService {
     /**
@@ -26,5 +27,24 @@ public interface FriendService {
      * @param userId
      * @return
      */
-    List<User> listAddFriend(String userId);
+    List<Map> listAddFriend(String userId);
+
+    /**
+     * 将当前用户的所有好友申请标记为已读
+     * @param userId
+     */
+    void flagAddFriend(String userId);
+
+    /**
+     * 获取用户未处理的好友请求
+     * @param userId
+     * @return
+     */
+    List<Map> listNoSuccessAddFriend(String userId);
+
+    /**
+     * 新增好友
+     * @param friend
+     */
+    void insert(Friend friend);
 }

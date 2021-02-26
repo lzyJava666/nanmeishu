@@ -7,7 +7,7 @@
       id="barStyle"
     >
       <template #right>
-        <van-badge :content="$store.state.addFriendNum">
+        <van-badge :content="$store.state.addFriendNum==0?'':$store.state.addFriendNum">
           <van-icon name="friends-o" class="barRight" @click="toFriendList"/>
         </van-badge>
         <van-popover

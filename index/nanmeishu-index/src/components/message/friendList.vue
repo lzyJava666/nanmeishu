@@ -7,7 +7,7 @@
     />
     <van-cell is-link style="margin-top: 1vh;margin-bottom: 1vh" :border="false" to="newFriend">
       <template #title>
-        <van-badge :content="$store.state.addFriendNum">
+        <van-badge :content="$store.state.addFriendNum==0?'':$store.state.addFriendNum">
           <span class="iconfont icon-xinhaoyou" style="vertical-align:middle;font-size: 25px;color: #42b983"></span>
         </van-badge>
         <span style="vertical-align:middle;margin-left: 3vw;font-size: 18px;">新朋友</span>

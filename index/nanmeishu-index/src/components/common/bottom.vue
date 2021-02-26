@@ -3,7 +3,7 @@
     <van-tabbar v-model="val">
       <van-tabbar-item icon="home-o">记录</van-tabbar-item>
       <van-tabbar-item icon="search">事务</van-tabbar-item>
-      <van-tabbar-item icon="chat-o" :badge="$store.state.num">消息</van-tabbar-item>
+      <van-tabbar-item icon="chat-o" :badge="$store.state.num==0?'':$store.state.num">消息</van-tabbar-item>
       <van-tabbar-item icon="user-o">我的</van-tabbar-item>
     </van-tabbar>
   </div>

@@ -16,7 +16,8 @@ public interface UserFeign {
     @PostMapping("/user/login")
     ResponseResult login(@RequestBody Map<String, Object> map);
 
-
+    @PostMapping("/friend/insert")
+    ResponseResult insert(@RequestBody String frientStr);
 
 
 }

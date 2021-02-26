@@ -70,6 +70,10 @@
               this.$router.push("/index");
             }
             break;
+            case 1141:{
+              this.$store.commit('addFriendNum')
+            }
+            break;
             default:{
               this.$toast.fail(res.errmsg);
             }

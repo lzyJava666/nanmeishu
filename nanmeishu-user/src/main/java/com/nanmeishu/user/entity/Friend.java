@@ -23,6 +23,9 @@ public class Friend implements Serializable {
     private User user;
     @ApiModelProperty("本人user_id")
     private Long myUserId;
+    @ApiModelProperty("本人对象")
+    @TableField(exist = false)
+    private User myUser;
     @ApiModelProperty("添加时间")
     private LocalDateTime createTime;
     @ApiModelProperty("所属分组 -1 为 默认分组 默认值-1")
@@ -33,4 +36,8 @@ public class Friend implements Serializable {
     private String brName;
     @ApiModelProperty("特别关心 0 否 1是 默认值0")
     private Integer mesTop;
+    @ApiModelProperty("我是否看他分享 0 是 1 否")
+    private Integer isMyYour;
+    @ApiModelProperty("他是否能看我分享 0 是 1 否")
+    private Integer isYourMy;
 }

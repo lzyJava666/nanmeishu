@@ -35,6 +35,8 @@ public class ImServerHandler extends SimpleChannelInboundHandler<TextWebSocketFr
     //存放连接用户的组
     public static ChannelGroup channelGroup = new DefaultChannelGroup("ChannelGroups", GlobalEventExecutor.INSTANCE);
 
+
+
     /**
      * 读取消息
      *
@@ -64,15 +66,79 @@ public class ImServerHandler extends SimpleChannelInboundHandler<TextWebSocketFr
                 toUserAdd(messageProtocol, ctx);
             }
             break;
+            case MessageCode.RETURN_USER_ADD:{
+                //处理添加好友请求消息
+                disposeAddUser(messageProtocol,ctx);
+            }
+            break;
+        }
+    }
+
+    //处理添加好友请求消息
+    private void disposeAddUser(MessageProtocol messageProtocol, ChannelHandlerContext ctx) {
+
+        RedisUtil redisUtils = SpringUtil.getBean(RedisUtil.class);
+        Jedis jedis = redisUtils.getJedis();
+        String token = messageProtocol.getToken();
+        String userId = JwtUtil.get(token, "userId");
+        String friendUserId=messageProtocol.getFromId().toString();
+        try {
+            //1.将redis中的未处理标志改为具体处理标志,注：双方信息都要
+            List<MessageProtocol> messageProtocols = JSON.parseArray(jedis.get(userId + ":" + friendUserId), MessageProtocol.class);
+            System.out.println(messageProtocols);
+            for (MessageProtocol protocol : messageProtocols) {
+                if(protocol.getType()==114){
+                    //添加好友请求
+                    Map content = JSON.parseObject(protocol.getContent(),Map.class);
+                    if(JSON.parseObject(messageProtocol.getContent(),Map.class).get("status").toString().equals("1")){
+                        //同意好友请求
+                        content.put("isAddStatus",1);
+                        //数据库添加好友
+                        UserFeign friendController = SpringUtil.getBean(UserFeign.class);
+                        friendController.insert(JSON.toJSONString(content));
+                    }else{
+                        //拒绝好友请求
+                        content.put("isAddStatus",2);
+                    }
+                    protocol.setContent(JSON.toJSONString(content));
+                    jedis.set(userId + ":" + friendUserId,JSON.toJSONString(messageProtocols));
+                    jedis.set(friendUserId+":"+userId,JSON.toJSONString(messageProtocols));
+                    //推送给用户消息
+                    charToAddUser(friendUserId);
+                }
+            }
+        }finally {
+            jedis.close();
+        }
+    }
+
+    //推送消息给目标用户  ---关于好友申请
+    private void charToAddUser(String friendUserId) {
+        MessageProtocol messageProtocol=new MessageProtocol();
+        messageProtocol.setType(1141);
+        messageProtocol.setCreateTime(LocalDateTime.now());
+        Object[] objects = userChannelTable.get(friendUserId);
+        if(objects==null){
+            return;
+        }
+        Boolean object = (Boolean) objects[1];
+        if(object){
+            //在线 推送给用户
+            UserChannel userChannel = (UserChannel) objects[0];
+            userChannel.getChannel().writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(messageProtocol)));
+        }else{
+            //离线
         }
     }
 
     //添加好友处理
     private void toUserAdd(MessageProtocol messageProtocol, ChannelHandlerContext ctx) {
-        System.out.println(messageProtocol);
+        Map map = JSON.parseObject(messageProtocol.getContent(), Map.class);
         //判断用户是否在线
         boolean exitUser = isExitUser(messageProtocol.getFromId());
         String userId = JwtUtil.get(messageProtocol.getToken(), "userId");
+        map.put("myUserId",userId);
+        messageProtocol.setContent(JSON.toJSONString(map));
         messageProtocol.setUserId(Long.parseLong(userId));
         RedisUtil redisUtil = SpringUtil.getBean(RedisUtil.class);
         Jedis jedis = redisUtil.getJedis();
@@ -99,7 +165,6 @@ public class ImServerHandler extends SimpleChannelInboundHandler<TextWebSocketFr
     //指定用户是否在线
     private boolean isExitUser(Long userId){
         Object[] userObj = userChannelTable.get(userId.toString());
-        System.out.println(userObj);
         if(userObj==null){
             return false;
         }
@@ -180,6 +245,7 @@ public class ImServerHandler extends SimpleChannelInboundHandler<TextWebSocketFr
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         System.out.println("发生异常：" + cause.getMessage());
+        cause.printStackTrace();
         ctx.close();
     }
 

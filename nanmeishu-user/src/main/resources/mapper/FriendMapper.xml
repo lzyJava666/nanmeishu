@@ -20,7 +20,7 @@
     <select id="listFriendByMe" resultMap="friendAndUser">
         select
             a.friend_id,a.user_id fuid,my_user_id,a.create_time,a.group_id,a.statuss,a.br_name,a.mes_top,
-            b.username,b.create_time btime,identity_card,age,sex,address,date_of_birth,is_delete,phone,head_portrait,qq_key,wx_key
+            b.username,b.create_time btime,identity_card,age,sex,address,date_of_birth,is_delete,phone,head_portrait,qq_key,wx_key,is_my_your,is_your_my
         from uu_friend a
         join uu_user b
         on a.user_id=b.user_id
@@ -37,6 +37,8 @@
         <result property="statuss" column="statuss"/>
         <result property="brName" column="br_name"/>
         <result property="mesTop" column="mes_top"/>
+        <result property="isYourMy" column="is_your_my"/>
+        <result property="isMyYour" column="is_my_your"/>
         <association property="user" javaType="com.nanmeishu.user.entity.User">
             <id property="userId" column="fuid"/>
             <result property="phone" column="phone"/>

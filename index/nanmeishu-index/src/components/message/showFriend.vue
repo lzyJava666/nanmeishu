@@ -23,7 +23,7 @@
       </van-col>
       <van-col span="16">
         <span style="margin: 0.5vh 0 0.5vh 3vw;display: block;font-size: 23px;font-weight: bold;">
-          {{friend==''&&friend.brName==null?user.username:friend.brName}}
+          {{friend==''||friend.brName==null?user.username:friend.brName}}
           <span class="iconfont icon-nan" v-show="user.sex==1"
                 style="font-weight: normal;font-size: 19px">
           </span>
@@ -67,8 +67,8 @@
       }
     },
     created() {
-      console.log("1",this.num);
-      this.num=5;
+      console.log("1", this.num);
+      this.num = 5;
     },
     methods: {
       onClickLeft() {
@@ -87,14 +87,14 @@
         }
       },
       toAddOrChar() {
-        if(this.friend==''){
+        if (this.friend == '') {
           this.$router.push({
-            path:"/addFriendDetails",
-            query:{
-              fromId:this.user.userId
+            path: "/addFriendDetails",
+            query: {
+              fromId: this.user.userId
             }
           })
-        }else{
+        } else {
 
         }
 
