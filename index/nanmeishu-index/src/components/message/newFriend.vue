@@ -12,7 +12,8 @@
     <van-card
       :title="'昵称：'+item.user.username"
       style="height: 7.5vh;margin-left:2vw;margin-right: 2vw;border-radius: 9px; "
-      v-for="item in friends"
+      v-for="(item,index) in friends"
+      :key="index"
     >
       <template #thumb>
         <van-image

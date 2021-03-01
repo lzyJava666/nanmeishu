@@ -72,4 +72,9 @@ public class TaleServiceImpl implements TaleService {
             throw new RuntimeException("更新出错");
         }
     }
+
+    @Override
+    public Integer countTaleByUserId(String userId) {
+        return taleMapper.selectCount(new QueryWrapper<Tale>().eq("type",0).eq("user_id",userId));
+    }
 }

@@ -8,7 +8,8 @@ const urlList = {
   listUserByPhoneOrName:url+"/friend/listUserByPhoneOrName",
   listFriendByMe:url+"/friend/listFriendByMe",
   get:url+"/user/get",
-  listAddFriend:url+"/friend/listAddFriend"
+  listAddFriend:url+"/friend/listAddFriend",
+  countUser:url+"/user/countUser"
 }
 
 //通过用户id获取用户信息
@@ -50,6 +51,11 @@ export function listFriendByMe(headers) {
 //返回当前用户的好友申请列表
 export function listAddFriend(headers) {
   return GetAndHeaders(urlList.listAddFriend,{},headers)
+}
+
+//返回用户的资源数量
+export function countUser(headers) {
+  return GetAndHeaders(urlList.countUser,{},headers)
 }
 
 

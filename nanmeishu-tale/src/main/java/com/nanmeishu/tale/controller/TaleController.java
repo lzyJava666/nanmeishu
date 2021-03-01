@@ -209,5 +209,11 @@ public class TaleController {
         return result;
     }
 
+    @ApiOperation("通过用户Id统计日记数量")
+    @GetMapping("/countTaleByUserId")
+    public ResponseResult countTaleByUserId(@RequestParam("userId") String userId){
+        return ResultUtil.success(taleService.countTaleByUserId(userId));
+    }
+
 
 }

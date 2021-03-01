@@ -1,6 +1,7 @@
 package com.nanmeishu.user.service;
 
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.nanmeishu.user.entity.Friend;
 import com.nanmeishu.user.entity.User;
 import com.nanmeishu.user.mapper.FriendMapper;
@@ -147,5 +148,12 @@ public class FriendServiceImpl implements FriendService {
         if(insert<=0){
             throw new RuntimeException("新增出错");
         }
+    }
+
+    @Override
+    public int countFriendByUserId(String userId) {
+        Integer countFrient=0;
+        countFrient = friendMapper.selectCount(new QueryWrapper<Friend>().eq("my_user_id", userId));
+        return countFrient;
     }
 }

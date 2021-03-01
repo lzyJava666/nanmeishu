@@ -29,6 +29,7 @@
       title="南美鼠"
       thumb="https://img01.yzcdn.cn/vant/ipad.jpeg"
       class="cardStyle"
+      @click="a"
       tag="5"
     >
       <template #thumb>
@@ -212,6 +213,9 @@
       }
     },
     methods: {
+      a(){
+        this.$router.push("/chat")
+      },
       onSelect(action) {
         let onAction = action.text;
         switch (onAction) {

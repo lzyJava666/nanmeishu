@@ -92,6 +92,7 @@ public class ErrorController {
                 .append("请求类型出错，错误类型：")
                 .append(e.getMethod());
         logger.error(errMsg);
+        e.printStackTrace();
         return ResultUtil.error(errMsg);
 
     }

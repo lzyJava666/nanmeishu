@@ -34,4 +34,11 @@ public interface TransactionService {
      * @param transaction
      */
     void save(Transaction transaction);
+
+    /**
+     * 统计当前用户事务数量
+     * @param userId
+     * @return
+     */
+    Integer countTransactionByUserId(String userId);
 }

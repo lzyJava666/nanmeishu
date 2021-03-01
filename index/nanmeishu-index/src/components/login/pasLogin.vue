@@ -74,6 +74,10 @@
               this.$store.commit('addFriendNum')
             }
             break;
+            case 11:{
+              console.log("收到私聊消息：",res);
+            }
+            break;
             default:{
               this.$toast.fail(res.errmsg);
             }

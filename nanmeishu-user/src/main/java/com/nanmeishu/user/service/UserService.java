@@ -32,4 +32,6 @@ public interface UserService extends IService<User> {
      * 返回用户人生进度条
      */
     Map<String, Object> getUserProgressBars(String userId);
+
+
 }

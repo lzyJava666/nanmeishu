@@ -4,6 +4,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.nanmeishu.entity.ResponseResult;
 import com.nanmeishu.user.constant.AllConstant;
 import com.nanmeishu.user.entity.User;
+import com.nanmeishu.user.feign.TaleFeign;
+import com.nanmeishu.user.feign.TransactionFeign;
+import com.nanmeishu.user.service.FriendService;
 import com.nanmeishu.user.service.UserService;
 import com.nanmeishu.user.util.RedisUtil;
 import com.nanmeishu.util.JwtUtil;
@@ -11,6 +14,7 @@ import com.nanmeishu.web.TokenVerifyAnnotation;
 import com.nanmeishu.util.DataUtil;
 import com.nanmeishu.util.ResultUtil;
 import io.swagger.annotations.*;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +23,7 @@ import redis.clients.jedis.Jedis;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Map;
 
 @Api(tags = "用户接口")
@@ -28,6 +33,15 @@ public class UserController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    FriendService friendService;
+
+    @Autowired
+    TransactionFeign transactionFeign;
+
+    @Autowired
+    TaleFeign taleFeign;
 
     @Autowired
     RedisUtil redisUtil;
@@ -222,6 +236,30 @@ public class UserController {
         String token = request.getHeader("accessToken");
         String userId = JwtUtil.get(token, "userId");
         resMap = userService.getUserProgressBars(userId);
+        return ResultUtil.success(resMap);
+    }
+
+    @ApiOperation("返回用户的资源数量")
+    @TokenVerifyAnnotation
+    @GetMapping("/countUser")
+    public ResponseResult countUser(HttpServletRequest request) {
+        String token = request.getHeader("accessToken");
+        String userId = JwtUtil.get(token, "userId");
+        Map<String, Integer> resMap = new HashMap<>();
+        //获取好友数量
+        int countFrient = friendService.countFriendByUserId(userId);
+        System.out.println("好友数量：" + countFrient);
+        //获取日记数量
+        ResponseResult taleResult = taleFeign.countTaleByUserId(userId);
+        int countTale = (int) taleResult.getData();
+        System.out.println("日记数量：" + countTale);
+        //获取事务数量
+        ResponseResult transactionResult = transactionFeign.countTransactionByUserId(userId);
+        int countTransaction = (int) transactionResult.getData();
+        System.out.println("事务数量：" + countTransaction);
+        resMap.put("countFrient", countFrient);
+        resMap.put("countTale",countTale);
+        resMap.put("countTransaction",countTransaction);
         return ResultUtil.success(resMap);
     }
 

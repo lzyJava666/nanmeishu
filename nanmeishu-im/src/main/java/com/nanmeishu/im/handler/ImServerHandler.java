@@ -35,7 +35,7 @@ public class ImServerHandler extends SimpleChannelInboundHandler<TextWebSocketFr
     //存放连接用户的组
     public static ChannelGroup channelGroup = new DefaultChannelGroup("ChannelGroups", GlobalEventExecutor.INSTANCE);
 
-
+    RedisUtil redisUtil=SpringUtil.getBean(RedisUtil.class);
 
     /**
      * 读取消息
@@ -66,19 +66,54 @@ public class ImServerHandler extends SimpleChannelInboundHandler<TextWebSocketFr
                 toUserAdd(messageProtocol, ctx);
             }
             break;
-            case MessageCode.RETURN_USER_ADD:{
+            case MessageCode.RETURN_CHAT_ADD:{
                 //处理添加好友请求消息
                 disposeAddUser(messageProtocol,ctx);
+            }
+            break;
+            case MessageCode.USER_CHAT:{
+                //处理私聊消息请求
+                toUserChat(messageProtocol,ctx);
             }
             break;
         }
     }
 
+    //处理私聊请求
+    private void toUserChat(MessageProtocol messageProtocol, ChannelHandlerContext ctx) {
+        if(isExitUser(messageProtocol.getFromId())){
+            //目标用户在线
+            Object[] userObj = userChannelTable.get(messageProtocol.getFromId().toString());
+            UserChannel fromUser= (UserChannel) userObj[0];
+            System.out.println(fromUser);
+            //拿到目标用户的channel
+            Channel fromChannel = fromUser.getChannel();
+            //推送消息
+            messageProtocol.setIsSuccess(1);
+            messageProtocol.setUserId(Long.parseLong(JwtUtil.get(messageProtocol.getToken(),"userId")));
+            fromChannel.writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(messageProtocol)));
+        }else{
+            //目标用户离线
+        }
+        //处理完毕 存入redis
+        Jedis jedis = redisUtil.getJedis();
+        try {
+            //拿到二人的消息列表
+            String fromToUser = jedis.get(messageProtocol.getFromId() + ":" + messageProtocol.getUserId());
+            List<MessageProtocol> fromToUserMessage=JSON.parseArray(fromToUser,MessageProtocol.class);
+            fromToUserMessage.add(messageProtocol);
+            jedis.set(messageProtocol.getFromId() + ":" + messageProtocol.getUserId(),JSON.toJSONString(fromToUserMessage));
+            jedis.set(messageProtocol.getUserId()+":"+messageProtocol.getFromId(),JSON.toJSONString(fromToUserMessage));
+        }finally {
+            jedis.close();
+        }
+
+    }
+
     //处理添加好友请求消息
     private void disposeAddUser(MessageProtocol messageProtocol, ChannelHandlerContext ctx) {
-
-        RedisUtil redisUtils = SpringUtil.getBean(RedisUtil.class);
-        Jedis jedis = redisUtils.getJedis();
+        //RedisUtil redisUtils = SpringUtil.getBean(RedisUtil.class);
+        Jedis jedis = redisUtil.getJedis();
         String token = messageProtocol.getToken();
         String userId = JwtUtil.get(token, "userId");
         String friendUserId=messageProtocol.getFromId().toString();
@@ -140,7 +175,7 @@ public class ImServerHandler extends SimpleChannelInboundHandler<TextWebSocketFr
         map.put("myUserId",userId);
         messageProtocol.setContent(JSON.toJSONString(map));
         messageProtocol.setUserId(Long.parseLong(userId));
-        RedisUtil redisUtil = SpringUtil.getBean(RedisUtil.class);
+        //RedisUtil redisUtil = SpringUtil.getBean(RedisUtil.class);
         Jedis jedis = redisUtil.getJedis();
         if(exitUser){
             //用户在线 推送消息

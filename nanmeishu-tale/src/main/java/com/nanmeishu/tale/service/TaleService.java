@@ -27,4 +27,11 @@ public interface TaleService {
      * @param tale
      */
     void updateTaleAndDetails(Tale tale);
+
+    /**
+     * 统计用户故事数量
+     * @param userId
+     * @return
+     */
+    Integer countTaleByUserId(String userId);
 }

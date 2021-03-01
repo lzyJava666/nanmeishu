@@ -80,5 +80,11 @@ public class TransactionController {
         }
     }
 
+    @ApiOperation("通过用户id统计事务数量")
+    @GetMapping("/countTransactionByUserId")
+    public ResponseResult countTransactionByUserId(@RequestParam("userId") String userId){
+        return ResultUtil.success(transactionService.countTransactionByUserId(userId));
+    }
+
 
 }

@@ -89,4 +89,9 @@ public class TransactionServiceImpl implements TransactionService {
             throw new RuntimeException("添加失败");
         }
     }
+
+    @Override
+    public Integer countTransactionByUserId(String userId) {
+        return transactionMapper.selectCount(new QueryWrapper<Transaction>().eq("user_id",userId));
+    }
 }

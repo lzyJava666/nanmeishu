@@ -114,6 +114,7 @@
         let mess= this.createMessage(content,114,this.getCookie("token"),this.fromId);
         console.log(mess);
         this.socket.ws.send(JSON.stringify(mess));
+        this.$toast.success("已发起好友添加请求！")
       }
     }
   }

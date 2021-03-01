@@ -42,9 +42,6 @@ public class NanMeiShuServer {
                     .childHandler(new ServerInitializer());
             System.out.println("------------------服务器已就绪------------------");
             ChannelFuture channelFuture = serverBootstrap.bind(7777).sync();
-            //加入nacos
-            //NamingService namingService = NamingFactory.createNamingService("127.0.0.1:7777");
-            //namingService.registerInstance("nanmeishu-server","127.0.0.1",7777);
 
             channelFuture.channel().closeFuture().sync();
 

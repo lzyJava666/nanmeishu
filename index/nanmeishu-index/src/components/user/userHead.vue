@@ -23,7 +23,7 @@
       </van-col>
       <van-col span="1"></van-col>
       <van-col span="23" style="color:#ffffff;font-size: 14px;margin-top: 10px;">
-        <span class="fontSpan">{{countDiary}}</span> 日记 <span class="fontSpan">{{countTransaction}}</span> 事务 <span
+        <span class="fontSpan">{{countTale}}</span> 日记 <span class="fontSpan">{{countTransaction}}</span> 事务 <span
         class="fontSpan">{{countFriend}}</span> 好友
       </van-col>
     </div>
@@ -31,12 +31,14 @@
 </template>
 
 <script>
+  import {countUser} from "../api/user";
+
   export default {
     name: "userHead",
     props: ["shezhi", "user"],
     data() {
       return {
-        countDiary: 0,
+        countTale: 0,
         countTransaction: 0,
         countFriend: 0,
         token: this.getCookie("token")
@@ -75,11 +77,13 @@
       if (this.token.length == 0) {
         this.$toast.fail("您还未登录,请先登录");
       } else {
-        // getUserBytokenApi({},{"accessToken":this.token}).then(res=>{
-        //   this.user=res.data.data;
-        //   console.log(this.user);
-        // });
-
+        countUser({"accessToken":this.getCookie("token")})
+            .then(res=>{
+              let data=res.data.data;
+              this.countTale=data.countTale;
+              this.countFriend=data.countFrient;
+              this.countTransaction=data.countTransaction;
+            })
       }
     }
   }

@@ -47,4 +47,11 @@ public interface FriendService {
      * @param friend
      */
     void insert(Friend friend);
+
+    /**
+     * 获取用户好友数量
+     * @param userId
+     * @return
+     */
+    int countFriendByUserId(String userId);
 }

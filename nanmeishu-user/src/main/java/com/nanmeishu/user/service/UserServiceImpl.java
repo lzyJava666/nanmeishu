@@ -4,10 +4,13 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.nanmeishu.user.constant.AllConstant;
+import com.nanmeishu.user.entity.Friend;
 import com.nanmeishu.user.entity.User;
+import com.nanmeishu.user.mapper.FriendMapper;
 import com.nanmeishu.user.mapper.UserMapper;
 import com.nanmeishu.util.DataUtil;
 import com.nanmeishu.util.HttpClientUtil;
+import io.swagger.models.auth.In;
 import org.apache.http.client.utils.HttpClientUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,6 +32,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Value("${ProgressBars}")
     private String progressBars;
+
 
     @Override
     public void register(User user) {
@@ -131,6 +135,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         System.out.println(currentLocal + "===============================================");
         return resMap;
     }
+
 
     //获取今日份鸡汤
     private String[] getSentence() {
