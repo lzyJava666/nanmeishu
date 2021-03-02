@@ -177,10 +177,17 @@ const store = new Vuex.Store({
     },
     //消息-1
     minusNum(state){
+      if(state.num==0){
+        return;
+      }
       state.num--;
     },
     minusNumBySize(state,size){
+      if(state.num==0){
+        return;
+      }
       state.num-=size;
+      state.num=state.num<0?0:state.num;
     },
     //消息-添加好友消息数量  添加好友消息归0
     zeroAddFriendNum(state){
@@ -200,7 +207,13 @@ const store = new Vuex.Store({
     },
     //当前未读消息-1，总消息-1
     minusChatNum(state){
+      if(state.chatNum==0){
+        return;
+      }
       state.chatNum--;
+      if(state.num==0){
+        return;
+      }
       state.num--;
     }
   }
