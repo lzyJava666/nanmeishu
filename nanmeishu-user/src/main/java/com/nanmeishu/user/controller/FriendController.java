@@ -83,4 +83,23 @@ public class FriendController {
         return ResultUtil.success();
     }
 
+    @ApiOperation("返回当前用户和目标用户的所有聊天记录")
+    @TokenVerifyAnnotation
+    @GetMapping("/listChatByFromUser")
+    public ResponseResult listChatByFromUser(@RequestParam("fromId") String fromId,HttpServletRequest request){
+        String token = request.getHeader("accessToken");
+        String userId = JwtUtil.get(token, "userId");
+        List<Map> resList=friendService.listChatByFromUser(userId,fromId);
+        return ResultUtil.success(resList);
+    }
+
+    @ApiOperation("返回当前用户最近聊天列表---最后一条聊天记录")
+    @TokenVerifyAnnotation
+    @GetMapping("/listChatByToken")
+    public ResponseResult listChatByToken(HttpServletRequest request){
+        String token = request.getHeader("accessToken");
+        String userId = JwtUtil.get(token, "userId");
+        List<Map> resList=friendService.listChatByToken(userId);
+        return ResultUtil.success(resList);
+    }
 }

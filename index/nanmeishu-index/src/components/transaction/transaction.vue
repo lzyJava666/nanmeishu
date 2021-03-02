@@ -320,7 +320,6 @@
   #outerList {
     width: 100vw;
     height: 84vh;
-
     overflow: hidden;
   }
 

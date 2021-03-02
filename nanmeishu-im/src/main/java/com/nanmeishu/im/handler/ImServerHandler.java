@@ -76,6 +76,31 @@ public class ImServerHandler extends SimpleChannelInboundHandler<TextWebSocketFr
                 toUserChat(messageProtocol,ctx);
             }
             break;
+            case MessageCode.TAKE_USER_CHAT:{
+                //目标用户查看私聊消息请求
+                toTakeUserChat(messageProtocol,ctx);
+            }
+            break;
+        }
+    }
+
+    //处理目标用户查看消息请求
+    private void toTakeUserChat(MessageProtocol messageProtocol, ChannelHandlerContext ctx) {
+        String token = messageProtocol.getToken();
+        String userId = JwtUtil.get(token, "userId");
+        Jedis jedis = redisUtil.getJedis();
+        try {
+            String s = jedis.get(userId + ":" + messageProtocol.getFromId());
+            List<MessageProtocol> messageProtocols = JSON.parseArray(s, MessageProtocol.class);
+            for (MessageProtocol protocol : messageProtocols) {
+                protocol.setIsShow(1);
+                protocol.setIsSuccess(1);
+                protocol.setReadTime(LocalDateTime.now());
+            }
+            jedis.set(userId + ":" + messageProtocol.getFromId(),JSON.toJSONString(messageProtocols));
+            jedis.set(messageProtocol.getFromId()+":"+userId,JSON.toJSONString(messageProtocols));
+        }finally {
+            jedis.close();
         }
     }
 
@@ -92,6 +117,7 @@ public class ImServerHandler extends SimpleChannelInboundHandler<TextWebSocketFr
             messageProtocol.setIsSuccess(1);
             messageProtocol.setUserId(Long.parseLong(JwtUtil.get(messageProtocol.getToken(),"userId")));
             fromChannel.writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(messageProtocol)));
+            ctx.channel().writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(messageProtocol)));
         }else{
             //目标用户离线
         }

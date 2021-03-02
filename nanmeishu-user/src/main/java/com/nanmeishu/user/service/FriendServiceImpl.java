@@ -156,4 +156,74 @@ public class FriendServiceImpl implements FriendService {
         countFrient = friendMapper.selectCount(new QueryWrapper<Friend>().eq("my_user_id", userId));
         return countFrient;
     }
+
+    @Override
+    public List<Map> listChatByFromUser(String userId, String fromId) {
+        Jedis jedis = redisUtil.getJedis();
+        List<Map> messageMaps=null;
+        List<Map> maps=new ArrayList<>();
+        try {
+            String s = jedis.get(userId + ":" + fromId);
+            messageMaps = JSON.parseArray(s, Map.class);
+            User myUser=userMapper.selectById(userId);
+            User fromUser=userMapper.selectById(fromId);
+            System.out.println("聊天记录："+messageMaps);
+            for (Map messageMap : messageMaps) {
+                if(!messageMap.get("type").toString().equals("11")){
+                    continue;
+                }
+                messageMap.put("myUser",myUser);
+                messageMap.put("fromUser",fromUser);
+                maps.add(messageMap);
+            }
+        }finally {
+            jedis.close();
+        }
+        return maps;
+    }
+
+    @Override
+    public List<Map> listChatByToken(String userId) {
+        Jedis jedis = redisUtil.getJedis();
+        List<Map> maps=new ArrayList<>();
+        String brName="";
+        try {
+            //获取和当前用户有交集的所有聊天列表
+            Set<String> keys = jedis.keys(userId + "*");
+            String s;
+            List<Map> maps1;
+            User fromUser;
+            String friendId;
+            int noSize=0;
+            for (String key : keys) {
+                s = jedis.get(key);
+                maps1 = JSON.parseArray(s, Map.class);
+                if(maps1.size()<=1){
+                    continue;
+                }
+                for (Map map : maps1) {
+                    if(map.get("isShow").toString().equals("0")){
+                        //未读
+                        noSize++;
+                    }
+                }
+                friendId=maps1.get(maps1.size()-1).get("fromId").toString().equals(userId)?
+                        maps1.get(maps1.size()-1).get("userId").toString() :
+                        maps1.get(maps1.size()-1).get("fromId").toString();
+                brName=friendMapper.selectOne(new QueryWrapper<Friend>()
+                        .eq("user_id",friendId)).getBrName();
+
+                fromUser=userMapper.selectById(friendId);
+                maps1.get(maps1.size()-1).put("friendUser",fromUser);
+                maps1.get(maps1.size()-1).put("noSize",noSize);
+                maps1.get(maps1.size()-1).put("brName",brName);
+                maps.add(maps1.get(maps1.size()-1));
+            }
+        }finally {
+            jedis.close();
+        }
+
+        return maps;
+    }
+
 }

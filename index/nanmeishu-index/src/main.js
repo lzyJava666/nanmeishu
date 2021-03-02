@@ -166,7 +166,9 @@ const store = new Vuex.Store({
     //此为所有未读消息
     num: 0,
     //此为所有未读添加好友请求消息
-    addFriendNum:0
+    addFriendNum:0,
+    //当前未读消息数
+    chatNum:0
   },
   mutations: {
     //消息+1
@@ -176,6 +178,9 @@ const store = new Vuex.Store({
     //消息-1
     minusNum(state){
       state.num--;
+    },
+    minusNumBySize(state,size){
+      state.num-=size;
     },
     //消息-添加好友消息数量  添加好友消息归0
     zeroAddFriendNum(state){
@@ -187,6 +192,16 @@ const store = new Vuex.Store({
     addFriendNum(state){
       state.addFriendNum++;
       state.num++;
+    },
+    //当前未读消息+1，总消息+1
+    addChatNum(state){
+      state.chatNum++;
+      state.num++;
+    },
+    //当前未读消息-1，总消息-1
+    minusChatNum(state){
+      state.chatNum--;
+      state.num--;
     }
   }
 })

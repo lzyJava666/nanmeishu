@@ -71,11 +71,13 @@
             }
             break;
             case 1141:{
-              this.$store.commit('addFriendNum')
+              this.$store.commit('addFriendNum');
             }
             break;
             case 11:{
               console.log("收到私聊消息：",res);
+              //消息+1
+              this.$store.commit('addChatNum');
             }
             break;
             default:{

@@ -25,168 +25,32 @@
     </van-nav-bar>
     <!--    好友消息部分-->
     <van-card
-      desc="描述信息"
-      title="南美鼠"
-      thumb="https://img01.yzcdn.cn/vant/ipad.jpeg"
+      v-for="(item,index) in messageList"
+      :key="index"
       class="cardStyle"
-      @click="a"
-      tag="5"
+      @click="toChat(item)"
     >
       <template #thumb>
         <van-image
           width="45"
           height="45"
           style="margin-left: 6vw"
-          src="https://img01.yzcdn.cn/vant/cat.jpeg"
+          :src="item.friendUser.headPortrait"
         />
       </template>
       <template #title>
-        <span class="titleSty">南美鼠</span>
+        <span class="titleSty">{{item.brName==null||item.brName==''?item.friendUser.username:item.brName}}</span>
       </template>
       <template #desc>
-        <span style="position: relative;display: block;color:#646566"> 125125
-          <span style="position: absolute;right: 5vw;">124</span>
+        <span style="position: relative;display: block;color:#646566"> {{item.content}}
+          <span style="position: absolute;right: 5vw;">{{parseTime(item.createTime,"{y}-{m}-{d}")==parseTime(new Date(),"{y}-{m}-{d}")?parseTime(item.createTime,"{h}:{i}:{s}"):parseTime(item.createTime)}}</span>
         </span>
       </template>
       <template #tag>
-        <van-tag color="red" size="medium" mark style="margin-left: 6vw;margin-top: -2vh" v-show="true">2</van-tag>
+        <van-tag color="red" size="medium" mark style="margin-left: 6vw;margin-top: -2vh" v-show="item.noSize!=0">{{item.noSize}}</van-tag>
       </template>
     </van-card>
-    <van-card
-      desc="描述信息"
-      title="南美鼠"
-      thumb="https://img01.yzcdn.cn/vant/ipad.jpeg"
-      class="cardStyle"
-      tag="5"
-    >
-      <template #thumb>
-        <van-image
-          width="45"
-          height="45"
-          style="margin-left: 6vw"
-          src="https://img01.yzcdn.cn/vant/cat.jpeg"
-        />
-      </template>
-      <template #title>
-        <span class="titleSty">南美鼠</span>
-      </template>
-      <template #desc>
-        <span style="position: relative;display: block;color:#646566"> 125125
-          <span style="position: absolute;right: 5vw;">124</span>
-        </span>
-      </template>
-      <template #tag>
-        <van-tag color="red" size="medium" mark style="margin-left: 6vw;margin-top: -2vh" v-show="true">2</van-tag>
-      </template>
-    </van-card>
-    <van-card
-      desc="描述信息"
-      title="南美鼠"
-      thumb="https://img01.yzcdn.cn/vant/ipad.jpeg"
-      class="cardStyle"
-      tag="5"
-    >
-      <template #thumb>
-        <van-image
-          width="45"
-          height="45"
-          style="margin-left: 6vw"
-          src="https://img01.yzcdn.cn/vant/cat.jpeg"
-        />
-      </template>
-      <template #title>
-        <span class="titleSty">南美鼠</span>
-      </template>
-      <template #desc>
-        <span style="position: relative;display: block;color:#646566"> 125125
-          <span style="position: absolute;right: 5vw;">124</span>
-        </span>
-      </template>
-      <template #tag>
-        <van-tag color="red" size="medium" mark style="margin-left: 6vw;margin-top: -2vh" v-show="true">2</van-tag>
-      </template>
-    </van-card>
-    <van-card
-      desc="描述信息"
-      title="南美鼠"
-      thumb="https://img01.yzcdn.cn/vant/ipad.jpeg"
-      class="cardStyle"
-      tag="5"
-    >
-      <template #thumb>
-        <van-image
-          width="45"
-          height="45"
-          style="margin-left: 6vw"
-          src="https://img01.yzcdn.cn/vant/cat.jpeg"
-        />
-      </template>
-      <template #title>
-        <span class="titleSty">南美鼠</span>
-      </template>
-      <template #desc>
-        <span style="position: relative;display: block;color:#646566"> 125125
-          <span style="position: absolute;right: 5vw;">124</span>
-        </span>
-      </template>
-      <template #tag>
-        <van-tag color="red" size="medium" mark style="margin-left: 6vw;margin-top: -2vh" v-show="true">2</van-tag>
-      </template>
-    </van-card>
-    <van-card
-      desc="描述信息"
-      title="南美鼠"
-      thumb="https://img01.yzcdn.cn/vant/ipad.jpeg"
-      class="cardStyle"
-      tag="5"
-    >
-      <template #thumb>
-        <van-image
-          width="45"
-          height="45"
-          style="margin-left: 6vw"
-          src="https://img01.yzcdn.cn/vant/cat.jpeg"
-        />
-      </template>
-      <template #title>
-        <span class="titleSty">南美鼠</span>
-      </template>
-      <template #desc>
-        <span style="position: relative;display: block;color:#646566"> 125125
-          <span style="position: absolute;right: 5vw;">124</span>
-        </span>
-      </template>
-      <template #tag>
-        <van-tag color="red" size="medium" mark style="margin-left: 6vw;margin-top: -2vh" v-show="true">2</van-tag>
-      </template>
-    </van-card>
-    <van-card
-      desc="描述信息"
-      title="南美鼠"
-      thumb="https://img01.yzcdn.cn/vant/ipad.jpeg"
-      class="cardStyle"
-      tag="5"
-    >
-      <template #thumb>
-        <van-image
-          width="45"
-          height="45"
-          style="margin-left: 6vw"
-          src="https://img01.yzcdn.cn/vant/cat.jpeg"
-        />
-      </template>
-      <template #title>
-        <span class="titleSty">南美鼠</span>
-      </template>
-      <template #desc>
-        <span style="position: relative;display: block;color:#646566"> 125125
-          <span style="position: absolute;right: 5vw;">124</span>
-        </span>
-      </template>
-      <template #tag>
-        <van-tag color="red" size="medium" mark style="margin-left: 6vw;margin-top: -2vh" v-show="true">2</van-tag>
-      </template>
-    </van-card>
+
 
 
     <!--    底部-->
@@ -196,6 +60,7 @@
 
 <script>
   import bottom from "../common/bottom";
+  import {listChatByToken} from "../api/user";
 
   export default {
     name: "message",
@@ -228,13 +93,42 @@
           }
             break;
         }
-
       },
       onLoadMesList() {
 
       },
       toFriendList() {
         this.$router.push("/friendList")
+      },
+      toChat(item){
+        console.log(item.friendUser.userId)
+        this.$router.push({
+          path:"/chat",
+          query:{
+            friendName:item.brName==null||item.brName==''?item.friendUser.username:item.brName,
+            fromId:item.friendUser.userId,
+            noSize:item.noSize
+          }
+        })
+      },
+      listChat(){
+        listChatByToken({"accessToken":this.getCookie("token")})
+          .then(res=>{
+            console.log(res.data.data);
+            this.messageList=res.data.data;
+          })
+      }
+    },
+    created() {
+      this.listChat();
+
+    },
+    watch:{
+      "$store.state.chatNum"(val,oldVal) {
+        if(val==0){
+          return;
+        }
+        this.listChat();
       }
     }
   }

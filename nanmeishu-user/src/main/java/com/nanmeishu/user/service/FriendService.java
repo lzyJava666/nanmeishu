@@ -54,4 +54,19 @@ public interface FriendService {
      * @return
      */
     int countFriendByUserId(String userId);
+
+    /**
+     * 返回目标用户和当前用户的所有聊天记录
+     * @param userId
+     * @param fromId
+     * @return
+     */
+    List<Map> listChatByFromUser(String userId, String fromId);
+
+    /**
+     * 返回当前用户最近聊天列表---最后一条聊天记录
+     * @param userId
+     * @return
+     */
+    List<Map> listChatByToken(String userId);
 }

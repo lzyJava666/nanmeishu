@@ -9,7 +9,9 @@ const urlList = {
   listFriendByMe:url+"/friend/listFriendByMe",
   get:url+"/user/get",
   listAddFriend:url+"/friend/listAddFriend",
-  countUser:url+"/user/countUser"
+  countUser:url+"/user/countUser",
+  listChatByFromUser:url+"/friend/listChatByFromUser",
+  listChatByToken:url+"/friend/listChatByToken"
 }
 
 //通过用户id获取用户信息
@@ -56,6 +58,16 @@ export function listAddFriend(headers) {
 //返回用户的资源数量
 export function countUser(headers) {
   return GetAndHeaders(urlList.countUser,{},headers)
+}
+
+//返回目标用户和当前用户的所有聊天记录
+export function listChatByFromUser(params,headers) {
+  return GetAndHeaders(urlList.listChatByFromUser,params,headers)
+}
+
+//返回最近和当前用户有聊天的记录列表
+export function listChatByToken(headers) {
+  return GetAndHeaders(urlList.listChatByToken,{},headers)
 }
 
 
