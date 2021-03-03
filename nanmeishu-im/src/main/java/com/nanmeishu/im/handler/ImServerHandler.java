@@ -35,7 +35,7 @@ public class ImServerHandler extends SimpleChannelInboundHandler<TextWebSocketFr
     //存放连接用户的组
     public static ChannelGroup channelGroup = new DefaultChannelGroup("ChannelGroups", GlobalEventExecutor.INSTANCE);
 
-    RedisUtil redisUtil=SpringUtil.getBean(RedisUtil.class);
+    RedisUtil redisUtil = SpringUtil.getBean(RedisUtil.class);
 
     /**
      * 读取消息
@@ -61,24 +61,24 @@ public class ImServerHandler extends SimpleChannelInboundHandler<TextWebSocketFr
                 toExit(messageProtocol, ctx);
             }
             break;
-            case MessageCode.USER_ADD:{
+            case MessageCode.USER_ADD: {
                 //添加好友
                 toUserAdd(messageProtocol, ctx);
             }
             break;
-            case MessageCode.RETURN_CHAT_ADD:{
+            case MessageCode.RETURN_CHAT_ADD: {
                 //处理添加好友请求消息
-                disposeAddUser(messageProtocol,ctx);
+                disposeAddUser(messageProtocol, ctx);
             }
             break;
-            case MessageCode.USER_CHAT:{
+            case MessageCode.USER_CHAT: {
                 //处理私聊消息请求
-                toUserChat(messageProtocol,ctx);
+                toUserChat(messageProtocol, ctx);
             }
             break;
-            case MessageCode.TAKE_USER_CHAT:{
+            case MessageCode.TAKE_USER_CHAT: {
                 //目标用户查看私聊消息请求
-                toTakeUserChat(messageProtocol,ctx);
+                toTakeUserChat(messageProtocol, ctx);
             }
             break;
         }
@@ -97,40 +97,51 @@ public class ImServerHandler extends SimpleChannelInboundHandler<TextWebSocketFr
                 protocol.setIsSuccess(1);
                 protocol.setReadTime(LocalDateTime.now());
             }
-            jedis.set(userId + ":" + messageProtocol.getFromId(),JSON.toJSONString(messageProtocols));
-            jedis.set(messageProtocol.getFromId()+":"+userId,JSON.toJSONString(messageProtocols));
-        }finally {
+            jedis.set(userId + ":" + messageProtocol.getFromId(), JSON.toJSONString(messageProtocols));
+            //jedis.set(messageProtocol.getFromId()+":"+userId,JSON.toJSONString(messageProtocols));
+        } finally {
             jedis.close();
         }
     }
 
     //处理私聊请求
     private void toUserChat(MessageProtocol messageProtocol, ChannelHandlerContext ctx) {
-        if(isExitUser(messageProtocol.getFromId())){
+        if (isExitUser(messageProtocol.getFromId())) {
             //目标用户在线
             Object[] userObj = userChannelTable.get(messageProtocol.getFromId().toString());
-            UserChannel fromUser= (UserChannel) userObj[0];
+            UserChannel fromUser = (UserChannel) userObj[0];
             System.out.println(fromUser);
             //拿到目标用户的channel
             Channel fromChannel = fromUser.getChannel();
             //推送消息
             messageProtocol.setIsSuccess(1);
-            messageProtocol.setUserId(Long.parseLong(JwtUtil.get(messageProtocol.getToken(),"userId")));
+            messageProtocol.setUserId(Long.parseLong(JwtUtil.get(messageProtocol.getToken(), "userId")));
             fromChannel.writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(messageProtocol)));
             ctx.channel().writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(messageProtocol)));
-        }else{
+        } else {
             //目标用户离线
         }
         //处理完毕 存入redis
         Jedis jedis = redisUtil.getJedis();
         try {
             //拿到二人的消息列表
+            if (messageProtocol.getUserId() == null) {
+                messageProtocol.setUserId(Long.parseLong(JwtUtil.get(messageProtocol.getToken(), "userId")));
+            }
             String fromToUser = jedis.get(messageProtocol.getFromId() + ":" + messageProtocol.getUserId());
-            List<MessageProtocol> fromToUserMessage=JSON.parseArray(fromToUser,MessageProtocol.class);
+            List<MessageProtocol> fromToUserMessage = JSON.parseArray(fromToUser, MessageProtocol.class);
             fromToUserMessage.add(messageProtocol);
-            jedis.set(messageProtocol.getFromId() + ":" + messageProtocol.getUserId(),JSON.toJSONString(fromToUserMessage));
-            jedis.set(messageProtocol.getUserId()+":"+messageProtocol.getFromId(),JSON.toJSONString(fromToUserMessage));
-        }finally {
+            String set = jedis.set(messageProtocol.getFromId() + ":" + messageProtocol.getUserId(), JSON.toJSONString(fromToUserMessage));
+            System.out.println(jedis.lastsave());
+            System.out.println(messageProtocol.getFromId() + ":" + messageProtocol.getUserId() + "  " + set);
+            System.out.println(jedis.get(messageProtocol.getFromId() + ":" + messageProtocol.getUserId()));
+            //第二人的缓存也要添加数据
+            List<MessageProtocol> myUserMessage = JSON.parseArray(jedis.get(messageProtocol.getUserId() + ":" + messageProtocol.getFromId()), MessageProtocol.class);
+            myUserMessage.add(messageProtocol);
+            String set1 = jedis.set(messageProtocol.getUserId() + ":" + messageProtocol.getFromId(), JSON.toJSONString(myUserMessage));
+            System.out.println(messageProtocol.getUserId() + ":" + messageProtocol.getFromId() + " " + set1);
+            System.out.println(jedis.get(messageProtocol.getUserId() + ":" + messageProtocol.getFromId()));
+        } finally {
             jedis.close();
         }
 
@@ -142,52 +153,52 @@ public class ImServerHandler extends SimpleChannelInboundHandler<TextWebSocketFr
         Jedis jedis = redisUtil.getJedis();
         String token = messageProtocol.getToken();
         String userId = JwtUtil.get(token, "userId");
-        String friendUserId=messageProtocol.getFromId().toString();
+        String friendUserId = messageProtocol.getFromId().toString();
         try {
             //1.将redis中的未处理标志改为具体处理标志,注：双方信息都要
             List<MessageProtocol> messageProtocols = JSON.parseArray(jedis.get(userId + ":" + friendUserId), MessageProtocol.class);
             System.out.println(messageProtocols);
             for (MessageProtocol protocol : messageProtocols) {
-                if(protocol.getType()==114){
+                if (protocol.getType() == 114) {
                     //添加好友请求
-                    Map content = JSON.parseObject(protocol.getContent(),Map.class);
-                    if(JSON.parseObject(messageProtocol.getContent(),Map.class).get("status").toString().equals("1")){
+                    Map content = JSON.parseObject(protocol.getContent(), Map.class);
+                    if (JSON.parseObject(messageProtocol.getContent(), Map.class).get("status").toString().equals("1")) {
                         //同意好友请求
-                        content.put("isAddStatus",1);
+                        content.put("isAddStatus", 1);
                         //数据库添加好友
                         UserFeign friendController = SpringUtil.getBean(UserFeign.class);
                         friendController.insert(JSON.toJSONString(content));
-                    }else{
+                    } else {
                         //拒绝好友请求
-                        content.put("isAddStatus",2);
+                        content.put("isAddStatus", 2);
                     }
                     protocol.setContent(JSON.toJSONString(content));
-                    jedis.set(userId + ":" + friendUserId,JSON.toJSONString(messageProtocols));
-                    jedis.set(friendUserId+":"+userId,JSON.toJSONString(messageProtocols));
+                    jedis.set(userId + ":" + friendUserId, JSON.toJSONString(messageProtocols));
+                    jedis.set(friendUserId + ":" + userId, JSON.toJSONString(messageProtocols));
                     //推送给用户消息
                     charToAddUser(friendUserId);
                 }
             }
-        }finally {
+        } finally {
             jedis.close();
         }
     }
 
     //推送消息给目标用户  ---关于好友申请
     private void charToAddUser(String friendUserId) {
-        MessageProtocol messageProtocol=new MessageProtocol();
+        MessageProtocol messageProtocol = new MessageProtocol();
         messageProtocol.setType(1141);
         messageProtocol.setCreateTime(LocalDateTime.now());
         Object[] objects = userChannelTable.get(friendUserId);
-        if(objects==null){
+        if (objects == null) {
             return;
         }
         Boolean object = (Boolean) objects[1];
-        if(object){
+        if (object) {
             //在线 推送给用户
             UserChannel userChannel = (UserChannel) objects[0];
             userChannel.getChannel().writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(messageProtocol)));
-        }else{
+        } else {
             //离线
         }
     }
@@ -198,57 +209,57 @@ public class ImServerHandler extends SimpleChannelInboundHandler<TextWebSocketFr
         //判断用户是否在线
         boolean exitUser = isExitUser(messageProtocol.getFromId());
         String userId = JwtUtil.get(messageProtocol.getToken(), "userId");
-        map.put("myUserId",userId);
+        map.put("myUserId", userId);
         messageProtocol.setContent(JSON.toJSONString(map));
         messageProtocol.setUserId(Long.parseLong(userId));
         //RedisUtil redisUtil = SpringUtil.getBean(RedisUtil.class);
         Jedis jedis = redisUtil.getJedis();
-        if(exitUser){
+        if (exitUser) {
             //用户在线 推送消息
             messageProtocol.setIsSuccess(1);
             //获取用户通道信息
             Object[] userObj = userChannelTable.get(messageProtocol.getFromId().toString());
             UserChannel userChannel = (UserChannel) userObj[0];
             Channel channel = userChannel.getChannel();
-            System.out.println("对方用户的channel："+channel.remoteAddress());
-            System.out.println("本人用户的channel"+ctx.channel().remoteAddress());
+            System.out.println("对方用户的channel：" + channel.remoteAddress());
+            System.out.println("本人用户的channel" + ctx.channel().remoteAddress());
             //推送给目标用户
             channel.writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(messageProtocol)));
         }
         // 记录存入redis中，存二份 user1:user2  user2:user1
-        List<MessageProtocol> messageProtocols=new ArrayList<>();
+        List<MessageProtocol> messageProtocols = new ArrayList<>();
         messageProtocols.add(messageProtocol);
-        jedis.set(userId+":"+messageProtocol.getFromId(),JSON.toJSONString(messageProtocols));
-        jedis.set(messageProtocol.getFromId()+":"+userId,JSON.toJSONString(messageProtocols));
+        jedis.set(userId + ":" + messageProtocol.getFromId(), JSON.toJSONString(messageProtocols));
+        jedis.set(messageProtocol.getFromId() + ":" + userId, JSON.toJSONString(messageProtocols));
         jedis.close();
     }
 
     //指定用户是否在线
-    private boolean isExitUser(Long userId){
+    private boolean isExitUser(Long userId) {
         Object[] userObj = userChannelTable.get(userId.toString());
-        if(userObj==null){
+        if (userObj == null) {
             return false;
         }
-        boolean isExit= true;
-        if(isExit){
+        boolean isExit = true;
+        if (isExit) {
             //用户在线
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
     //退出登录
     private void toExit(MessageProtocol messageProtocol, ChannelHandlerContext ctx) {
-        String token = JSON.parseObject(messageProtocol.getContent(),Map.class).get("token").toString();
+        String token = JSON.parseObject(messageProtocol.getContent(), Map.class).get("token").toString();
         String userId = JwtUtil.get(token, "userId");
         Object[] objects = userChannelTable.get(userId);
         UserChannel userChannel = (UserChannel) objects[0];
         userChannel.setCreateTime(null);
         userChannel.setEndTime(LocalDateTime.now());
-        objects[0]=userChannel;
-        objects[1]=false;
-        userChannelTable.put(userId,objects);
+        objects[0] = userChannel;
+        objects[1] = false;
+        userChannelTable.put(userId, objects);
         System.out.println("用户：" + token + "已经断开了连接\n当前人数为：" + count());
         ctx.channel().writeAndFlush(new TextWebSocketFrame("true"));
     }
@@ -259,7 +270,7 @@ public class ImServerHandler extends SimpleChannelInboundHandler<TextWebSocketFr
         UserFeign userFeign = SpringUtil.getBean(UserFeign.class);
         System.out.println("传入内容：" + messageProtocol.getContent());
         //获取登录信息
-        ResponseResult login = userFeign.login(JSON.parseObject(messageProtocol.getContent(),Map.class));
+        ResponseResult login = userFeign.login(JSON.parseObject(messageProtocol.getContent(), Map.class));
         if (login.getErrcode() == 200) {
             String token = login.getData().toString();
             String userId = JwtUtil.get(token, "userId");
@@ -285,11 +296,11 @@ public class ImServerHandler extends SimpleChannelInboundHandler<TextWebSocketFr
                     exitCurrentLogin(objects);
                 }
                 //上线处理
-                loginFlag(userId,channel,token);
+                loginFlag(userId, channel, token);
                 //离线消息推送
                 offLineCharPush(userId);
             }
-            MessageProtocol messageProtocol1=new MessageProtocol();
+            MessageProtocol messageProtocol1 = new MessageProtocol();
             messageProtocol.setType(MessageCode.LOGIN);
             messageProtocol.setContent(token);
             ctx.channel().writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(messageProtocol1)));
@@ -321,7 +332,7 @@ public class ImServerHandler extends SimpleChannelInboundHandler<TextWebSocketFr
     }
 
     //将连接人员标记为上线
-    private void loginFlag(String userId,Channel channel,String token) {
+    private void loginFlag(String userId, Channel channel, String token) {
         Object[] currentObject = userChannelTable.get(userId);
         UserChannel userChannel = (UserChannel) currentObject[0];
         userChannel.setCreateTime(LocalDateTime.now());
@@ -358,15 +369,15 @@ public class ImServerHandler extends SimpleChannelInboundHandler<TextWebSocketFr
 
     //将断开成员标记为离线,并更改用户状态信息
     private void exitLoginFlag(Channel channel) {
-        userChannelTable.forEach((key,value)->{
-            Object[] objects=(Object[]) value;
-            UserChannel userChannel=(UserChannel) objects[0];
-            if(channel == userChannel.getChannel()){
+        userChannelTable.forEach((key, value) -> {
+            Object[] objects = (Object[]) value;
+            UserChannel userChannel = (UserChannel) objects[0];
+            if (channel == userChannel.getChannel()) {
                 userChannel.setEndTime(LocalDateTime.now());
                 userChannel.setCreateTime(null);
-                objects[1]=false;
-                objects[0]=userChannel;
-                userChannelTable.put(key,objects);
+                objects[1] = false;
+                objects[0] = userChannel;
+                userChannelTable.put(key, objects);
                 return;
             }
         });

@@ -12,7 +12,7 @@
       </template>
     </van-nav-bar>
     <div id="testContent">
-      <div class="test" ref="chatObj" id="gundong">
+      <div class="test">
         <div v-for="(item,index) in chatList" :key="index" style="text-align: center">
           <span style="padding-bottom: 1vh;display: block;color:#7f7f7f">{{parseTime(item.createTime,"{y}-{m}-{d}")==parseTime(new Date(),"{y}-{m}-{d}")?parseTime(item.createTime,"{h}:{i}:{s}"):parseTime(item.createTime)}}</span>
           <div class="msg" v-show="item.fromId==fromId" v-bind:class="{self:item.fromId==fromId}">
@@ -44,10 +44,11 @@
         type="textarea"
         show-word-limit
         style="width: 100%;height: 100%"
+        ref="input"
       >
       </van-field>
       <div style="position: fixed;bottom: 2vh;right: 3vw">
-        <van-button size="small"  class="btnClass" @click="message=''">清空</van-button>
+        <van-button size="small" class="btnClass" @click="message=''">清空</van-button>
         <van-button size="small" type="primary" class="btnClass" @click="sendChat()">发送</van-button>
       </div>
     </div>
@@ -61,7 +62,7 @@
     name: "chat",
     data() {
       return {
-        message:'',
+        message: '',
         chatList: [],
         friendName: this.$route.query.friendName,
         fromId: this.$route.query.fromId,
@@ -79,7 +80,6 @@
         this.socket.ws.send(JSON.stringify(message));
       },
       loadChatList() {
-        console.log(this.noSize);
         this.$store.commit('minusNumBySize', this.noSize);
         let token = this.getCookie("token");
         let message = this.createMessage("", 13, token, this.fromId);
@@ -87,26 +87,24 @@
         listChatByFromUser({fromId: this.fromId}, {"accessToken": token})
           .then(res => {
             this.chatList = res.data.data;
-            console.log(this.chatList)
           })
       },
-      sendChat(){
+      sendChat() {
         let token = this.getCookie("token");
         let message = this.createMessage(this.message, 11, token, this.fromId);
         this.socket.ws.send(JSON.stringify(message));
-        this.message='';
+        this.message = '';
       }
 
     },
     created() {
       this.loadChatList();
-      console.log(this.friendName, this.fromId, this.noSize)
+    },
+    mounted() {
+      this.$refs.input.focus()
     },
     watch: {
-      "$store.state.chatNum"(val,oldVal) {
-        if(val==0){
-          return;
-        }
+      "$store.state.chatNum"(val, oldVal) {
         this.loadChatList();
         this.$store.commit('minusChatNum');
       }
@@ -130,13 +128,15 @@
 
     padding-bottom: 20vh;
   }
-  #inputContent{
+
+  #inputContent {
     width: 100%;
     height: 20%;
     position: fixed;
     bottom: 0;
     overflow-y: auto;
   }
+
   .test {
     width: 100vw;
     min-height: 100%;
@@ -219,7 +219,8 @@
     background: #95ec69;
     transform: rotate(45deg);
   }
-  .btnClass{
+
+  .btnClass {
     border-radius: 4px;
     padding: 0.5vh 5vw 0.5vh 5vw;
     margin-right: 1vw;

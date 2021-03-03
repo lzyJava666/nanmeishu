@@ -34,4 +34,11 @@ public interface TaleService {
      * @return
      */
     Integer countTaleByUserId(String userId);
+
+    /**
+     * 删除指定日记
+     * @param userId
+     * @param taleId
+     */
+    void deleteTale(String userId, String taleId);
 }

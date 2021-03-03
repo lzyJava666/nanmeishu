@@ -77,4 +77,12 @@ public class TaleServiceImpl implements TaleService {
     public Integer countTaleByUserId(String userId) {
         return taleMapper.selectCount(new QueryWrapper<Tale>().eq("type",0).eq("user_id",userId));
     }
+
+    @Override
+    public void deleteTale(String userId, String taleId) {
+        int delete = taleMapper.delete(new QueryWrapper<Tale>().eq("user_id", userId).eq("tale_id", taleId));
+        if(delete<=0){
+            throw new RuntimeException("删除出错");
+        }
+    }
 }

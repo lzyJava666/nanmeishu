@@ -95,7 +95,14 @@
             }
           })
         } else {
-
+            this.$router.push({
+              path:"/chat",
+              query:{
+                friendName:this.friend.brName==null||this.friend.brName==''?this.user.username:this.friend.brName,
+                fromId:this.user.userId,
+                noSize:0
+              }
+            })
         }
 
       }

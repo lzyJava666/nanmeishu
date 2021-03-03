@@ -215,5 +215,14 @@ public class TaleController {
         return ResultUtil.success(taleService.countTaleByUserId(userId));
     }
 
+    @ApiOperation("删除指定日记")
+    @TokenVerifyAnnotation
+    @GetMapping("/deleteTale")
+    public ResponseResult deleteTale(@RequestParam("taleId") String taleId,HttpServletRequest request){
+        String userId=JwtUtil.get(request.getHeader("accessToken"),"userId");
+        taleService.deleteTale(userId,taleId);
+        return ResultUtil.success();
+    }
+
 
 }

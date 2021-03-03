@@ -1,18 +1,5 @@
 <template>
-  <div id="FriendList">
-    <van-nav-bar
-      title="好友列表"
-      left-arrow
-      @click-left="onClickLeft"
-    />
-    <van-cell is-link style="margin-top: 1vh;margin-bottom: 1vh" :border="false" to="newFriend">
-      <template #title>
-        <van-badge :content="$store.state.addFriendNum==0?'':$store.state.addFriendNum">
-          <span class="iconfont icon-xinhaoyou" style="vertical-align:middle;font-size: 25px;color: #42b983"></span>
-        </van-badge>
-        <span style="vertical-align:middle;margin-left: 3vw;font-size: 18px;">新朋友</span>
-      </template>
-    </van-cell>
+  <div id="ShareFriend">
     <van-index-bar>
       <div v-for="(st,index) in indexList" :key="index" v-show="st.size !=0">
         <van-index-anchor :index="st.index" style="background: #f0efef"/>
@@ -37,24 +24,25 @@
   import {oneMaxFirst} from "../api/common";
 
   export default {
-    name: "friendList",
+    name: "shareFriend",
     data() {
       return {
         indexList: new Array()
       }
     },
+    props:["taleId"]
+    ,
     methods: {
-      onClickLeft() {
-        this.$router.push("/message")
-      },
       showFriend(friend) {
-        this.$router.push({
-          path: "/showFriend",
-          query: {
-            friend: encodeURIComponent(JSON.stringify(friend)),
-            user: encodeURIComponent(JSON.stringify(friend.user))
-          }
+        this.$dialog.confirm({
+          title: '分享',
+          message: '您是否分享此内容给该好友',
+        }).then(() => {
+          this.$emit('friend-id',friend.userId)
         })
+          .catch(() => {
+            // on cancel
+          });
       }
     },
     created() {
@@ -100,5 +88,5 @@
 </script>
 
 <style scoped>
-  @import "../../assets/font/iconfont.css";
+
 </style>

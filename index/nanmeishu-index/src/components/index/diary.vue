@@ -19,25 +19,32 @@
         </template>
       </van-card>
       <div v-for="(tale,index) in tales" :key=tale.taleId>
-        <van-card
-          class="goods-card-content outSphere"
-          @click="toTale(tale)"
-        >
-          <template #title>
-            <div class="title"></div>
-          </template>
-          <template #desc>
-            <span class="titleDesc">{{tale.taleDetails.taleTitle}}</span>
-            <br/>
-            <span class="desc" style="position: relative">{{(tale.taleDetails.content).length>10?(tale.taleDetails.content).substring(0,10)+'......':(tale.taleDetails.content)}}
+        <van-swipe-cell>
+          <van-card
+            class="goods-card-content outSphere"
+            @click="toTale(tale)"
+          >
+            <template #title>
+              <div class="title"></div>
+            </template>
+            <template #desc>
+              <span class="titleDesc">{{tale.taleDetails.taleTitle}}</span>
+              <br/>
+              <span class="desc" style="position: relative">{{(tale.taleDetails.content).length>10?(tale.taleDetails.content).substring(0,10)+'......':(tale.taleDetails.content)}}
               <van-image style="position: absolute;right: 0;" round width="25" height="25"
                          :src="getStatu(tale.objectt)"></van-image>
             </span>
+            </template>
+            <template #thumb>
+              <span style="display: block;margin-top: 0.3vh;font-size: 25px">{{dataToYear(tale.createTime)}}<br>{{dataToDay(tale.createTime)<10?'0'+dataToDay(tale.createTime):dataToDay(tale.createTime)}}号</span>
+            </template>
+          </van-card>
+          <template #right>
+            <van-button square text="分享" type="primary" class="delete-button" @click="clickSquare(tale.taleId)" />
+            <van-button @click="taleDelete(tale.taleId)" square text="删除" type="danger" class="delete-button" />
           </template>
-          <template #thumb>
-            <span style="display: block;margin-top: 0.3vh;font-size: 25px">{{dataToYear(tale.createTime)}}<br>{{dataToDay(tale.createTime)<10?'0'+dataToDay(tale.createTime):dataToDay(tale.createTime)}}号</span>
-          </template>
-        </van-card>
+        </van-swipe-cell>
+
       </div>
       <van-pagination
         id="pageStyle"
@@ -52,20 +59,35 @@
     <div id="writeIcon" @click="toWriteDiary()">
       <van-icon name="edit" size="30" id="iconW"/>
     </div>
+    <van-share-sheet
+      v-model="showShare"
+      title="立即分享给好友"
+      :options="options"
+      @select="onSelect"
+    />
+    <van-overlay :show="show" @click="show = false">
+      <shareFriend class="wrapper" @friend-id="f"></shareFriend>
+    </van-overlay>
   </div>
 </template>
 
 <script>
   import StatuList from "./statuList";
-  import {getCaihongPi, listByToken, listStatu} from "../api/tale";
-
+  import {getCaihongPi, listByToken, listStatu,deleteTale} from "../api/tale";
+  import shareFriend from "./shareFriend";
   export default {
     name: "diary",
     components: {
-      "statuList": StatuList
+      "statuList": StatuList,
+      shareFriend
     },
     data() {
       return {
+        show: false,
+        showShare:false,
+        options:[
+          {name: '好友', icon: 'wechat' }
+        ],
         //彩虹屁url
         caihongpiImg: "",
         //彩虹屁文字
@@ -78,10 +100,23 @@
         currentPage: 1,
         total: 0,
         //心情集合类
-        status: []
+        status: [],
+        taleId:-1
       }
     },
     methods: {
+      f(val){
+        console.log(val);
+        console.log(this.taleId);
+      },
+      clickSquare(Id){
+        this.taleId=Id;
+        this.showShare=true;
+      },
+      onSelect(option) {
+        this.showShare = false;
+        this.show=true;
+      },
       //跳转到彩虹屁页面
       toCaihongpi() {
         this.$router.push({
@@ -136,6 +171,20 @@
           }
         })
         return statu1;
+      },
+      taleDelete(taleId){
+        console.log(taleId);
+        deleteTale({taleId:taleId},{"accessToken":this.token})
+            .then(res=>{
+              console.log(res);
+              this.$toast.success("删除成功");
+              this.$router.push({
+                path:"/black",
+                query:{
+                  url:"/index"
+                }
+              })
+            })
       }
     },
     created() {
@@ -164,11 +213,19 @@
               this.status = res.data.data;
             })
         })
+    },
+    watch:{
     }
   }
 </script>
 
 <style scoped>
+  .wrapper {
+    background: #fff;
+    height: 80%;
+    width: 100%;
+    margin: 10% 0 10% 0;
+  }
   .goods-card {
     margin: 0;
     background-image: url("https://files.catbox.moe/mt30es.png");
@@ -205,7 +262,7 @@
   }
 
   .outSphere {
-    margin: 1.5vh;
+    margin: 1vh;
     border-radius: 5px;
   }
 
@@ -224,6 +281,6 @@
   }
 
   #pageStyle {
-    margin-top: 3vh;
+    margin-top: 1vh;
   }
 </style>

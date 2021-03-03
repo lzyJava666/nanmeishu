@@ -168,6 +168,9 @@ public class FriendServiceImpl implements FriendService {
             User myUser=userMapper.selectById(userId);
             User fromUser=userMapper.selectById(fromId);
             System.out.println("聊天记录："+messageMaps);
+            if(messageMaps==null){
+                return messageMaps;
+            }
             for (Map messageMap : messageMaps) {
                 if(!messageMap.get("type").toString().equals("11")){
                     continue;

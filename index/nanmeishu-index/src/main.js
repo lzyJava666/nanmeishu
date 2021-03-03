@@ -74,7 +74,9 @@ import { Search } from 'vant';
 import { Empty } from 'vant';
 import { IndexBar, IndexAnchor } from 'vant';
 import { Badge } from 'vant';
+import { ShareSheet } from 'vant';
 
+Vue.use(ShareSheet);
 Vue.use(Badge);
 Vue.use(IndexBar);
 Vue.use(IndexAnchor);
@@ -211,11 +213,9 @@ const store = new Vuex.Store({
         return;
       }
       state.chatNum--;
-      if(state.num==0){
-        return;
-      }
       state.num--;
     }
+
   }
 })
 
