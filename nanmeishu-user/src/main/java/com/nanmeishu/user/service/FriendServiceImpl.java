@@ -226,7 +226,7 @@ public class FriendServiceImpl implements FriendService {
                         maps1.get(maps1.size()-1).get("userId").toString() :
                         maps1.get(maps1.size()-1).get("fromId").toString();
                 brName=friendMapper.selectOne(new QueryWrapper<Friend>()
-                        .eq("user_id",friendId)).getBrName();
+                        .eq("user_id",friendId).eq("my_user_id",userId)).getBrName();
 
                 fromUser=userMapper.selectById(friendId);
                 maps1.get(maps1.size()-1).put("friendUser",fromUser);
