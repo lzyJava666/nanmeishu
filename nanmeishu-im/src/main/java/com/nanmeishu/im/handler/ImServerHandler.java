@@ -81,6 +81,48 @@ public class ImServerHandler extends SimpleChannelInboundHandler<TextWebSocketFr
                 toTakeUserChat(messageProtocol, ctx);
             }
             break;
+            case MessageCode.TALE_SHARE: {
+                //处理分享消息请求
+                toTaleShare(messageProtocol, ctx);
+            }
+            break;
+        }
+    }
+
+    //处理分享消息请求
+    private void toTaleShare(MessageProtocol messageProtocol, ChannelHandlerContext ctx) {
+        Jedis jedis = redisUtil.getJedis();
+        try {
+            if (isExitUser(messageProtocol.getFromId())) {
+                //目标用户在线
+                Object[] userObj = userChannelTable.get(messageProtocol.getFromId().toString());
+                UserChannel fromUser = (UserChannel) userObj[0];
+                System.out.println(fromUser);
+                //拿到目标用户的channel
+                Channel fromChannel = fromUser.getChannel();
+                //推送消息
+                messageProtocol.setIsSuccess(1);
+                messageProtocol.setUserId(Long.parseLong(JwtUtil.get(messageProtocol.getToken(), "userId")));
+                fromChannel.writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(messageProtocol)));
+                ctx.channel().writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(messageProtocol)));
+            }else{
+                //对方离线
+            }
+            //将消息存入redis
+            //1.拿到对方用户和当前用户的消息列表
+            if (messageProtocol.getUserId() == null) {
+                messageProtocol.setUserId(Long.parseLong(JwtUtil.get(messageProtocol.getToken(), "userId")));
+            }
+            //本人消息列表
+            List<MessageProtocol> myMessage = JSON.parseArray(jedis.get(messageProtocol.getUserId() + ":" + messageProtocol.getFromId()), MessageProtocol.class);
+            //目标用户消息列表
+            List<MessageProtocol> fromMeaage = JSON.parseArray(jedis.get(messageProtocol.getFromId() + ":" + messageProtocol.getUserId()), MessageProtocol.class);
+            myMessage.add(messageProtocol);
+            fromMeaage.add(messageProtocol);
+            jedis.set(messageProtocol.getUserId() + ":" + messageProtocol.getFromId(),JSON.toJSONString(myMessage));
+            jedis.set(messageProtocol.getFromId() + ":" + messageProtocol.getUserId(),JSON.toJSONString(fromMeaage));
+        } finally {
+            jedis.close();
         }
     }
 
@@ -132,15 +174,10 @@ public class ImServerHandler extends SimpleChannelInboundHandler<TextWebSocketFr
             List<MessageProtocol> fromToUserMessage = JSON.parseArray(fromToUser, MessageProtocol.class);
             fromToUserMessage.add(messageProtocol);
             String set = jedis.set(messageProtocol.getFromId() + ":" + messageProtocol.getUserId(), JSON.toJSONString(fromToUserMessage));
-            System.out.println(jedis.lastsave());
-            System.out.println(messageProtocol.getFromId() + ":" + messageProtocol.getUserId() + "  " + set);
-            System.out.println(jedis.get(messageProtocol.getFromId() + ":" + messageProtocol.getUserId()));
             //第二人的缓存也要添加数据
             List<MessageProtocol> myUserMessage = JSON.parseArray(jedis.get(messageProtocol.getUserId() + ":" + messageProtocol.getFromId()), MessageProtocol.class);
             myUserMessage.add(messageProtocol);
             String set1 = jedis.set(messageProtocol.getUserId() + ":" + messageProtocol.getFromId(), JSON.toJSONString(myUserMessage));
-            System.out.println(messageProtocol.getUserId() + ":" + messageProtocol.getFromId() + " " + set1);
-            System.out.println(jedis.get(messageProtocol.getUserId() + ":" + messageProtocol.getFromId()));
         } finally {
             jedis.close();
         }

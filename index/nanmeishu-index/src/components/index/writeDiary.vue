@@ -11,7 +11,7 @@
         <van-icon name="arrow-left" style="font-size: 22px;"/>
       </template>
       <template #right>
-        <van-button round color="#ffca28" text="保存" size="small" hairline></van-button>
+        <van-button  style="padding: 0 3vw 0 3vw" round color="#ffca28" text="保存" size="small" hairline></van-button>
       </template>
     </van-nav-bar>
     <van-field

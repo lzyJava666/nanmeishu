@@ -12,4 +12,7 @@ public interface TaleFeign {
 
     @RequestMapping(value = "/tale/countTaleByUserId",method = RequestMethod.GET)
     ResponseResult countTaleByUserId(@RequestParam("userId") String userId);
+
+    @GetMapping("/tale/getTale")
+    ResponseResult getTale(@RequestParam("taleId") String taleId);
 }

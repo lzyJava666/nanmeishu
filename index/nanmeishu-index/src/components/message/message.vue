@@ -42,7 +42,7 @@
         <span class="titleSty">{{item.brName==null||item.brName==''?item.friendUser.username:item.brName}}</span>
       </template>
       <template #desc>
-        <span style="position: relative;display: block;color:#646566"> {{item.content}}
+        <span style="position: relative;display: block;color:#646566"> {{item.content.length>=10?(item.content).substring(0,10)+'...':item.content}}
           <span style="position: absolute;right: 5vw;">{{parseTime(item.createTime,"{y}-{m}-{d}")==parseTime(new Date(),"{y}-{m}-{d}")?parseTime(item.createTime,"{h}:{i}:{s}"):parseTime(item.createTime)}}</span>
         </span>
       </template>

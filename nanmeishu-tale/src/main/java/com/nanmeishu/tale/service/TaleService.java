@@ -41,4 +41,11 @@ public interface TaleService {
      * @param taleId
      */
     void deleteTale(String userId, String taleId);
+
+    /**
+     * 通过taleid获取详细信息
+     * @param taleId
+     * @return
+     */
+    Tale getTale(String taleId);
 }

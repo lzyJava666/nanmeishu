@@ -1,9 +1,12 @@
 package com.nanmeishu.user.service;
 
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.nanmeishu.entity.ResponseResult;
 import com.nanmeishu.user.entity.Friend;
 import com.nanmeishu.user.entity.User;
+import com.nanmeishu.user.feign.TaleFeign;
 import com.nanmeishu.user.mapper.FriendMapper;
 import com.nanmeishu.user.mapper.UserMapper;
 import com.nanmeishu.user.util.RedisUtil;
@@ -25,6 +28,9 @@ public class FriendServiceImpl implements FriendService {
 
     @Autowired
     UserMapper userMapper;
+
+    @Autowired
+    TaleFeign taleFeign;
 
 
     @Override
@@ -114,7 +120,7 @@ public class FriendServiceImpl implements FriendService {
             for (String key : keys) {
                 s = jedis.get(key);
                 messageProtocols=JSON.parseArray(s,Map.class);
-                if(messageProtocols.size()==1){
+                if(messageProtocols.size()==1||messageProtocols.get(0).get("type").toString().equals("114")){
                     currentMap = messageProtocols.get(0);
                     Map content = JSON.parseObject(currentMap.get("content").toString(), Map.class);
                     if((currentMap.get("userId").toString().equals(userId)&&
@@ -172,7 +178,13 @@ public class FriendServiceImpl implements FriendService {
                 return messageMaps;
             }
             for (Map messageMap : messageMaps) {
-                if(!messageMap.get("type").toString().equals("11")){
+                if(messageMap.get("type").toString().equals("14")){
+                    ResponseResult responseResult = taleFeign.getTale(messageMap.get("content").toString());
+                    if(responseResult.getErrcode()==200){
+                        messageMap.put("tale",responseResult.getData());
+                    }
+                }
+                if((!messageMap.get("type").toString().equals("11"))&&(!messageMap.get("type").toString().equals("14"))){
                     continue;
                 }
                 messageMap.put("myUser",myUser);
@@ -220,6 +232,10 @@ public class FriendServiceImpl implements FriendService {
                 maps1.get(maps1.size()-1).put("friendUser",fromUser);
                 maps1.get(maps1.size()-1).put("noSize",noSize);
                 maps1.get(maps1.size()-1).put("brName",brName);
+                if(maps1.get(maps1.size()-1).get("type").toString().equals("14")){
+                    maps1.get(maps1.size()-1).put("content","有一条分享信息");
+                }
+                System.out.println(maps1.get(maps1.size()-1));
                 maps.add(maps1.get(maps1.size()-1));
             }
         }finally {

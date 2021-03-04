@@ -224,5 +224,11 @@ public class TaleController {
         return ResultUtil.success();
     }
 
+    @ApiOperation("通过taleid获取详细信息")
+    @GetMapping("/getTale")
+    public ResponseResult getTale(@RequestParam("taleId") String taleId){
+        Tale tale= taleService.getTale(taleId);
+        return ResultUtil.success(tale);
+    }
 
 }

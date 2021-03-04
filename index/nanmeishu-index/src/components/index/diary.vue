@@ -23,6 +23,7 @@
           <van-card
             class="goods-card-content outSphere"
             @click="toTale(tale)"
+            style="z-index: 5"
           >
             <template #title>
               <div class="title"></div>
@@ -31,7 +32,8 @@
               <span class="titleDesc">{{tale.taleDetails.taleTitle}}</span>
               <br/>
               <span class="desc" style="position: relative">{{(tale.taleDetails.content).length>10?(tale.taleDetails.content).substring(0,10)+'......':(tale.taleDetails.content)}}
-              <van-image style="position: absolute;right: 0;" round width="25" height="25"
+<!--                <van-icon name="eye-o"  style="z-index: 15; position: absolute;right: 0;top: -5vh" size="22" color="#000"/>-->
+                <van-image style="position: absolute;right: 0;" round width="25" height="25"
                          :src="getStatu(tale.objectt)"></van-image>
             </span>
             </template>
@@ -73,6 +75,7 @@
 
 <script>
   import StatuList from "./statuList";
+  import {getUserBytokenApi} from "../api/user";
   import {getCaihongPi, listByToken, listStatu,deleteTale} from "../api/tale";
   import shareFriend from "./shareFriend";
   export default {
@@ -105,9 +108,17 @@
       }
     },
     methods: {
+      showTale(taleId){
+        this.$router.push({
+          path:"/showTale"
+        })
+      },
       f(val){
         console.log(val);
         console.log(this.taleId);
+        let message=this.createMessage(this.taleId,14,this.getCookie("token"),val);
+        console.log(message);
+        this.socket.ws.send(JSON.stringify(message));
       },
       clickSquare(Id){
         this.taleId=Id;
@@ -147,12 +158,18 @@
       toTale(myTale) {
         let statuMap = this.getStatu(myTale.objectt);
         myTale.statuImg = statuMap;
-        this.$router.push({
-          path: "/writeDiary",
-          query: {
-            readTale: myTale
-          }
-        })
+        getUserBytokenApi({},{"accessToken":this.token})
+            .then(res=>{
+              this.$router.push({
+                path: "/showTale",
+                query: {
+                  readTale: myTale,
+                  user:encodeURIComponent(JSON.stringify(res.data.data)),
+                  flag:true
+                }
+              })
+            })
+
       },
       //切换页码
       changePage(value) {

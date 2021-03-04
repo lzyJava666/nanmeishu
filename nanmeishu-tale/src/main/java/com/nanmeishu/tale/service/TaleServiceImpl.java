@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.nanmeishu.tale.entity.Tale;
 import com.nanmeishu.tale.entity.TaleDetails;
+import com.nanmeishu.tale.mapper.StatuMapper;
 import com.nanmeishu.tale.mapper.TaleDetailsMapper;
 import com.nanmeishu.tale.mapper.TaleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,9 @@ public class TaleServiceImpl implements TaleService {
 
     @Autowired
     TaleDetailsMapper taleDetailsMapper;
+
+    @Autowired
+    StatuMapper statuMapper;
 
     @Transactional
     @Override
@@ -84,5 +88,13 @@ public class TaleServiceImpl implements TaleService {
         if(delete<=0){
             throw new RuntimeException("删除出错");
         }
+    }
+
+    @Override
+    public Tale getTale(String taleId) {
+        Tale tale = taleMapper.selectById(taleId);
+        tale.setTaleDetails(taleDetailsMapper.selectOne(new QueryWrapper<TaleDetails>().eq("tale_id",tale.getTaleId())));
+        tale.setStatu(statuMapper.selectById(tale.getObjectt()));
+        return tale;
     }
 }

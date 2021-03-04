@@ -80,6 +80,12 @@
               this.$store.commit('addChatNum');
             }
             break;
+            case 14:{
+              console.log("收到分享消息：",res);
+              //消息+1
+              this.$store.commit('addChatNum');
+            }
+            break;
             default:{
               this.$toast.fail(res.errmsg);
             }

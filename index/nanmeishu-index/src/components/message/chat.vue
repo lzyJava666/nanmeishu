@@ -22,7 +22,28 @@
               :src="item.fromId==fromId?item.myUser.headPortrait:item.fromUser.headPortrait"
               class="avatar"
             />
-            <div class="content">{{ item.content}}</div>
+            <div class="content" v-show="item.type==11">{{ item.content}}</div>
+            <div class="content" v-show="item.type==14" @click="toTale(item)">
+              <van-card
+                class="goods-card-content outSphere"
+                style="width: 70vw"
+              >
+                <template #title>
+                  <div class="title"></div>
+                </template>
+                <template #desc>
+                  <span
+                    style="padding-top: 2vh;display: block">{{item.tale==null?'':item.tale.taleDetails.taleTitle}}</span>
+                  <span class="desc" style="position: relative;width: 35vw;display: block">{{(item.tale==null?'':item.tale.taleDetails.content).length>10?(item.tale==null?'':item.tale.taleDetails.content).substring(0,10)+'......':(item.tale==null?'':item.tale.taleDetails.content)}}
+              <van-image style="position: absolute;right: 0;" round width="25" height="25"
+                         :src="item.tale==null?'':item.tale.statu.statuUrl"></van-image>
+            </span>
+                </template>
+                <template #thumb>
+                  <span style="display: block;margin-top:2vh;font-size: 25px">{{dataToYear(item.tale==null?new Date():item.tale.createTime)}}<br>{{dataToDay(item.tale==null?new Date():item.tale.createTime)<10?'0'+dataToDay(item.tale==null?new Date():item.tale.createTime):dataToDay(item.tale==null?new Date():item.tale.createTime)}}号</span>
+                </template>
+              </van-card>
+            </div>
           </div>
           <div class="msg" v-show="item.fromId!=fromId" v-bind:class="{other:item.fromId!=fromId}">
             <van-image
@@ -31,7 +52,28 @@
               :src="item.fromId==fromId?item.myUser.headPortrait:item.fromUser.headPortrait"
               class="avatar"
             />
-            <div class="content">{{ item.content}}</div>
+            <div class="content" v-show="item.type==11">{{ item.content}}</div>
+            <div class="content" v-show="item.type==14" @click="toTale(item)">
+              <van-card
+                class="goods-card-content outSphere"
+                style="width: 70vw"
+              >
+                <template #title>
+                  <div class="title"></div>
+                </template>
+                <template #desc>
+                  <span
+                    style="padding-top: 2vh;display: block">{{item.tale==null?'':item.tale.taleDetails.taleTitle}}</span>
+                  <span class="desc" style="position: relative;width: 35vw;display: block">{{(item.tale==null?'':item.tale.taleDetails.content).length>10?(item.tale==null?'':item.tale.taleDetails.content).substring(0,10)+'......':(item.tale==null?'':item.tale.taleDetails.content)}}
+              <van-image style="position: absolute;right: 0;" round width="25" height="25"
+                         :src="item.tale==null?'':item.tale.statu.statuUrl"></van-image>
+            </span>
+                </template>
+                <template #thumb>
+                  <span style="display: block;margin-top:2vh;font-size: 25px">{{dataToYear(item.tale==null?new Date():item.tale.createTime)}}<br>{{dataToDay(item.tale==null?new Date():item.tale.createTime)<10?'0'+dataToDay(item.tale==null?new Date():item.tale.createTime):dataToDay(item.tale==null?new Date():item.tale.createTime)}}号</span>
+                </template>
+              </van-card>
+            </div>
           </div>
         </div>
       </div>
@@ -56,7 +98,7 @@
 </template>
 
 <script>
-  import {listChatByFromUser} from "../api/user";
+  import {getUserBytokenApi, listChatByFromUser} from "../api/user";
 
   export default {
     name: "chat",
@@ -66,12 +108,23 @@
         chatList: [],
         friendName: this.$route.query.friendName,
         fromId: this.$route.query.fromId,
-        noSize: this.$route.query.noSize
+        noSize: this.$route.query.noSize,
+        months: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
       }
     },
     methods: {
       onClickLeft() {
         this.$router.push("/message")
+      },
+      //当前时间转月份
+      dataToYear(data) {
+        let m = Number(this.parseTime(data, "{m}"));
+        return this.months[m - 1];
+      },
+      //当前时间转具体哪天
+      dataToDay(data) {
+        let m = Number(this.parseTime(data, "{d}"));
+        return m;
       },
       onClickRight() {
         //模拟当前用户发送消息给id为1338679112490074115的用户
@@ -87,6 +140,7 @@
         listChatByFromUser({fromId: this.fromId}, {"accessToken": token})
           .then(res => {
             this.chatList = res.data.data;
+            console.log(this.chatList);
           })
       },
       sendChat() {
@@ -94,6 +148,20 @@
         let message = this.createMessage(this.message, 11, token, this.fromId);
         this.socket.ws.send(JSON.stringify(message));
         this.message = '';
+      },
+      toTale(item){
+        console.log(item)
+        let user=item.fromId==item.myUser.userId?item.fromUser:item.myUser;
+        let tale=item.tale;
+        tale.statuImg = item.tale.statu.statuUrl;
+        this.$router.push({
+          path: "/showTale",
+          query: {
+            readTale: tale,
+            user:encodeURIComponent(JSON.stringify(user)),
+            flag:false
+          }
+        })
       }
 
     },

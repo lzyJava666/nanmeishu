@@ -21,6 +21,9 @@ public class MessageCode {
     //收到个人消息
     public static final int TAKE_USER_CHAT = 13;
 
+    //分享
+    public static final int TALE_SHARE=14;
+
     //个人拉黑
     public static final int USER_BLACKLIST = 111;
     //个人屏蔽

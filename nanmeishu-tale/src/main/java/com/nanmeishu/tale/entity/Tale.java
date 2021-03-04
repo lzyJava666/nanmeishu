@@ -39,6 +39,9 @@ public class Tale {
     private Integer type;
     @ApiModelProperty("对象（与类型对应，类型->对象对应关系如下{0:心情id，1-4：自定义}）")
     private String objectt;
+    @ApiModelProperty("心情对象")
+    @TableField(exist = false)
+    private Statu statu;
     @ApiModelProperty("所属用户id (新增时不能为空)")
     private Long userId;
     @TableField(exist = false)
