@@ -190,18 +190,26 @@
         return statu1;
       },
       taleDelete(taleId){
-        console.log(taleId);
-        deleteTale({taleId:taleId},{"accessToken":this.token})
-            .then(res=>{
-              console.log(res);
-              this.$toast.success("删除成功");
-              this.$router.push({
-                path:"/black",
-                query:{
-                  url:"/index"
-                }
+        this.$dialog.confirm({
+          title: '提示',
+          message: '您是否删除此日记？',
+        })
+          .then(() => {
+            deleteTale({taleId:taleId},{"accessToken":this.token})
+              .then(res=>{
+                console.log(res);
+                this.$toast.success("删除成功");
+                this.$router.push({
+                  path:"/black",
+                  query:{
+                    url:"/index"
+                  }
+                })
               })
-            })
+          })
+          .catch(() => {
+
+          });
       }
     },
     created() {

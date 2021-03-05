@@ -58,7 +58,7 @@
     },
     created() {
       this.val = this.val == -1 ? this.tabIndex : this.val;
-  }
+    }
   }
 </script>
 

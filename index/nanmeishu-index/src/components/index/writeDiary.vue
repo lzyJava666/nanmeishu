@@ -71,6 +71,10 @@
           taleTitle: this.taleTitle
         };
         if (this.readTale == null) {
+          if(this.statuId==null||this.statuId=='-1'){
+            this.$toast.fail("请选择今日份心情");
+            return;
+          }
           //新增
           let date = new Date();
           this.tale.frontDate = date;

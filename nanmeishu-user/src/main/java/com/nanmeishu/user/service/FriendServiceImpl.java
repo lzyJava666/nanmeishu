@@ -208,14 +208,22 @@ public class FriendServiceImpl implements FriendService {
             String s;
             List<Map> maps1;
             User fromUser;
+            //存放当前用户的好友id
             String friendId;
-            int noSize=0;
+            //用来存放用户未读消息的标记
+            int noSize;
+            //获取到和当前用户聊过天的用户key列表
             for (String key : keys) {
+                noSize=0;
+                //拿到聊天json串
                 s = jedis.get(key);
+                //转成数组
                 maps1 = JSON.parseArray(s, Map.class);
                 if(maps1.size()<=1){
+                    //小于等1说明只有一个请求---则为添加好友请求
                     continue;
                 }
+
                 for (Map map : maps1) {
                     if(map.get("isShow").toString().equals("0")){
                         //未读

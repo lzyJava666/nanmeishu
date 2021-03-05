@@ -53,43 +53,47 @@
 
         this.socket.ws.onmessage = e => {
           let res = JSON.parse(e.data);
-          console.log(res);
-          let token="";
+          console.log("收到消息：",res);
+          let token = "";
           switch (res.type) {
-            case 114:{
+            case 114: {
               //添加好友请求
               this.$store.commit('addFriendNum')
-              console.log(this.$store.state.num);
             }
-            break;
-            case 1:{
-              token=res.data;
+              break;
+            case 1: {
+              token = res.data;
               this.removeCookie("token");
               this.addCookie("token", token, 1000 * 60 * 2);
               this.$toast.success("登录成功");
               this.$router.push("/index");
             }
-            break;
-            case 1141:{
+              break;
+            case 1141: {
               this.$store.commit('addFriendNum');
             }
-            break;
-            case 11:{
-              console.log("收到私聊消息：",res);
+              break;
+            case 11: {
               //消息+1
               this.$store.commit('addChatNum');
             }
-            break;
-            case 14:{
-              console.log("收到分享消息：",res);
+              break;
+            case 14: {
               //消息+1
               this.$store.commit('addChatNum');
             }
+              break;
+            case 888:{
+              console.log("收到离线推送：",res);
+              let map=JSON.parse(res.content);
+              this.$store.commit('addFriendBySize',map.addNum);
+              this.$store.commit('addChatNumBySize',map.chatNo);
+            }
             break;
-            default:{
+            default: {
               this.$toast.fail(res.errmsg);
             }
-            break;
+              break;
           }
         }
 

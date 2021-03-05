@@ -20,9 +20,7 @@ import io.netty.util.concurrent.GlobalEventExecutor;
 import redis.clients.jedis.Jedis;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ImServerHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> {
@@ -148,6 +146,8 @@ public class ImServerHandler extends SimpleChannelInboundHandler<TextWebSocketFr
 
     //处理私聊请求
     private void toUserChat(MessageProtocol messageProtocol, ChannelHandlerContext ctx) {
+        messageProtocol.setIsSuccess(1);
+        messageProtocol.setUserId(Long.parseLong(JwtUtil.get(messageProtocol.getToken(), "userId")));
         if (isExitUser(messageProtocol.getFromId())) {
             //目标用户在线
             Object[] userObj = userChannelTable.get(messageProtocol.getFromId().toString());
@@ -156,12 +156,11 @@ public class ImServerHandler extends SimpleChannelInboundHandler<TextWebSocketFr
             //拿到目标用户的channel
             Channel fromChannel = fromUser.getChannel();
             //推送消息
-            messageProtocol.setIsSuccess(1);
-            messageProtocol.setUserId(Long.parseLong(JwtUtil.get(messageProtocol.getToken(), "userId")));
             fromChannel.writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(messageProtocol)));
             ctx.channel().writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(messageProtocol)));
         } else {
             //目标用户离线
+            ctx.channel().writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(messageProtocol)));
         }
         //处理完毕 存入redis
         Jedis jedis = redisUtil.getJedis();
@@ -209,13 +208,18 @@ public class ImServerHandler extends SimpleChannelInboundHandler<TextWebSocketFr
                         //拒绝好友请求
                         content.put("isAddStatus", 2);
                     }
+
                     protocol.setContent(JSON.toJSONString(content));
                     jedis.set(userId + ":" + friendUserId, JSON.toJSONString(messageProtocols));
-                    jedis.set(friendUserId + ":" + userId, JSON.toJSONString(messageProtocols));
+                    protocol.setIsShow(0);
+
                     //推送给用户消息
                     charToAddUser(friendUserId);
+                    break;
                 }
             }
+
+            jedis.set(friendUserId + ":" + userId, JSON.toJSONString(messageProtocols));
         } finally {
             jedis.close();
         }
@@ -335,7 +339,7 @@ public class ImServerHandler extends SimpleChannelInboundHandler<TextWebSocketFr
                 //上线处理
                 loginFlag(userId, channel, token);
                 //离线消息推送
-                offLineCharPush(userId);
+                offLineCharPush(userId,channel);
             }
             MessageProtocol messageProtocol1 = new MessageProtocol();
             messageProtocol.setType(MessageCode.LOGIN);
@@ -382,7 +386,41 @@ public class ImServerHandler extends SimpleChannelInboundHandler<TextWebSocketFr
     }
 
     //离线消息推送
-    private void offLineCharPush(String token) {
+    private void offLineCharPush(String userId, Channel channel) {
+        System.out.println(userId);
+        MessageProtocol messageProtocol=new MessageProtocol();
+        messageProtocol.setType(888);
+        messageProtocol.setCreateTime(LocalDateTime.now());
+        messageProtocol.setIsSuccess(1);
+        messageProtocol.setFromId(Long.parseLong(userId));
+        Jedis jedis = redisUtil.getJedis();
+        //标记好友添加请求个数
+        int addNum=0;
+        //标记未读消息个数
+        int chatNo=0;
+        try {
+            Set<String> keys = jedis.keys(userId + ":*");
+            List<MessageProtocol> messageProtocols;
+            for (String key : keys) {
+                messageProtocols=JSON.parseArray(jedis.get(key),MessageProtocol.class);
+                for (MessageProtocol protocol : messageProtocols) {
+                    if(protocol.getIsShow()==0){
+                        if(protocol.getType()==MessageCode.USER_ADD){
+                            addNum++;
+                        }else {
+                            chatNo++;
+                        }
+                    }
+                }
+            }
+            Map<String,Integer> resMap=new HashMap<>();
+            resMap.put("addNum",addNum);
+            resMap.put("chatNo",chatNo);
+            messageProtocol.setContent(JSON.toJSONString(resMap));
+        }finally {
+            jedis.close();
+        }
+        channel.writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(messageProtocol)));
     }
 
     //统计在线人数

@@ -141,7 +141,7 @@ export const router = new VueRouter({
     {path: "/index", component: index},
     {path: "/login", component: login, meta: {keepAlive: true}},
     {path: "/login/phone", component: phoneLogin},
-    {path: "/user", component: user, meta: {keepAlive: true}},
+    {path: "/user", component: user},
     {path: "/transaction", component: transaction},
     {path: "/black", component: black},
     {path: "/friend", component: friend},
@@ -216,6 +216,16 @@ const store = new Vuex.Store({
       }
       state.chatNum--;
       state.num--;
+    },
+    //指定添加好友消息数量
+    addFriendBySize(state,size){
+      state.addFriendNum+=size;
+      state.num+=size;
+    },
+    //指定添加未读消息数量
+    addChatNumBySize(state,size){
+      state.chatNum+=size;
+      state.num+=size;
     }
 
   }

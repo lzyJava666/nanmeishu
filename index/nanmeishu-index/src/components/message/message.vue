@@ -94,14 +94,10 @@
             break;
         }
       },
-      onLoadMesList() {
-
-      },
       toFriendList() {
         this.$router.push("/friendList")
       },
       toChat(item){
-        console.log(item.friendUser.userId)
         this.$router.push({
           path:"/chat",
           query:{
@@ -114,7 +110,6 @@
       listChat(){
         listChatByToken({"accessToken":this.getCookie("token")})
           .then(res=>{
-            console.log(res.data.data);
             this.messageList=res.data.data;
           })
       }

@@ -9,7 +9,7 @@ public class MessageCode {
     //强制下线
     public static final int COERCE_EXIT = 2;
 
-    //系统推送消息
+    //系统推送离线消息
     public static final int SYSTEM_CHAT=888;
 
     //发送个人消息

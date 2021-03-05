@@ -30,7 +30,6 @@
       "diary": Diary,
       "tale": Tale,
       "bottom": Bottom
-
     }
   }
 </script>
