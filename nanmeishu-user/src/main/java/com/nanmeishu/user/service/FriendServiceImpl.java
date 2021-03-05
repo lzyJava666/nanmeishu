@@ -57,7 +57,6 @@ public class FriendServiceImpl implements FriendService {
                 obj=new HashMap();
                 s = jedis.get(key);
                 messageProtocols= JSON.parseArray(s,Object.class);
-                System.out.println(messageProtocols);
                 if(messageProtocols.size()==1){
                     //一条信息，代表的是好友申请
                     Map<String,Object> map=(Map) messageProtocols.get(0);
@@ -68,7 +67,6 @@ public class FriendServiceImpl implements FriendService {
                     objects.add(obj);
                 }
             }
-            System.out.println("objects:"+objects);
         }finally {
             jedis.close();
         }

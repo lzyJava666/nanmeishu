@@ -31,6 +31,7 @@ import FriendList from "./components/message/friendList";
 import NewFriend from "./components/message/newFriend";
 import Chat from "./components/message/chat";
 import ShowTale from "./components/index/showTale";
+import UpdatePas from "./components/user/updatePas";
 
 import socket from './components/api/websocket'
 Vue.prototype.socket = socket
@@ -76,7 +77,10 @@ import { Empty } from 'vant';
 import { IndexBar, IndexAnchor } from 'vant';
 import { Badge } from 'vant';
 import { ShareSheet } from 'vant';
+import { PasswordInput, NumberKeyboard } from 'vant';
 
+Vue.use(PasswordInput);
+Vue.use(NumberKeyboard);
 Vue.use(ShareSheet);
 Vue.use(Badge);
 Vue.use(IndexBar);
@@ -146,6 +150,7 @@ export const router = new VueRouter({
     {path: "/black", component: black},
     {path: "/friend", component: friend},
     {path:"/showTale",component:ShowTale},
+    {path:"/updatePas",component:UpdatePas},
     {path: "/exit", component: Exit},
     {path:"/addFriend",component:AddFriend},
     {path:"/addFriendDetails",component:AddFriendDetails},

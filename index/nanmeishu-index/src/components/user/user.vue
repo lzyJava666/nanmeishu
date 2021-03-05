@@ -6,7 +6,7 @@
         <van-col span="24">
           <van-cell title="信息管理" is-link @click="xxgl()"/>
           <van-cell title="账号管理" is-link @click="zhgl()"/>
-          <van-cell title="修改密码" is-link />
+          <van-cell title="修改密码" is-link @click="toUpdatePass()"/>
           <van-cell title="人生进度条" is-link to="/friend" />
           <van-cell title="我的分享" is-link/>
           <van-cell title="我的好友" is-link to="/friendList"/>
@@ -35,6 +35,14 @@
       }
     },
     methods: {
+      toUpdatePass(){
+        this.$router.push({
+          path:"/updatePas",
+          query:{
+            user:this.user
+          }
+        })
+      },
       xxgl() {
         if (this.token.length == 0) {
           this.$router.push("/login");
@@ -77,9 +85,6 @@
             console.log(res);
             this.$toast.clear(false);
           });
-
-
-
       }
     }
   }

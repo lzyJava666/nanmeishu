@@ -84,13 +84,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         //手机号
         String phone = reqMap.get("phone").toString();
         User userVerify = userMapper.selectOne(new QueryWrapper<User>()
-                .eq("password", DataUtil.md5Encrypt(formerPas, AllConstant.getPasMd5()))
+                .eq("password", formerPas)
                 .eq("user_id", userId));
         if (userVerify != null && userVerify.getPhone().equals(phone)) {
             //验证成功
             User user = new User();
             user.setUserId(Long.parseLong(userId));
-            user.setPassword(DataUtil.md5Encrypt(newPas, AllConstant.getPasMd5()));
+            user.setPassword(newPas);
             int u = userMapper.updateById(user);
             if (u <= 0) {
                 throw new RuntimeException("修改出错");

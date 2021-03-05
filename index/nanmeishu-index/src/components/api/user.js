@@ -11,7 +11,8 @@ const urlList = {
   listAddFriend:url+"/friend/listAddFriend",
   countUser:url+"/user/countUser",
   listChatByFromUser:url+"/friend/listChatByFromUser",
-  listChatByToken:url+"/friend/listChatByToken"
+  listChatByToken:url+"/friend/listChatByToken",
+  updatePas:url+"/user/updatePas"
 }
 
 //通过用户id获取用户信息
@@ -68,6 +69,11 @@ export function listChatByFromUser(params,headers) {
 //返回最近和当前用户有聊天的记录列表
 export function listChatByToken(headers) {
   return GetAndHeaders(urlList.listChatByToken,{},headers)
+}
+
+//修改密码
+export function updatePas(data, headers) {
+  return PostAndHeaders(urlList.updatePas, data, headers)
 }
 
 
