@@ -5,16 +5,15 @@ import com.nanmeishu.entity.ResponseResult;
 import com.nanmeishu.user.entity.Friend;
 import com.nanmeishu.user.entity.User;
 import com.nanmeishu.user.service.FriendService;
+import com.nanmeishu.util.DataUtil;
 import com.nanmeishu.util.JwtUtil;
 import com.nanmeishu.util.ResultUtil;
 import com.nanmeishu.web.TokenVerifyAnnotation;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apiguardian.api.API;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
@@ -102,4 +101,37 @@ public class FriendController {
         List<Map> resList=friendService.listChatByToken(userId);
         return ResultUtil.success(resList);
     }
+
+    @ApiOperation("通过用户id和本人id获取到好友信息")
+    @TokenVerifyAnnotation
+    @GetMapping("/getFriendByFromId")
+    public ResponseResult getFriendByFromId(@RequestParam("fromId") String fromId,HttpServletRequest request){
+        String token = request.getHeader("accessToken");
+        String userId = JwtUtil.get(token, "userId");
+        Friend friend=friendService.getFriendByFromId(userId,fromId);
+        return ResultUtil.success(friend);
+    }
+
+    @ApiOperation("修改好友权限")
+    @TokenVerifyAnnotation
+    @PostMapping("/updateFriend")
+    public ResponseResult updateFriend(@RequestBody Friend friend,HttpServletRequest request){
+        DataUtil.verifyData(friend.getUserId(),"userId/好友Id不能为空");
+        String token = request.getHeader("accessToken");
+        String userId = JwtUtil.get(token, "userId");
+        friend.setMyUserId(Long.parseLong(userId));
+        friendService.updateFriend(friend);
+        return ResultUtil.success();
+    }
+
+    @ApiOperation("删除目标好友")
+    @TokenVerifyAnnotation
+    @GetMapping("/deleteFriend")
+    public ResponseResult deleteFriend(@RequestParam("fromId") String fromId,HttpServletRequest request){
+        String token = request.getHeader("accessToken");
+        String userId = JwtUtil.get(token, "userId");
+        friendService.deleteFriend(fromId,userId);
+        return ResultUtil.success();
+    }
+
 }

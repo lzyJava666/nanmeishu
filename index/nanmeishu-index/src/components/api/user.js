@@ -12,7 +12,10 @@ const urlList = {
   countUser:url+"/user/countUser",
   listChatByFromUser:url+"/friend/listChatByFromUser",
   listChatByToken:url+"/friend/listChatByToken",
-  updatePas:url+"/user/updatePas"
+  updatePas:url+"/user/updatePas",
+  getFriendByFromId:url+"/friend/getFriendByFromId",
+  updateFriend:url+"/friend/updateFriend",
+  deleteFriend:url+"/friend/deleteFriend"
 }
 
 //通过用户id获取用户信息
@@ -74,6 +77,22 @@ export function listChatByToken(headers) {
 //修改密码
 export function updatePas(data, headers) {
   return PostAndHeaders(urlList.updatePas, data, headers)
+}
+
+//通过用户id和本人id获取到好友信息
+export function getFriendByFromId(params,headers) {
+  return GetAndHeaders(urlList.getFriendByFromId,params,headers)
+}
+
+
+//修改用户权限
+export function updateFriend(data,headers) {
+  return PostAndHeaders(urlList.updateFriend,data,headers)
+}
+
+//删除好友
+export function deleteFriend(params,headers) {
+  return GetAndHeaders(urlList.deleteFriend,params,headers)
 }
 
 

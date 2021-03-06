@@ -16,7 +16,7 @@
             round
             width="6rem"
             height="6rem"
-            src="https://img.yzcdn.cn/vant/cat.jpeg"
+            :src="user.headPortrait"
           />
         </van-uploader>
       </van-col>

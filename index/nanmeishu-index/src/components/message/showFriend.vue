@@ -8,7 +8,7 @@
       :border="false"
     >
       <template #right>
-        <span id="gengduo"><span class="icon-gengduo iconfont"></span></span>
+        <span id="gengduo" v-show="friend!=''"><span class="icon-gengduo iconfont"></span></span>
       </template>
     </van-nav-bar>
     <van-row style="padding-top: 9vh;padding-bottom: 8vh;background: #ffffff;margin-bottom: 1vh">
@@ -23,7 +23,7 @@
       </van-col>
       <van-col span="16">
         <span style="margin: 0.5vh 0 0.5vh 3vw;display: block;font-size: 23px;font-weight: bold;">
-          {{friend==''||friend.brName==null?user.username:friend.brName}}
+          {{friend==''||friend.brName==null||friend.brName==''?user.username:friend.brName}}
           <span class="iconfont icon-nan" v-show="user.sex==1"
                 style="font-weight: normal;font-size: 19px">
           </span>
@@ -31,15 +31,15 @@
                 style="font-weight: normal;font-size: 19px">
           </span>
         </span>
-        <span class="userSty" v-show="friend!=''&&friend.brName!=null">昵称:{{user.username}}</span>
-        <br v-show="friend!=''&&friend.brName!=null"/>
+        <span class="userSty" v-show="friend!=''&&friend.brName!=null&&friend.brName!=''">昵称:{{user.username}}</span>
+        <br v-show="friend!=''&&friend.brName!=null&&friend.brName!=''"/>
         <span class="userSty">年龄:{{user.age==null?'未知年龄':user.age}}</span><br/>
         <span class="userSty">地区:{{user.address==null||user.address==''?'归属地不详':user.address}}</span>
       </van-col>
     </van-row>
-    <van-cell title="设置备注名" is-link/>
-    <van-cell title="好友权限" is-link/>
-    <van-cell title="他的分享" is-link/>
+    <van-cell title="设置备注名" @click="toSetFriend" is-link/>
+    <van-cell title="好友权限" @click="toSetFriend" is-link/>
+    <van-cell title="他的分享"  is-link/>
     <van-cell title="待开发" is-link/>
     <van-cell title="待开发" is-link/>
     <van-cell title="待开发" is-link/>
@@ -67,7 +67,6 @@
       }
     },
     created() {
-      console.log("1", this.num);
       this.num = 5;
     },
     methods: {
@@ -75,7 +74,19 @@
         history.go(-1)
       },
       onClickRight() {
-
+        this.toSetFriend();
+      },
+      toSetFriend() {
+        if (this.friend == '') {
+          this.toAddFriendDetails();
+        } else {
+          this.$router.push({
+            path: "/setFriend",
+            query: {
+              friendId: this.friend.userId
+            }
+          })
+        }
       },
       getSex(age) {
         if (age == 0) {
@@ -86,23 +97,26 @@
           return 'icon-nv2';
         }
       },
+      toAddFriendDetails() {
+        this.$router.push({
+          path: "/addFriendDetails",
+          query: {
+            fromId: this.user.userId
+          }
+        })
+      },
       toAddOrChar() {
         if (this.friend == '') {
+          this.toAddFriendDetails();
+        } else {
           this.$router.push({
-            path: "/addFriendDetails",
+            path: "/chat",
             query: {
-              fromId: this.user.userId
+              friendName: this.friend.brName == null || this.friend.brName == '' ? this.user.username : this.friend.brName,
+              fromId: this.user.userId,
+              noSize: 0
             }
           })
-        } else {
-            this.$router.push({
-              path:"/chat",
-              query:{
-                friendName:this.friend.brName==null||this.friend.brName==''?this.user.username:this.friend.brName,
-                fromId:this.user.userId,
-                noSize:0
-              }
-            })
         }
 
       }

@@ -121,7 +121,6 @@
           this.myDate = date;
         }
         let params = {type: -1, startDate: date, status: 1};
-        console.log(params);
         getById(params, {"accessToken": this.token})
           .then(res => {
             this.transactions = res.data.data;
@@ -173,6 +172,7 @@
         }
       },
       onLoad() {
+        this.$toast.loading();
         let date = this.parseTime(new Date(), "{y}-{m}-{d}");
         getById({type: -1, startDate: date, status: 1}, {"accessToken": this.token})
           .then(res => {
@@ -187,7 +187,6 @@
           })
       },
       myDelete(id, index) {
-        console.log(id);
         this.$dialog.confirm({
           title: '提示',
           message: '您是否删除此事务?',
@@ -295,7 +294,6 @@
         getById(params, {"accessToken": this.token})
           .then(res => {
             this.transactions = res.data.data;
-            console.log(this.transactions);
             this.finished = true;
             this.transactions.map(transaction => {
               if (transaction.statuss == 1) {

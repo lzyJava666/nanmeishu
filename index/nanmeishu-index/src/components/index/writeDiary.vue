@@ -65,6 +65,7 @@
       },
       //新增日记
       onClickRight() {
+        this.$toast.loading();
         this.tale.objectt = this.statuId;
         this.tale.taleDetails = {
           content: this.content,

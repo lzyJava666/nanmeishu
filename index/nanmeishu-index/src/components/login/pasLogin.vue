@@ -41,6 +41,10 @@
     },
     methods: {
       login() {
+        if(this.username==''||this.password==''){
+          this.$toast.fail("请输入用户名或密码");
+          return;
+        }
         this.$toast.loading({
           message: '登录中...',
         });

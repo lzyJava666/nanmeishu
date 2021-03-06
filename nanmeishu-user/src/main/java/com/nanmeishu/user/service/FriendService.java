@@ -69,4 +69,25 @@ public interface FriendService {
      * @return
      */
     List<Map> listChatByToken(String userId);
+
+    /**
+     * 通过用户id和本人id获取到好友信息
+     * @param userId
+     * @param fromId
+     * @return
+     */
+    Friend getFriendByFromId(String userId, String fromId);
+
+    /**
+     * 修改好友权限
+     * @param friend
+     */
+    void updateFriend(Friend friend);
+
+    /**
+     * 删除好友
+     * @param fromId
+     * @param userId
+     */
+    void deleteFriend(String fromId, String userId);
 }

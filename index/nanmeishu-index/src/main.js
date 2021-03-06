@@ -32,6 +32,7 @@ import NewFriend from "./components/message/newFriend";
 import Chat from "./components/message/chat";
 import ShowTale from "./components/index/showTale";
 import UpdatePas from "./components/user/updatePas";
+import SetFriend from "./components/message/setFriend";
 
 import socket from './components/api/websocket'
 Vue.prototype.socket = socket
@@ -150,6 +151,7 @@ export const router = new VueRouter({
     {path: "/black", component: black},
     {path: "/friend", component: friend},
     {path:"/showTale",component:ShowTale},
+    {path:"/setFriend",component:SetFriend},
     {path:"/updatePas",component:UpdatePas},
     {path: "/exit", component: Exit},
     {path:"/addFriend",component:AddFriend},

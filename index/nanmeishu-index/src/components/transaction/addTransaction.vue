@@ -57,8 +57,11 @@
       />
     </van-popup>
     <div id="btnBootom">
-      <van-button hairline plain class="btnStyle" @click="exitAdd">取消</van-button>
-      <van-button @click="saveT()" hairline plain class="btnStyle" style="color: red">确认</van-button>
+      <van-button hairline plain class="btnStyle" @click="exitAdd">取消
+      </van-button><van-button @click="saveT()" hairline plain class="btnStyle" style="color: red">
+        确认
+      </van-button>
+
     </div>
   </div>
 </template>
@@ -95,8 +98,12 @@
       },
       saveT() {
         //内容
+        if (this.content == '') {
+          this.$toast.fail("请输入事务内容");
+          return;
+        }
         let token = this.getCookie("token");
-        let hearders = {"accessToken": token};
+        let hearders = {"acscessToken": token};
         let startDate;
         let startTime;
         if (this.dateFild == true) {

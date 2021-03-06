@@ -127,10 +127,12 @@
         return m;
       },
       onClickRight() {
-        //模拟当前用户发送消息给id为1338679112490074115的用户
-        let token = this.getCookie("token");
-        let message = this.createMessage("你222好，我是我去！", 11, token, this.fromId);
-        this.socket.ws.send(JSON.stringify(message));
+          this.$router.push({
+            path:"/setFriend",
+            query:{
+              friendId:this.fromId
+            }
+          })
       },
       loadChatList() {
         this.$store.commit('minusNumBySize', this.noSize);
@@ -140,7 +142,6 @@
         listChatByFromUser({fromId: this.fromId}, {"accessToken": token})
           .then(res => {
             this.chatList = res.data.data;
-            console.log(this.chatList);
           })
       },
       sendChat() {
@@ -150,7 +151,6 @@
         this.message = '';
       },
       toTale(item){
-        console.log(item)
         let user=item.fromId==item.myUser.userId?item.fromUser:item.myUser;
         let tale=item.tale;
         tale.statuImg = item.tale.statu.statuUrl;

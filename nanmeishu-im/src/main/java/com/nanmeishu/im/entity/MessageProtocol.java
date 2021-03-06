@@ -35,5 +35,20 @@ public class MessageProtocol {
     private Long fromId;
     //是否推送成功
     private int isSuccess;
+
+    /**
+     * 错误提示
+     * @param content 提示内容
+     * @return
+     */
+    public static MessageProtocol createErrorChat(String content){
+        MessageProtocol messageProtocol = new MessageProtocol();
+        messageProtocol.setIsShow(1);
+        messageProtocol.setIsSuccess(1);
+        messageProtocol.setContent(content);
+        messageProtocol.setCreateTime(LocalDateTime.now());
+        messageProtocol.setType(MessageCode.ERROR_CHAT);
+        return messageProtocol;
+    }
 }
 

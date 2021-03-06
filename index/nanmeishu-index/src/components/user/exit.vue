@@ -41,13 +41,11 @@
       </van-button>
       <van-button block style="background: #ffffff;color: #bbbbbb;border-radius:5px;">注销账号</van-button>
     </div>
-
   </div>
 </template>
 
 <script>
   import {updateUser} from "../api/user";
-
   export default {
     name: "exit",
     data() {

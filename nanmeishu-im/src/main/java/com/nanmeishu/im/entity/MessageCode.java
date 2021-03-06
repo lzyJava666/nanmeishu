@@ -37,4 +37,7 @@ public class MessageCode {
     //个人特别关心好友
     public static final int USER_MES_TOP = 116;
 
+    //出错提醒
+    public static final int ERROR_CHAT=404;
+
 }

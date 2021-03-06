@@ -14,7 +14,7 @@
         class="iconfont icon-benyue iconStyle"></span>本月
       </van-button>
       <van-button type="default" class="btnClass" @click="toTransaction(5)"><span
-        class="iconfont icon-quanbu iconStyle"></span>全部
+        class="iconfont icon-quanbu1 iconStyle"></span>全部
       </van-button>
       <van-button type="default" class="btnClass" @click="toTransaction(6)"><span
         class="iconfont icon-shezhi iconStyle"></span>选择
