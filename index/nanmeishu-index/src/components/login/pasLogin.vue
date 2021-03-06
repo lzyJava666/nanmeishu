@@ -62,9 +62,9 @@
             }
               break;
             case 1: {
-              token = res.data;
+              token = res.content;
               this.removeCookie("token");
-              this.addCookie("token", token, 1000 * 60 * 2);
+              this.addCookie("token", token, 0);
               this.$toast.success("登录成功");
               this.$router.push("/index");
             }
@@ -97,17 +97,17 @@
           }
         }
 
-        loginapi({username: this.username, password: this.password}).then((res) => {
-          if (res.data.errcode == 200) {
-            let token = res.data.data;
-            this.removeCookie("token");
-            this.addCookie("token", token, 1000 * 60 * 2);
-            this.$toast.success("登录成功");
-            this.$router.push("/index");
-          } else {
-            this.$toast.fail(res.data.errmsg);
-          }
-        });
+        // loginapi({username: this.username, password: this.password}).then((res) => {
+        //   if (res.data.errcode == 200) {
+        //     let token = res.data.data;
+        //     this.removeCookie("token");
+        //     this.addCookie("token", token, 1000 * 60 * 2);
+        //     this.$toast.success("登录成功");
+        //     this.$router.push("/index");
+        //   } else {
+        //     this.$toast.fail(res.data.errmsg);
+        //   }
+        // });
       }
     }
   }

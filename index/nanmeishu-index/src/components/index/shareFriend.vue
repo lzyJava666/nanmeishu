@@ -30,7 +30,7 @@
         indexList: new Array()
       }
     },
-    props:["taleId"]
+    props: ["taleId"]
     ,
     methods: {
       showFriend(friend) {
@@ -38,7 +38,7 @@
           title: '分享',
           message: '您是否分享此内容给该好友',
         }).then(() => {
-          this.$emit('friend-id',friend.userId)
+          this.$emit('friend-id', friend.userId)
         })
           .catch(() => {
             // on cancel
@@ -66,21 +66,25 @@
       listFriendByMe({"accessToken": this.getCookie("token")})
         .then(res => {
           let friends = res.data.data;
-          friends.map(friend => {
-            let char = oneMaxFirst(friend.brName == null ? friend.user.username : friend.brName);
-            var falg = false;
-            for (var i = 0; i < list.length; i++) {
-              if (list[i].index == char) {
-                //找到目标
-                list[i].youList[list[i].size++] = friend;
-                falg = true;
+          if (friends == null||friends.length==0) {
+            return;
+          } else {
+            friends.map(friend => {
+              let char = oneMaxFirst(friend.brName == null ? friend.user.username : friend.brName);
+              var falg = false;
+              for (var i = 0; i < list.length; i++) {
+                if (list[i].index == char) {
+                  //找到目标
+                  list[i].youList[list[i].size++] = friend;
+                  falg = true;
+                }
               }
-            }
-            if (!falg) {
-              list[0].youList[list[0].size++] = friend;
-            }
-          })
-          this.indexList = list;
+              if (!falg) {
+                list[0].youList[list[0].size++] = friend;
+              }
+            })
+            this.indexList = list;
+          }
         })
 
     }

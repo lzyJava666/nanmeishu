@@ -48,4 +48,10 @@ public interface TaleService {
      * @return
      */
     Tale getTale(String taleId);
+
+    /**
+     * 获取彩虹屁文字
+     * @return
+     */
+    String caiHongPiText();
 }

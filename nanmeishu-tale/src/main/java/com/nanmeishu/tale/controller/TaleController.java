@@ -42,8 +42,7 @@ public class TaleController {
 
     @Autowired
     UserFeign userFeign;
-    @Value("${caiHongPiText}")
-    String caiHongPiText;
+
     @Value("${caiHongPiImg}")
     String caiHongPiImg;
 
@@ -127,18 +126,8 @@ public class TaleController {
     @GetMapping("/getCaiHongPi")
     public ResponseResult getCaiHongPi() {
         Map<String, String> caihongpiMap = new HashMap<>();
-        String caihongpiText = null;
-        while (true) {
-            caihongpiText = caiHongPiText();
-            if (caihongpiText == null) {
-                throw new RuntimeException("彩虹屁文字获取失败");
-            }
-            if (caihongpiText.length() > 20) {
-                caihongpiText = caiHongPiText();
-            } else {
-                break;
-            }
-        }
+        String caihongpiText;
+        caihongpiText = taleService.caiHongPiText();
         String caihongpiImg = caiHongPiImg();
         if (caihongpiImg == null) {
             throw new RuntimeException("彩虹屁图片获取失败");
@@ -176,37 +165,6 @@ public class TaleController {
             }
         }
         return null;
-    }
-
-    /**
-     * 获取彩虹屁文字
-     *
-     * @return
-     */
-    private String caiHongPiText() {
-        String str = "";
-        String result = "";
-        InputStream inputStream = null;
-        BufferedReader bufferedReader = null;
-        try {
-            URL url = new URL(caiHongPiText);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            inputStream = conn.getInputStream();
-            bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-            while ((str = bufferedReader.readLine()) != null) {
-                result += str;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                bufferedReader.close();
-                inputStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return result;
     }
 
     @ApiOperation("通过用户Id统计日记数量")

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nanmeishu.tale.mapper.TaleMapper">
+    <select id="caiHongPiText" resultType="string">
+    SELECT t1.text
+    FROM `tt_glowing_terms` t1
+    WHERE id >= (SELECT floor(RAND() * (SELECT MAX(id) FROM `tt_glowing_terms`)))
+    ORDER BY id LIMIT 1;
+  </select>
+</mapper>

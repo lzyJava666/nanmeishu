@@ -97,4 +97,10 @@ public class TaleServiceImpl implements TaleService {
         tale.setStatu(statuMapper.selectById(tale.getObjectt()));
         return tale;
     }
+
+    @Override
+    public String caiHongPiText() {
+        String text= taleMapper.caiHongPiText();
+        return text;
+    }
 }

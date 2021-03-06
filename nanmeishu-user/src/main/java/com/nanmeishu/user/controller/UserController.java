@@ -63,7 +63,6 @@ public class UserController {
         loginVerify(map);
         String username = String.valueOf(map.get("username"));
         String password = String.valueOf(map.get("password"));
-        //String password= DataUtil.md5Encrypt(String.valueOf(map.get("password")), AllConstant.getPasMd5());
         //验证登录是否成功
         User user = userService.getOne(new QueryWrapper<User>()
                 .eq("username", username)
@@ -78,7 +77,7 @@ public class UserController {
             Jedis jedis = redisUtil.getJedis();
             try {
                 jedis.set(token, LocalDateTime.now().plusHours(2).minusMinutes(10).toString());
-                jedis.expire(token, Integer.parseInt(TOKEN_DATE) - 60 * 60 * 10);
+                jedis.expire(token, Integer.parseInt(TOKEN_DATE) - 60 *10);
             } finally {
                 jedis.close();
             }
