@@ -12,7 +12,7 @@
           round
           width="5rem"
           height="5rem"
-          :src="user.headPortrait"
+          :src="user.headPortrait==null||user.headPortrait==''?'':toImg(user.headPortrait)"
           @click="showUser()"
           style="vertical-align:middle;"
         />
@@ -32,6 +32,7 @@
 
 <script>
   import {countUser} from "../api/user";
+  import {imgUrl} from "../api/api";
 
   export default {
     name: "userHead",
@@ -45,6 +46,9 @@
       }
     },
     methods: {
+      toImg(img){
+        return imgUrl+img;
+      },
       showUser() {
         if (this.token.length == 0) {
           this.$router.push("/login");
@@ -101,7 +105,7 @@
   }
 
   #user-head {
-    background: url('https://files.catbox.moe/tjffz3.jpg');
+    background: url('../../assets/image/用户资料背景.jpg');
     width: 100vw;
     height: 40vh;
   }

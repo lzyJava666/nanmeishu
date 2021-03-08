@@ -3,7 +3,7 @@
     <van-grid :border="false" :column-num="3" id="statuContent">
       <van-grid-item class="statuClass" v-for="(statu,index) in status" :key="statu.statuId"
                      @click="toWriteDiary(statu.statuId,statu.statuUrl)">
-        <van-image round :src="statu.statuUrl" class="statuImg"/>
+        <van-image round :src="require('../../assets/'+statu.statuUrl+'.png')" class="statuImg"/>
         <span>{{statu.name}}</span>
       </van-grid-item>
     </van-grid>

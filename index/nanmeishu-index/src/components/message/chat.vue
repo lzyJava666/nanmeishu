@@ -19,7 +19,7 @@
             <van-image
               width="40"
               height="40"
-              :src="item.fromId==fromId?item.myUser.headPortrait:item.fromUser.headPortrait"
+              :src="item.fromId==fromId?toImg(item.myUser.headPortrait):toImg(item.fromUser.headPortrait)"
               class="avatar"
             />
             <div class="content" v-show="item.type==11">{{ item.content}}</div>
@@ -36,7 +36,7 @@
                     style="padding-top: 2vh;display: block">{{item.tale==null?'':item.tale.taleDetails.taleTitle}}</span>
                   <span class="desc" style="position: relative;width: 35vw;display: block">{{(item.tale==null?'':item.tale.taleDetails.content).length>10?(item.tale==null?'':item.tale.taleDetails.content).substring(0,10)+'......':(item.tale==null?'':item.tale.taleDetails.content)}}
               <van-image style="position: absolute;right: 0;" round width="25" height="25"
-                         :src="item.tale==null?'':item.tale.statu.statuUrl"></van-image>
+                         :src="item.tale==null?'':require('../../assets/'+item.tale.statu.statuUrl+'.png')"></van-image>
             </span>
                 </template>
                 <template #thumb>
@@ -49,7 +49,7 @@
             <van-image
               width="40"
               height="40"
-              :src="item.fromId==fromId?item.myUser.headPortrait:item.fromUser.headPortrait"
+              :src="item.fromId==fromId?toImg(item.myUser.headPortrait):toImg(item.fromUser.headPortrait)"
               class="avatar"
             />
             <div class="content" v-show="item.type==11">{{ item.content}}</div>
@@ -66,7 +66,7 @@
                     style="padding-top: 2vh;display: block">{{item.tale==null?'':item.tale.taleDetails.taleTitle}}</span>
                   <span class="desc" style="position: relative;width: 35vw;display: block">{{(item.tale==null?'':item.tale.taleDetails.content).length>10?(item.tale==null?'':item.tale.taleDetails.content).substring(0,10)+'......':(item.tale==null?'':item.tale.taleDetails.content)}}
               <van-image style="position: absolute;right: 0;" round width="25" height="25"
-                         :src="item.tale==null?'':item.tale.statu.statuUrl"></van-image>
+                         :src="item.tale==null?'':require('../../assets/'+item.tale.statu.statuUrl+'.png')"></van-image>
             </span>
                 </template>
                 <template #thumb>
@@ -99,6 +99,7 @@
 
 <script>
   import {getUserBytokenApi, listChatByFromUser} from "../api/user";
+  import {imgUrl} from "../api/api";
 
   export default {
     name: "chat",
@@ -113,6 +114,9 @@
       }
     },
     methods: {
+      toImg(img){
+        return imgUrl+img;
+      },
       onClickLeft() {
         this.$router.push("/message")
       },

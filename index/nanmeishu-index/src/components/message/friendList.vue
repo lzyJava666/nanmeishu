@@ -21,7 +21,7 @@
             <van-image
               width="40"
               height="40"
-              :src="friend.user.headPortrait"
+              :src="toImg(friend.user.headPortrait)"
               style="vertical-align:middle;"
             />
             <span style="vertical-align:middle;margin-left: 3vw">{{friend.brName==null||friend.brName==''?friend.user.username:friend.brName}}</span>
@@ -35,6 +35,7 @@
 <script>
   import {listFriendByMe} from "../api/user";
   import {oneMaxFirst} from "../api/common";
+  import {imgUrl} from "../api/api";
 
   export default {
     name: "friendList",
@@ -44,6 +45,9 @@
       }
     },
     methods: {
+      toImg(img){
+        return imgUrl+img;
+      },
       onClickLeft() {
         this.$router.push("/message")
       },

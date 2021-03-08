@@ -26,7 +26,7 @@
     />
     <div id="bottomIcon" @click="show=true">
       <van-icon name="arrow-up" size="30" style="text-shadow:#000 1px 1px 2px" v-show="actitySid==false"/>
-      <van-image round :src="statuImg" style="height:30px;width: 30px;margin-bottom: 10px;" v-show="actitySid"/>
+      <van-image round v-show="actitySid" :src="statuImg==null||statuImg==''?'':require('../../assets/'+statuImg+'.png')" style="height:30px;width: 30px;margin-bottom: 10px;" />
     </div>
     <!-- 弹出框-->
     <van-popup v-model="show" round closeable

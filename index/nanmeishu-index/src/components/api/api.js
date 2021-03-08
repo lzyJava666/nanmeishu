@@ -1,7 +1,14 @@
 import axios from "axios";
 import {router} from "../../main";
 
+
 export const url = "http://127.0.0.1:8888";
+
+export const imgUrl="http://qpjzl0kar.hd-bkt.clouddn.com/";
+
+const urlList={
+  upload:url+"/upload/upload"
+}
 
 axios.interceptors.response.use(
   res => {
@@ -46,6 +53,15 @@ export function GetAndHeaders(url, params, headers) {
   return axios.get(url, {
     params: params,
     headers: headers
+  });
+}
+//文件上传
+export function upload(data,token) {
+  return axios.post(urlList.upload, data, {
+    headers: {
+      "Content-Type":"multipart/form-data",
+      "accessToken":token
+    }
   });
 }
 

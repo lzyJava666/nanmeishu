@@ -12,6 +12,9 @@
         <module>nanmeishu-user</module>
         <module>nanmeishu-tale</module>
         <module>nanmeishu-transaction</module>
+        <module>nanmeishu-upload</module>
+        <module>nanmeishu-gateway</module>
+        <module>nanmeishu-im</module>
     </modules>
 
     <build>

@@ -34,7 +34,7 @@
               <span class="desc" style="position: relative">{{(tale.taleDetails.content).length>10?(tale.taleDetails.content).substring(0,10)+'......':(tale.taleDetails.content)}}
 <!--                <van-icon name="eye-o"  style="z-index: 15; position: absolute;right: 0;top: -5vh" size="22" color="#000"/>-->
                 <van-image style="position: absolute;right: 0;" round width="25" height="25"
-                         :src="getStatu(tale.objectt)"></van-image>
+                         :src="getStatu(tale.objectt)==null||getStatu(tale.objectt)==''?'':require('../../assets/'+getStatu(tale.objectt)+'.png')"></van-image>
             </span>
             </template>
             <template #thumb>
@@ -114,8 +114,6 @@
         })
       },
       f(val){
-        console.log(val);
-        console.log(this.taleId);
         let message=this.createMessage(this.taleId,14,this.getCookie("token"),val);
         console.log(message);
         this.socket.ws.send(JSON.stringify(message));
@@ -253,7 +251,7 @@
   }
   .goods-card {
     margin: 0;
-    background-image: url("https://files.catbox.moe/mt30es.png");
+    background-image: url("../../assets/image/日记背景.png");
     height: 13.5vh;
   }
 

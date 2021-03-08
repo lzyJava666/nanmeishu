@@ -11,12 +11,12 @@
     <van-row type="flex" justify="center" style="margin-top: 13vh">
       <van-col span="8"></van-col>
       <van-col span="8">
-        <van-uploader>
+        <van-uploader :after-read="afterRead" result-type="file">
           <van-image
             round
             width="6rem"
             height="6rem"
-            :src="user.headPortrait"
+            :src="toImg(user.headPortrait)==null||toImg(user.headPortrait)==''?'':toImg(user.headPortrait)"
           />
         </van-uploader>
       </van-col>
@@ -79,11 +79,25 @@
 
 <script>
   import {updateUser} from '../api/user'
+  import {imgUrl, upload} from "../api/api";
 
   export default {
     name: "updateUser",
     data() {
       return {
+        // fileList: [
+        //   {
+        //     url: 'https://img01.yzcdn.cn/vant/leaf.jpg',
+        //     status: 'uploading',
+        //     message: '上传中...',
+        //
+        //   },
+        //   {
+        //     url: 'https://img01.yzcdn.cn/vant/tree.jpg',
+        //     status: 'failed',
+        //     message: '上传失败',
+        //   },
+        // ],
         user: JSON.parse(decodeURIComponent(this.$route.query.user)),
         minDate: new Date(1900, 0, 1),
         maxDate: new Date(),
@@ -99,6 +113,18 @@
       }
     },
     methods: {
+      toImg(img) {
+        return imgUrl + img;
+      },
+      afterRead(file) {
+        let formData = new FormData()
+        formData.append('file', file.file);
+        upload(formData, this.getCookie("token"))
+          .then(res => {
+            this.user.headPortrait=res.data;
+            console.log(res.data);
+          })
+      },
       onClickLeft() {
         this.$router.push({
           path: "/showUser",

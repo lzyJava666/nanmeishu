@@ -23,7 +23,7 @@
           width="41"
           height="41"
           style="margin-left: 6vw"
-          :src="user.headPortrait"
+          :src="toImg(user.headPortrait)"
         />
       </template>
       <template #title>
@@ -31,7 +31,7 @@
       </template>
       <template #desc>
         <span style="position: relative;display: block;color:#646566;vertical-align:middle;"> 心情：
-          <van-image round :src="readTale.statuImg" width="21" height="21" style="vertical-align:middle;"/>
+          <van-image round :src="require('../../assets/'+readTale.statuImg+'.png')" width="21" height="21" style="vertical-align:middle;"/>
         </span>
       </template>
     </van-card>
@@ -48,6 +48,8 @@
 </template>
 
 <script>
+  import {imgUrl} from "../api/api";
+
   export default {
     name: "showTale",
     data() {
@@ -58,6 +60,9 @@
       }
     },
     methods: {
+      toImg(img){
+        return imgUrl+img;
+      },
       onClickLeft() {
         this.$router.push("/index")
       },

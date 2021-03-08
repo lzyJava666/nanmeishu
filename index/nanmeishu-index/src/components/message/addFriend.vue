@@ -28,7 +28,7 @@
           width="45"
           height="45"
           style="margin-left: 6vw;margin-top: 0.8vh"
-          :src="user.headPortrait"
+          :src="toImg(user.headPortrait)"
         />
       </template>
       <template #title>
@@ -50,6 +50,7 @@
 
 <script>
   import {listUserByPhoneOrName} from "../api/user";
+  import {imgUrl} from "../api/api";
 
   export default {
     name: "addFriend",
@@ -61,6 +62,9 @@
       }
     },
     methods: {
+      toImg(img){
+        return imgUrl+img;
+      },
       onClickLeft() {
         this.$router.push("/message")
       },

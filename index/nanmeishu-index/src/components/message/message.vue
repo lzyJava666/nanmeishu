@@ -35,7 +35,7 @@
           width="45"
           height="45"
           style="margin-left: 6vw"
-          :src="item.friendUser.headPortrait"
+          :src="item.friendUser.headPortrait==null||item.friendUser.headPortrait==''?'':toImg(item.friendUser.headPortrait)"
         />
       </template>
       <template #title>
@@ -61,6 +61,7 @@
 <script>
   import bottom from "../common/bottom";
   import {listChatByToken} from "../api/user";
+  import {imgUrl} from "../api/api";
 
   export default {
     name: "message",
@@ -78,6 +79,9 @@
       }
     },
     methods: {
+      toImg(img){
+        return imgUrl+img;
+      },
       a(){
         this.$router.push("/chat")
       },

@@ -17,7 +17,7 @@
         <van-image
           width="90"
           height="90"
-          :src="user.headPortrait"
+          :src="toImg(user.headPortrait)"
           round
         />
       </van-col>
@@ -57,6 +57,8 @@
 </template>
 
 <script>
+  import {imgUrl} from "../api/api";
+
   export default {
     name: "showFriend",
     data() {
@@ -70,6 +72,9 @@
       this.num = 5;
     },
     methods: {
+      toImg(img){
+        return imgUrl+img;
+      },
       onClickLeft() {
         history.go(-1)
       },
