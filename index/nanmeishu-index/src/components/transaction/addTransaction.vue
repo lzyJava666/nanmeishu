@@ -103,11 +103,12 @@
           return;
         }
         let token = this.getCookie("token");
-        let hearders = {"acscessToken": token};
+        let hearders = {"accessToken": token};
         let startDate;
         let startTime;
         if (this.dateFild == true) {
-          startDate = '2000-01-01';
+          startDate=new Date();
+          startDate.setFullYear(2000,0,1);
         } else {
           if (this.currentDate == true) {
             startDate = new Date();
@@ -134,6 +135,8 @@
           startTime: startTime,
           tops: this.tops ? 1 : 0
         };
+        console.log(data);
+        console.log(hearders);
         save(data, hearders)
           .then(res => {
             this.$toast.success("新增成功");
