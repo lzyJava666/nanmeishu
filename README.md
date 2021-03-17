@@ -58,6 +58,79 @@ Docker | 容器技术
 Git | 版本管理技术
 OSS | 文件存储
 
+## 模块介绍
+
+### 网关模块
+#### 部署
+##### docker部署
+- 创建一个文件夹用于存放网关服务运行环境
+- 上传打包好的jar文件
+- vi Dockerfile   ---编写Dockerfile文件
+```
+FROM java:8
+LABEL author="lzy"
+EXPOSE 8888
+ADD nanmeishu-gateway-0.0.1-SNAPSHOT.jar application.jar
+ENTRYPOINT ["java","-jar","application.jar"]
+```
+
+```
+docker build -t nanmeishu-gateway:1.0 .    ---构建镜像
+docker run -d --name nanmeishu-gateway -p 8888:8888 nanmeishu-gateway:1.0 ---运行容器
+```
+
+### 用户模块
+#### 部署
+##### docker部署
+- 创建一个文件夹用于存放用户服务运行环境
+- 上传打包好的jar文件
+- vi Dockerfile   ---编写Dockerfile文件
+
+```
+FROM java:8
+LABEL author="lzy"
+ADD nanmeishu-user-0.0.1-SNAPSHOT.jar application.jar
+ENTRYPOINT ["java","-jar","application.jar"]
+```
+
+```
+docker build -t nanmeishu-user:1.0 .    ---构建镜像
+docker run -d --name nanmeishu-user nanmeishu-user:1.0 ---运行容器
+```
+- 运行成功后在浏览器中输入链接测试 
+
+```
+http://服务器地址:8888/area/listAreaAndDetails 
+```
+### 故事/日记模块
+#### 部署
+##### docker部署
+- 创建一个文件夹用于存放故事/日记服务运行环境
+- 上传打包好的jar文件
+- vi Dockerfile   ---编写Dockerfile文件
+
+```
+FROM java:8
+LABEL author="lzy"
+ADD nanmeishu-tale-0.0.1-SNAPSHOT.jar application.jar
+ENTRYPOINT ["java","-jar","application.jar"]
+```
+
+```
+docker build -t nanmeishu-tale:1.0 .    ---构建镜像
+docker run -d --name nanmeishu-tale nanmeishu-tale:1.0 ---运行容器
+```
+- 运行成功后在浏览器中输入链接测试 
+ 
+```
+http://服务器地址:8888/tale/getCaiHongPi
+```
+
+
+
+
+
+
 ## 数据表解析
 ## 用户服务（user）
 ### 用户表结构（uu_user）
