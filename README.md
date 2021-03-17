@@ -7,6 +7,7 @@
 
 ## 组织结构
 ```
+index --- 前端模块
 nanmeishu-common -- 工具类及通用代码模块
 nanmeishu-im -- 内置即使聊天室模块服务
 nanmeishu-tale -- 故事/日记服务
