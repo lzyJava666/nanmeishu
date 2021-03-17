@@ -48,7 +48,7 @@ Vue-router|路由框架
 Vant | UI框架
 Axios | 前端HTTP库
 Vuex | 全局状态管理
-web socket | 通信技术
+Web Socket | 通信技术
 
 #### 其他技术
 技术 | 说明
