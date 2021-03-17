@@ -55,6 +55,7 @@ web socket | 通信技术
 CentOS7 | 服务器环境
 Docker | 容器技术
 Git | 版本管理技术
+OSS | 文件存储
 
 ## 数据表解析
 ## 用户服务（user）
