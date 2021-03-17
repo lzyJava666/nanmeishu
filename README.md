@@ -13,7 +13,7 @@ nanmeishu-tale -- 故事/日记服务
 nanmeishu-transaction -- 代办事务服务
 nanmeishu-upload -- 文件上传模块服务
 nanmeishu-user -- 用户服务
-parent -- 父模块（用于管理依赖版本）
+parent -- 版本管理模块（用于管理依赖版本）
 ```
 
 ## 项目演示
