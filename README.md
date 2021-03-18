@@ -48,7 +48,7 @@ Vue-router|路由框架
 Vant | UI框架
 Axios | 前端HTTP库
 Vuex | 全局状态管理
-Web Socket | 通信技术
+web socket | 通信技术
 
 #### 其他技术
 技术 | 说明
@@ -57,6 +57,64 @@ CentOS7 | 服务器环境
 Docker | 容器技术
 Git | 版本管理技术
 OSS | 文件存储
+
+## 项目效果图
+![avatar](/static/1.png)
+![avatar](/static/2.png)
+![avatar](/static/3.png)
+![avatar](/static/4.png)
+![avatar](/static/5.png)
+![avatar](/static/6.png)
+![avatar](/static/7.png)
+![avatar](/static/8.png)
+![avatar](/static/9.png)
+![avatar](/static/10.png)
+![avatar](/static/11.png)
+
+## 环境安装
+- ### docker安装nacos
+
+1. 创建nacos容器
+```
+docker pull nacos/nacos-server    ---拉取nacos镜像
+mkdir -p /opt/docker/nacos/init.d /opt/docker/nacos/logs 
+cd /opt/docker/nacos/init.d
+vi custom.properties
+```
+  custom.properties 内容
+
+```
+management.endpoints.web.exposure.include=*
+```
+2. 运行容器
+```
+docker run -d -p 8848:8848 -e MODE=standalone -e PREFER_HOST_MODE=hostname -v /opt/docker/nacos/init.d/custom.properties:/home/nacos/init.d/custom.properties -v /opt/docker/nacos/logs:/home/nacos/logs --restart always --name nacos nacos/nacos-server
+```
+3. - 测试（开启8848端口）
+
+```
+http://服务器地址:8848/nacos
+```
+- ### docker 安装Redis
+1. 创建容器
+
+```
+docker pull redis:6.0.5
+mkdir /opt/docker/redis  ---创建redis工作路径
+cd /opt/docker/redis
+将redis.conf上传至当前目录下
+```
+2. 运行容器
+
+```
+docker run -p 6379:6379 -d -v /opt/docker/redis:/usr/local/etc/redis --name redis6 redis:6.0.5 redis-server /usr/local/etc/redis/redis.conf
+```
+
+3. 测试（开启6379端口）
+    
+```
+通过客户端工具连接测试，初始密码为 123456
+```
 
 ## 模块介绍
 
@@ -125,10 +183,67 @@ docker run -d --name nanmeishu-tale nanmeishu-tale:1.0 ---运行容器
 ```
 http://服务器地址:8888/tale/getCaiHongPi
 ```
+### 代办事务模块
+#### 部署
+##### docker部署
+- 创建一个文件夹用于存放用户服务运行环境
+- 上传打包好的jar文件
+- vi Dockerfile   ---编写Dockerfile文件
 
+```
+FROM java:8
+LABEL author="lzy"
+ADD nanmeishu-transaction-0.0.1-SNAPSHOT.jar application.jar
+ENTRYPOINT ["java","-jar","application.jar"]
+```
 
+```
+docker build -t nanmeishu-transaction:1.0 .    ---构建镜像
+docker run -d --name nanmeishu-transaction nanmeishu-transaction:1.0 ---运行容器
+```
+- 运行成功后在浏览器中输入链接测试 
 
+```
+http://服务器地址:8888/transaction/countTransactionByUserId?userId=123
+```
+### 即使聊天室模块
+#### 部署
+##### docker部署
+- 创建一个文件夹用于存放用户服务运行环境
+- 上传打包好的jar文件
+- vi Dockerfile   ---编写Dockerfile文件
 
+```
+FROM java:8
+LABEL author="lzy"
+ADD nanmeishu-im-0.0.1-SNAPSHOT.jar application.jar
+EXPOSE 7777
+ENTRYPOINT ["java","-jar","application.jar"]
+```
+
+```
+docker build -t nanmeishu-im:1.0 .    ---构建镜像
+docker run -d -p 7777:7777 --name nanmeishu-im nanmeishu-im:1.0 ---运行容器
+```
+
+### 上传模块
+#### 部署
+##### docker部署
+- 创建一个文件夹用于存放用户服务运行环境
+- 上传打包好的jar文件
+- vi Dockerfile   ---编写Dockerfile文件
+
+```
+FROM java:8
+LABEL author="lzy"
+ADD nanmeishu-upload-0.0.1-SNAPSHOT.jar application.jar
+ENTRYPOINT ["java","-jar","application.jar"]
+```
+
+```
+docker build -t nanmeishu-upload:1.0 .    ---构建镜像
+docker run -d --name nanmeishu-upload nanmeishu-upload:1.0 ---运行容器
+```
 
 
 ## 数据表解析

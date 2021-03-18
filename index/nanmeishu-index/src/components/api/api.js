@@ -2,9 +2,9 @@ import axios from "axios";
 import {router} from "../../main";
 
 
-export const url = "http://127.0.0.1:8888";
+export const url = "http://47.100.137.41:8888";
 
-export const imgUrl="http://qpjzl0kar.hd-bkt.clouddn.com/";
+export const imgUrl="http://www.ocass.cn/";
 
 const urlList={
   upload:url+"/upload/upload"

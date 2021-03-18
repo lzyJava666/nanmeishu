@@ -21,7 +21,7 @@
           width="38"
           height="38"
           style="margin-left: 4vw;"
-          :src="item.user.headPortrait"
+          :src="myImg(item.user.headPortrait)"
         />
       </template>
       <template #desc style="position: relative">
@@ -51,7 +51,7 @@
 
 <script>
   import {listAddFriend} from "../api/user";
-
+  import {imgUrl} from "../api/api";
   export default {
     name: "newFriend",
     data() {
@@ -60,6 +60,9 @@
       }
     },
     methods: {
+      myImg(img){
+        return imgUrl+img;
+      },
       onClickLeft() {
         this.$router.push("/friendList")
       },
